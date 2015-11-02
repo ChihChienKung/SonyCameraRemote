@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2014 Sony Corporation -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.chien.sony.cameraremote"
+    android:versionCode="2"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="10"
+        android:targetSdkVersion="23" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <application
+        android:name=".CameraApplication"
+        android:allowBackup="true"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".CameraConnectActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".CameraActivity"
+            android:label="@string/sample_camera" />
+        <activity
+            android:name=".DateListActivity"
+            android:label="@string/title_activity_date_list" >
+        </activity>
+        <activity
+            android:name=".ContentsGridActivity"
+            android:label="@string/title_activity_contents_grid" >
+        </activity>
+        <activity
+            android:name=".StillContentActivity"
+            android:label="@string/title_activity_still_content" >
+        </activity>
+        <activity
+            android:name=".MovieContentActivity"
+            android:label="@string/title_activity_movie_content" >
+        </activity>
+    </application>
+
+</manifest>
