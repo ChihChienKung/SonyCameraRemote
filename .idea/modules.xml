@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SonyCameraAPISample.iml" filepath="$PROJECT_DIR$/SonyCameraAPISample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SonyCameraRemote.iml" filepath="$PROJECT_DIR$/SonyCameraRemote.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
