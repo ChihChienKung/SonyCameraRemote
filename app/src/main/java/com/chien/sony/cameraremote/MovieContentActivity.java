@@ -77,7 +77,7 @@ public class MovieContentActivity extends Activity {
 
                 try {
                     // Make target device ready to start content streaming
-                    replyJson = mRemoteApi.setStreamingContent(uri);
+                    replyJson = mRemoteApi.setStreamingContent("simpleStreaming", uri);
                     if (RemoteApi.isErrorReply(replyJson)) {
                         DisplayHelper.toast(getApplicationContext(), //
                                 R.string.msg_error_connection);

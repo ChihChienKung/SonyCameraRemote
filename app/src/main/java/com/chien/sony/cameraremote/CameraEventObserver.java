@@ -218,7 +218,7 @@ public class CameraEventObserver {
 
                     try {
                         // Call getEvent API.
-                        JSONObject replyJson = mRemoteApi.getEvent(longPolling);
+                        JSONObject replyJson = mRemoteApi.getEvent_v1_0(longPolling);
 
                         // Check error code at first.
                         int errorCode = findErrorCode(replyJson);

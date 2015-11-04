@@ -305,12 +305,12 @@ public class CameraActivity extends Activity {
             public void run() {
                 try {
                     // Get supported API list (Camera API)
-                    JSONObject replyJsonCamera = mRemoteApi.getCameraMethodTypes();
+                    JSONObject replyJsonCamera = mRemoteApi.getMethodTypes(RemoteApi.API_SERVICE_CAMERA, RemoteApi.VERSION_1_0);
                     loadSupportedApiList(replyJsonCamera);
 
                     try {
                         // Get supported API list (AvContent API)
-                        JSONObject replyJsonAvcontent = mRemoteApi.getAvcontentMethodTypes();
+                        JSONObject replyJsonAvcontent = mRemoteApi.getMethodTypes(RemoteApi.API_SERVICE_AV_CONTENT, RemoteApi.VERSION_1_0);
                         loadSupportedApiList(replyJsonAvcontent);
                     } catch (IOException e) {
                         Log.d(TAG, "AvContent is not support.");
@@ -340,7 +340,7 @@ public class CameraActivity extends Activity {
 
                         // confirm current camera status
                         String cameraStatus = null;
-                        JSONObject replyJson = mRemoteApi.getEvent(false);
+                        JSONObject replyJson = mRemoteApi.getEvent_v1_0(false);
                         JSONArray resultsObj = replyJson.getJSONArray("result");
                         JSONObject cameraStatusObj = resultsObj.getJSONObject(1);
                         String type = cameraStatusObj.getString("type");

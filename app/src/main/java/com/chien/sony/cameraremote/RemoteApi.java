@@ -23,19 +23,19 @@ public class RemoteApi {
 
     private static final String TAG = RemoteApi.class.getSimpleName();
 
-    private static final String API_SERVICE_CAMERA = "camera";
-    private static final String API_SERVICE_AV_CONTENT = "avContent";
-    private static final String API_SERVICE_SYSTEM = "system";
+    public static final String API_SERVICE_CAMERA = "camera";
+    public static final String API_SERVICE_AV_CONTENT = "avContent";
+    public static final String API_SERVICE_SYSTEM = "system";
 
     private static final String KEY_METHOD = "method";
     private static final String KEY_PARAMS = "params";
     private static final String KEY_ID = "id";
     private static final String KEY_VERSION = "version";
 
-    private static final String VERSION_1_0 = "1.0";
-    private static final String VERSION_1_1 = "1.1";
-    private static final String VERSION_1_2 = "1.2";
-    private static final String VERSION_1_3 = "1.3";
+    public static final String VERSION_1_0 = "1.0";
+    public static final String VERSION_1_1 = "1.1";
+    public static final String VERSION_1_2 = "1.2";
+    public static final String VERSION_1_3 = "1.3";
 
     // If you'd like to suppress detailed log output, change this value into
     // false.
@@ -883,7 +883,7 @@ public class RemoteApi {
         }
     }
 
-    public JSONObject setStreamingContent(String remotePlayType, int uri) throws IOException {
+    public JSONObject setStreamingContent(String remotePlayType, String uri) throws IOException {
         try {
             JSONObject object = new JSONObject();
             object.put("remotePlayType", remotePlayType).put("uri", uri);
