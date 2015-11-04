@@ -1,7 +1,7 @@
 
 package com.chien.sony.cameraremote.receiver;
 
-import com.chien.sony.cameraremote.widget.Device;
+import com.chien.sony.cameraremote.widget.ApPoint;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -26,7 +26,7 @@ public class WifiBroadcastReceiver extends BroadcastReceiver {
 
     private final OnWifiScanListener mOnWifiScanListener;
 
-    List<Device> mDeviceList = new ArrayList<Device>();
+    List<ApPoint> mApPointList = new ArrayList<ApPoint>();
 
     public WifiBroadcastReceiver(final WifiManager wifiManager, final OnWifiScanListener onWifiScanListener) {
         mWifiManager = wifiManager;
@@ -56,7 +56,7 @@ public class WifiBroadcastReceiver extends BroadcastReceiver {
     }
 
     private void updateAccessPoints(final Context context) {
-        mDeviceList.clear();
+        mApPointList.clear();
         final List<ScanResult> wifiList = mWifiManager.getScanResults();
         final List<WifiConfiguration> configs = mWifiManager.getConfiguredNetworks();
 
@@ -68,7 +68,7 @@ public class WifiBroadcastReceiver extends BroadcastReceiver {
 //            if (!saveSSID.contains(SONY_CAMERA))
 //                continue;
 
-            final Device ap = new Device(context, scanResult);
+            final ApPoint ap = new ApPoint(context, scanResult);
 
             for (final WifiConfiguration config : configs) {
                 if (config.SSID.equals(saveSSID)) {
@@ -78,15 +78,15 @@ public class WifiBroadcastReceiver extends BroadcastReceiver {
                     break;
                 }
             }
-            mDeviceList.add(ap);
+            mApPointList.add(ap);
         }
 
-        Collections.sort(mDeviceList);
+        Collections.sort(mApPointList);
 
-        mOnWifiScanListener.scanResults(mDeviceList);
+        mOnWifiScanListener.scanResults(mApPointList);
     }
 
     public interface OnWifiScanListener {
-        public void scanResults(List<Device> apPointList);
+        public void scanResults(List<ApPoint> apPointList);
     }
 }

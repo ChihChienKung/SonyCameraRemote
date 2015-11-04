@@ -4,15 +4,22 @@
 
 package com.chien.sony.cameraremote;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiConfiguration.KeyMgmt;
+import android.net.wifi.WifiConfiguration.AuthAlgorithm;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,13 +29,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chien.sony.cameraremote.receiver.WifiBroadcastReceiver;
-import com.chien.sony.cameraremote.widget.Device;
+import com.chien.sony.cameraremote.widget.ApPoint;
 import com.telly.mrvector.MrVector;
 
 import java.util.ArrayList;
@@ -52,6 +60,8 @@ public class CameraConnectActivity extends AppCompatActivity {
     private ProgressBar mProgressBar;
 
     private Toolbar mToolbar;
+
+    private ConnectTask mTask;
 
     private boolean mActivityActive, mWifiScanActive;
 
@@ -83,9 +93,16 @@ public class CameraConnectActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ListView listView = (ListView) parent;
-                ServerDevice device = (ServerDevice) listView.getAdapter().getItem(position);
-                launchCameraActivity(device);
+                if (mTask == null) {
+                    synchronized (CameraConnectActivity.class) {
+                        if (mTask == null) {
+                            ApPoint apPoint = mListAdapter.getItem(position);
+                            Log.v(TAG, "connect " + apPoint.getSSID());
+                            mTask = new ConnectTask(apPoint, position);
+                            mTask.execute();
+                        }
+                    }
+                }
             }
         });
         //TODO do some thing.
@@ -205,10 +222,8 @@ public class CameraConnectActivity extends AppCompatActivity {
     /**
      * Start searching supported devices.
      */
-    private void searchDevices() {
-        mListAdapter.clearDevices();
-        setProgressBarIndeterminateVisibility(true);
-        mSsdpClient.search(new SsdpClient.SearchResultHandler() {
+    private void searchDevices(final int position) {
+        SsdpClient.SearchResultHandler handler = new SsdpClient.SearchResultHandler() {
 
             @Override
             public void onDeviceFound(final ServerDevice device) {
@@ -217,7 +232,7 @@ public class CameraConnectActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-//                        mListAdapter.addDevice(device);
+                        launchCameraActivity(device);
                     }
                 });
             }
@@ -229,7 +244,6 @@ public class CameraConnectActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        setProgressBarIndeterminateVisibility(false);
                         if (mActivityActive) {
                             Toast.makeText(CameraConnectActivity.this, //
                                     R.string.msg_device_search_finish, //
@@ -246,7 +260,6 @@ public class CameraConnectActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        setProgressBarIndeterminateVisibility(false);
                         if (mActivityActive) {
                             Toast.makeText(CameraConnectActivity.this, //
                                     R.string.msg_error_device_searching, //
@@ -255,7 +268,98 @@ public class CameraConnectActivity extends AppCompatActivity {
                     }
                 });
             }
-        });
+        };
+
+        mSsdpClient.search(handler);
+    }
+
+    private void connectSuccess(int position) {
+        Log.i(TAG, "connectSuccess");
+        searchDevices(position);
+    }
+
+    private void connectFail() {
+        Log.i(TAG, "connectFail");
+        Toast.makeText(this, R.string.wifi_connect_fail, Toast.LENGTH_SHORT).show();
+    }
+
+    private WifiConfiguration getWifiConfiguration(final ApPoint apPoint, final String password) {
+        final WifiConfiguration config = new WifiConfiguration();
+        config.allowedAuthAlgorithms.clear();
+        config.allowedGroupCiphers.clear();
+        config.allowedKeyManagement.clear();
+        config.allowedPairwiseCiphers.clear();
+        config.allowedProtocols.clear();
+        config.SSID = "\"" + apPoint.getSSID() + "\"";
+        Log.w(TAG, "apPoint.getSecurity()=" + apPoint.getSecurity());
+        switch (apPoint.getSecurity()) {
+            case ApPoint.SECURITY_NONE:
+                incompetence(config);
+                break;
+            case ApPoint.SECURITY_WEP:
+                cipherWEP(config, password);
+                break;
+            case ApPoint.SECURITY_PSK:
+                config.BSSID = apPoint.getBSSID();
+                cipherPSK(config, password);
+                break;
+        }
+        return config;
+    }
+
+    private void incompetence(final WifiConfiguration config) {
+        config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+    }
+
+    private void cipherWEP(final WifiConfiguration config, final String password) {
+        if (password.length() != 0) {
+            final int length = password.length();
+            if ((length == 10 || length == 26 || length == 58) && password.matches("[0-9A-Fa-f]*")) {
+                config.wepKeys[0] = password;
+            } else {
+                config.wepKeys[0] = "\"" + password + "\"";
+            }
+        }
+        config.allowedKeyManagement.set(KeyMgmt.NONE);
+        config.allowedAuthAlgorithms.set(AuthAlgorithm.OPEN);
+        config.allowedAuthAlgorithms.set(AuthAlgorithm.SHARED);
+    }
+
+    private void cipherPSK(final WifiConfiguration config, final String password) {
+        if (password.length() != 0) {
+            if (password.matches("[0-9A-Fa-f]{64}")) {
+                config.preSharedKey = password;
+            } else {
+                config.preSharedKey = "\"" + password + "\"";
+            }
+        }
+        config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
+        config.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
+        config.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+        config.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+        config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
+        config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
+        config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
+        config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
+    }
+
+    private void taskNotify() {
+        synchronized (mTask) {
+            mTask.notify();
+        }
+    }
+
+    private void taskWait(final long millis) {
+        try {
+            synchronized (mTask) {
+                if (millis <= 0)
+                    mTask.wait();
+                else
+                    mTask.wait(millis);
+            }
+        } catch (final InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -271,6 +375,7 @@ public class CameraConnectActivity extends AppCompatActivity {
         app.setTargetServerDevice(device);
         Intent intent = new Intent(this, CameraActivity.class);
         startActivity(intent);
+        finish();
     }
 
     /**
@@ -278,40 +383,40 @@ public class CameraConnectActivity extends AppCompatActivity {
      */
     private static class DeviceListAdapter extends BaseAdapter {
 
-        private final List<Device> mDeviceList;
+        private final List<ApPoint> mApPointList;
 
         private final LayoutInflater mInflater;
 
         public DeviceListAdapter(Context context) {
-            mDeviceList = new ArrayList<Device>();
+            mApPointList = new ArrayList<ApPoint>();
             mInflater = LayoutInflater.from(context);
         }
 
-        public void addDevice(Device device) {
-            mDeviceList.add(device);
+        public void addDevice(ApPoint apPoint) {
+            mApPointList.add(apPoint);
             notifyDataSetChanged();
         }
 
-        public void addDevice(List<Device> devices) {
-            mDeviceList.clear();
-            for (final Device device : devices)
-                mDeviceList.add(device);
+        public void addDevice(List<ApPoint> apPoints) {
+            mApPointList.clear();
+            for (final ApPoint apPoint : apPoints)
+                mApPointList.add(apPoint);
             notifyDataSetChanged();
         }
 
         public void clearDevices() {
-            mDeviceList.clear();
+            mApPointList.clear();
             notifyDataSetChanged();
         }
 
         @Override
         public int getCount() {
-            return mDeviceList.size();
+            return mApPointList.size();
         }
 
         @Override
-        public Device getItem(int position) {
-            return mDeviceList.get(position);
+        public ApPoint getItem(int position) {
+            return mApPointList.get(position);
         }
 
         @Override
@@ -326,8 +431,8 @@ public class CameraConnectActivity extends AppCompatActivity {
             if (textView == null) {
                 textView = (TextView) mInflater.inflate(R.layout.device_list_item, parent, false);
             }
-            Device device = getItem(position);
-            textView.setText(device.getSSID());
+            ApPoint apPoint = getItem(position);
+            textView.setText(apPoint.getSSID());
 //            ServerDevice device =  (ServerDevice)getItem(position);
 //            ServerDevice.ApiService apiService = device.getApiService("camera");
 //            String endpointUrl = null;
@@ -350,9 +455,118 @@ public class CameraConnectActivity extends AppCompatActivity {
     private final WifiBroadcastReceiver.OnWifiScanListener mOnWifiScanListener = new WifiBroadcastReceiver.OnWifiScanListener() {
 
         @Override
-        public void scanResults(final List<Device> devices) {
-            mListAdapter.addDevice(devices);
+        public void scanResults(final List<ApPoint> apPoints) {
+            mListAdapter.addDevice(apPoints);
         }
 
     };
+
+    private class ConnectTask extends AsyncTask<Void, Integer, String> {
+        private final ApPoint mApPoint;
+
+        private String mPassword;
+
+        private int mPosition;
+
+        public ConnectTask(final ApPoint apPointPreference, int position) {
+            mApPoint = apPointPreference;
+            mPosition = position;
+        }
+
+        @Override
+        protected String doInBackground(final Void... v) {
+            final String SSID = mApPoint.getSSID();
+            int networkId = mApPoint.getNetworkId();
+            if (networkId == -1) {
+                checkPassword();
+                if (mPassword == null)
+                    return null;
+                networkId = mWifiManager.addNetwork(getWifiConfiguration(mApPoint, mPassword));
+                Log.e(TAG, "addNetwork=" + networkId);
+                publishProgress(networkId);
+            }
+
+            final WifiInfo wifiInfo = mWifiManager.getConnectionInfo();
+            final int connectId = wifiInfo.getNetworkId();
+            Log.e(TAG, "connectId=" + connectId);
+
+            boolean isConnect = false;
+            if (connectId != -1 && connectId != networkId) {
+                mWifiManager.disableNetwork(connectId);
+                mWifiManager.disconnect();
+                taskWait(1500);
+                mWifiManager.enableNetwork(networkId, true);
+                mWifiManager.saveConfiguration();
+                isConnect = mWifiManager.reconnect();
+            } else if (connectId != -1 && connectId == networkId) {
+                return SSID;
+            } else if (connectId == -1 && connectId != networkId) {
+                mWifiManager.enableNetwork(networkId, true);
+                mWifiManager.saveConfiguration();
+                isConnect = mWifiManager.reconnect();
+            }
+
+            Log.e(TAG, "networkId=" + networkId);
+            if (!isConnect)
+                return null;
+            taskWait(2500);
+            return SSID;
+        }
+
+        @Override
+        protected void onProgressUpdate(final Integer... networkIds) {
+            super.onProgressUpdate(networkIds);
+            if (networkIds.length == 0) {
+                showDialog();
+                return;
+            }
+            mApPoint.setNetworkId(networkIds[0]);
+        }
+
+        @Override
+        protected void onPostExecute(final String connectSSID) {
+            super.onPostExecute(connectSSID);
+            mTask = null;
+
+            final WifiInfo wifiInfo = mWifiManager.getConnectionInfo();
+            Log.e(TAG, wifiInfo.getSSID() + " " + connectSSID);
+            if (connectSSID != null && wifiInfo.getSSID() != null && wifiInfo.getSSID().equals(connectSSID)) {
+                connectSuccess(mPosition);
+            } else {
+                connectFail();
+            }
+        }
+
+        private void checkPassword() {
+            switch (mApPoint.getSecurity()) {
+                case ApPoint.SECURITY_WEP:
+                case ApPoint.SECURITY_PSK:
+                    publishProgress();
+                    taskWait(0);
+                    break;
+            }
+        }
+
+        private void showDialog() {
+            final EditText editText = new EditText(CameraConnectActivity.this);
+            editText.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            final AlertDialog.Builder dialog = new AlertDialog.Builder(CameraConnectActivity.this);
+            dialog.setTitle(R.string.input_ap_password);
+            dialog.setView(editText);
+            dialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(final DialogInterface dialog, final int which) {
+                    mPassword = editText.getText().toString();
+                    taskNotify();
+                }
+            });
+            dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(final DialogInterface dialog) {
+                    taskNotify();
+                }
+            });
+            dialog.show();
+        }
+    }
 }

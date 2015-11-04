@@ -2,4 +2,6 @@
 <resources>
     <string name="app_name">Sony相機遙控器</string>
     <string name="connect_to_camera">連線到拍攝裝置</string>
+    <string name="wifi_connect_fail">連線失敗</string>
+    <string name="input_ap_password">請輸入密碼</string>
 </resources>

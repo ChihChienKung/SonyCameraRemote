@@ -29,7 +29,7 @@ public final class RemoteApiHelper {
     /**
      * Prepare request params and calls SimpleRemoteApi method to get date list
      * of storage contents. Request JSON data is such like as below.
-     * 
+     * <p/>
      * <pre>
      * {
      *   "method": "getContentList",
@@ -42,28 +42,22 @@ public final class RemoteApiHelper {
      *   "version": "1.3"
      * }
      * </pre>
-     * 
-     * @param object of SimpleRemoteAPi
+     *
      * @return JSON data of response
      * @throws IOException all errors and exception are wrapped by this
-     *             Exception.
+     *                     Exception.
      */
-    public static JSONObject getContentDateList(RemoteApi simpleRemoteApi) throws IOException {
+    public static JSONObject getContentDateList(RemoteApi remoteApi) throws IOException {
 
         try {
-            List<String> uri = getSupportedStorages(simpleRemoteApi);
+            List<String> uri = getSupportedStorages(remoteApi);
 
             if (uri == null) {
                 Log.w(TAG, "supported Uri is null");
                 throw new IOException();
             }
 
-            JSONObject replyJson = null;
-            JSONObject paramObj = new JSONObject().put("sort", "ascending").put("view", "date")
-                    .put("uri", uri.get(0));
-            JSONArray params = new JSONArray().put(0, paramObj);
-
-            replyJson = simpleRemoteApi.getContentList(params);
+            JSONObject replyJson = remoteApi.getContentList(uri.get(0), 0, 100, "date", "ascending");
             return replyJson;
 
         } catch (JSONException e) {
@@ -74,7 +68,7 @@ public final class RemoteApiHelper {
     /**
      * Prepare request params and calls SimpleRemoteApi method to get contents
      * list of storage. Request JSON data is such like as below.
-     * 
+     * <p/>
      * <pre>
      * {
      *   "method": "getContentList",
@@ -92,46 +86,29 @@ public final class RemoteApiHelper {
      *   "version": "1.3"
      * }
      * </pre>
-     * 
-     * @param simpleRemoteApi object of simpleRemoteApi
-     * @param uri uri of target date
+     *
+     * @param remoteApi         object of simpleRemoteApi
+     * @param uri               uri of target date
      * @param isStreamSupported set true if target device supported streaming
-     *            playback
-     * @return JSON data of response
+     *                          playback
      * @throws IOException IOException all errors and exception are wrapped by
-     *             this Exception.
+     *                     this Exception.
      */
-    public static JSONObject
-            getContentListOfDay(RemoteApi simpleRemoteApi, String uri, //
-                    Boolean isStreamSupported) throws IOException {
-
-        try {
-            JSONObject replyJson = null;
-            JSONArray typeParam;
-            if (isStreamSupported) {
-                // Device supports streaming API.
-                // get still and movie contents.
-                typeParam = new JSONArray().put("still").put("movie_mp4").put("movie_xavcs");
-            } else {
-                // Device does not support streaming API.
-                // get only still contents.
-                typeParam = new JSONArray().put("still");
-            }
-            JSONObject paramObj =
-                    new JSONObject().put("sort", "ascending").put("view", "date") //
-                            .put("type", typeParam).put("uri", uri);
-            JSONArray params = new JSONArray().put(0, paramObj);
-
-            replyJson = simpleRemoteApi.getContentList(params);
-            return replyJson;
-
-        } catch (JSONException e) {
-            throw new IOException(e);
+    public static JSONObject getContentListOfDay(RemoteApi remoteApi, String uri, Boolean isStreamSupported) throws IOException {
+        JSONObject replyJson = null;
+        if (isStreamSupported) {
+            // Device supports streaming API.
+            // get still and movie contents.
+            replyJson = remoteApi.getContentList(uri, 0, 100, "date", "ascending", "still", "movie_mp4", "movie_xavcs");
+        } else {
+            // Device does not support streaming API.
+            // get only still contents.
+            replyJson = remoteApi.getContentList(uri, 0, 100, "date", "ascending", "still");
         }
+        return replyJson;
     }
 
-    private static List<String> getSupportedStorages(RemoteApi simpleRemoteApi) //
-            throws IOException, JSONException {
+    private static List<String> getSupportedStorages(RemoteApi simpleRemoteApi) throws IOException, JSONException {
 
         // Confirm Scheme
         JSONObject replyJsonScheme = simpleRemoteApi.getSchemeList();

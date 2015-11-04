@@ -24,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -44,13 +45,12 @@ public class CameraActivity extends Activity {
 
     private static final String TAG = CameraActivity.class.getSimpleName();
 
+    private ImageButton mCapture, mSettings;
+
     private ImageView mImagePictureWipe;
 
     private Spinner mSpinnerShootMode;
 
-    private Button mButtonTakePicture;
-
-    private Button mButtonRecStartStop;
 
     private Button mButtonZoomIn;
 
@@ -78,17 +78,20 @@ public class CameraActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        setContentView(R.layout.activity_sample_camera);
+        setContentView(R.layout.activity_camera);
 
         CameraApplication app = (CameraApplication) getApplication();
         mTargetServer = app.getTargetServerDevice();
         mRemoteApi = new RemoteApi(mTargetServer);
         app.setRemoteApi(mRemoteApi);
         mEventObserver = new CameraEventObserver(getApplicationContext(), mRemoteApi);
+
+        mCapture = (ImageButton) findViewById(R.id.btn_capture);
+        mSettings = (ImageButton) findViewById(R.id.btn_settings);
+
+
         mImagePictureWipe = (ImageView) findViewById(R.id.image_picture_wipe);
         mSpinnerShootMode = (Spinner) findViewById(R.id.spinner_shoot_mode);
-        mButtonTakePicture = (Button) findViewById(R.id.button_take_picture);
-        mButtonRecStartStop = (Button) findViewById(R.id.button_rec_start_stop);
         mButtonZoomIn = (Button) findViewById(R.id.button_zoom_in);
         mButtonZoomOut = (Button) findViewById(R.id.button_zoom_out);
         mButtonContentsListMode = (Button) findViewById(R.id.button_contents_list);
@@ -172,17 +175,15 @@ public class CameraActivity extends Activity {
         mSpinnerShootMode.setFocusable(false);
         mButtonContentsListMode.setEnabled(false);
 
-        mButtonTakePicture.setOnClickListener(new View.OnClickListener() {
+        mCapture.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
+
+                //TODO if picture
                 takeAndFetchPicture();
-            }
-        });
-        mButtonRecStartStop.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
+                //TODO if video
                 if ("MovieRecording".equals(mEventObserver.getCameraStatus())) {
                     stopMovieRec();
                 } else if ("IDLE".equals(mEventObserver.getCameraStatus())) {
@@ -558,31 +559,33 @@ public class CameraActivity extends Activity {
         // CameraStatus TextView
         mTextCameraStatus.setText(cameraStatus);
 
-        // Recording Start/Stop Button
-        if ("MovieRecording".equals(cameraStatus)) {
-            mButtonRecStartStop.setEnabled(true);
-            mButtonRecStartStop.setText(R.string.button_rec_stop);
-        } else if ("IDLE".equals(cameraStatus) && "movie".equals(shootMode)) {
-            mButtonRecStartStop.setEnabled(true);
-            mButtonRecStartStop.setText(R.string.button_rec_start);
-        } else {
-            mButtonRecStartStop.setEnabled(false);
+        if (CameraEventObserver.SHOOT_MODE_STILL.equals(shootMode)) {
+            if(CameraEventObserver.STATUS_IDLE.equals(cameraStatus)){
+                mCapture.setEnabled(true);
+                mCapture.setImageResource(R.drawable.btn_capture_still);
+            }else{
+                mCapture.setEnabled(false);
+            }
+        } else if (CameraEventObserver.SHOOT_MODE_MOVIE.equals(shootMode)) {
+            if (CameraEventObserver.STATUS_MOVIE_RECORDING.equals(cameraStatus)) {
+                mCapture.setEnabled(true);
+                mCapture.setImageResource(R.drawable.btn_capture_rec_stop);
+            } else if (CameraEventObserver.STATUS_IDLE.equals(cameraStatus)) {
+                mCapture.setEnabled(true);
+                mCapture.setImageResource(R.drawable.btn_capture_rec_start);
+            } else {
+                mCapture.setEnabled(false);
+            }
         }
 
-        // Take picture Button
-        if ("still".equals(shootMode) && "IDLE".equals(cameraStatus)) {
-            mButtonTakePicture.setEnabled(true);
-        } else {
-            mButtonTakePicture.setEnabled(false);
-        }
 
         // Picture wipe Image
-        if (!"still".equals(shootMode)) {
+        if (!CameraEventObserver.SHOOT_MODE_STILL.equals(shootMode)) {
             mImagePictureWipe.setVisibility(View.INVISIBLE);
         }
 
         // Shoot Mode Buttons
-        if ("IDLE".equals(cameraStatus) || "MovieRecording".equals(cameraStatus)) {
+        if (CameraEventObserver.STATUS_IDLE.equals(cameraStatus) || CameraEventObserver.STATUS_MOVIE_RECORDING.equals(cameraStatus)) {
             mSpinnerShootMode.setEnabled(true);
             selectionShootModeSpinner(mSpinnerShootMode, shootMode);
         } else {
@@ -606,7 +609,7 @@ public class CameraActivity extends Activity {
 
     /**
      * Retrieve a list of APIs that are available at present.
-     * 
+     *
      * @param replyJson
      */
     private void loadAvailableCameraApiList(JSONObject replyJson) {
@@ -626,7 +629,7 @@ public class CameraActivity extends Activity {
 
     /**
      * Retrieve a list of APIs that are supported by the target device.
-     * 
+     *
      * @param replyJson
      */
     private void loadSupportedApiList(JSONObject replyJson) {
@@ -645,7 +648,7 @@ public class CameraActivity extends Activity {
     /**
      * Check if the specified API is available at present. This works correctly
      * only for Camera API.
-     * 
+     *
      * @param apiName
      * @return
      */
@@ -660,7 +663,7 @@ public class CameraActivity extends Activity {
     /**
      * Check if the specified API is supported. This is for camera and avContent
      * service API. The result of this method does not change dynamically.
-     * 
+     *
      * @param apiName
      * @return
      */
@@ -674,7 +677,7 @@ public class CameraActivity extends Activity {
 
     /**
      * Check if the version of the server is supported in this application.
-     * 
+     *
      * @param replyJson
      * @return
      */
@@ -697,7 +700,7 @@ public class CameraActivity extends Activity {
 
     /**
      * Check if the shoot mode is supported in this application.
-     * 
+     *
      * @param mode
      * @return
      */
@@ -748,13 +751,15 @@ public class CameraActivity extends Activity {
                 } catch (JSONException e) {
                     Log.w(TAG, "prepareShootModeRadioButtons: JSON format error.");
                 }
-            };
+            }
+
+            ;
         }.start();
     }
 
     /**
      * Selection for Spinner UI of Shoot Mode.
-     * 
+     *
      * @param spinner
      * @param mode
      */
@@ -771,7 +776,7 @@ public class CameraActivity extends Activity {
 
     /**
      * Prepare for Spinner UI of Shoot Mode.
-     * 
+     *
      * @param availableShootModes
      * @param currentMode
      */
@@ -822,7 +827,7 @@ public class CameraActivity extends Activity {
 
     /**
      * Prepare for Button to select "actZoom" by user.
-     * 
+     *
      * @param flag
      */
     private void prepareActZoomButtons(final boolean flag) {
@@ -839,7 +844,7 @@ public class CameraActivity extends Activity {
 
     /**
      * Prepare for ActZoom Button UI.
-     * 
+     *
      * @param flag
      */
     private void prepareActZoomButtonsUi(boolean flag) {
@@ -854,7 +859,7 @@ public class CameraActivity extends Activity {
 
     /**
      * Call setShootMode
-     * 
+     *
      * @param mode
      */
     private void setShootMode(final String mode) {
@@ -1005,7 +1010,7 @@ public class CameraActivity extends Activity {
 
     /**
      * Call actZoom
-     * 
+     *
      * @param direction
      * @param movement
      */

@@ -25,6 +25,37 @@ public class CameraEventObserver {
 
     private static final String TAG = CameraEventObserver.class.getSimpleName();
 
+    public static final String STATUS_ERROR = "Error";
+    public static final String STATUS_NOT_READY = "NotReady";
+    public static final String STATUS_IDLE = "IDLE";
+    public static final String STATUS_STILL_CAPTURING = "StillCapturing";
+    public static final String STATUS_STILL_SAVING = "StillSaving";
+    public static final String STATUS_MOVIE_WAIT_REC_START = "MovieWaitRecStart";
+    public static final String STATUS_MOVIE_RECORDING = "MovieRecording";
+    public static final String STATUS_MOVIE_WAIT_REC_STOP = "MovieWaitRecStop";
+    public static final String STATUS_MOVIE_SAVING = "MovieSaving";
+    public static final String STATUS_AUDIO_WAIT_REC_START = "AudioWaitRecStart";
+    public static final String STATUS_AUDIO_RECORDING = "AudioRecording";
+    public static final String STATUS_AUDIO_WAIT_REC_STOP = "AudioWaitRecStop";
+    public static final String STATUS_AUDIO_SAVING = "AudioSaving";
+    public static final String STATUS_INTERVAL_WAIT_REC_START = "IntervalWaitRecStart";
+    public static final String STATUS_INTERVAL_RECORDING = "IntervalRecording";
+    public static final String STATUS_INTERVAL_WAIT_REC_STOP = "IntervalWaitRecStop";
+    public static final String STATUS_LOOP_WAIT_REC_START = "LoopWaitRecStart";
+    public static final String STATUS_LOOP_RECORDING = "LoopRecording";
+    public static final String STATUS_LOOP_WAIT_REC_STOP = "LoopWaitRecStop";
+    public static final String STATUS_LOOP_SAVING = "LoopSaving";
+    public static final String STATUS_WHITE_BALANCE_ONE_PUSH_CAPTURING = "WhiteBalanceOnePushCapturing";
+    public static final String STATUS_XONTENTS_TRANSFER = "ContentsTransfer";
+    public static final String STATUS_STREAMING = "Streaming";
+    public static final String STATUS_DELETING = "Deleting";
+
+    public static final String SHOOT_MODE_STILL = "still";
+    public static final String SHOOT_MODE_MOVIE = "movie";
+    public static final String SHOOT_MODE_AUDIO = "audio";
+    public static final String SHOOT_MODE_INTERVALSTILL = "intervalstill";
+    public static final String SHOOT_MODE_LOOPREC = "looprec";
+
     /**
      * A listener interface to receive these changes. These methods will be
      * called by UI thread.
@@ -33,42 +64,42 @@ public class CameraEventObserver {
 
         /**
          * Called when the list of available APIs is modified.
-         * 
+         *
          * @param apis a list of available APIs
          */
         void onApiListModified(List<String> apis);
 
         /**
          * Called when the value of "Camera Status" is changed.
-         * 
+         *
          * @param status camera status (ex."IDLE")
          */
         void onCameraStatusChanged(String status);
 
         /**
          * Called when the value of "Liveview Status" is changed.
-         * 
+         *
          * @param status liveview status (ex.true)
          */
         void onLiveviewStatusChanged(boolean status);
 
         /**
          * Called when the value of "Shoot Mode" is changed.
-         * 
+         *
          * @param shootMode shoot mode (ex."still")
          */
         void onShootModeChanged(String shootMode);
 
         /**
          * Called when the value of "zoomPosition" is changed.
-         * 
+         *
          * @param zoomPosition zoom position (ex.12)
          */
         void onZoomPositionChanged(int zoomPosition);
 
         /**
          * Called when the value of "storageId" is changed.
-         * 
+         *
          * @param storageId storageId (ex. "Memory Card 1")
          */
         void onStorageIdChanged(String storageId);
@@ -139,8 +170,8 @@ public class CameraEventObserver {
 
     /**
      * Constructor.
-     * 
-     * @param context context to notify the changes by UI thread.
+     *
+     * @param context   context to notify the changes by UI thread.
      * @param apiClient API client
      */
     public CameraEventObserver(Context context, RemoteApi apiClient) {
@@ -156,9 +187,9 @@ public class CameraEventObserver {
 
     /**
      * Starts monitoring by continuously calling getEvent API.
-     * 
+     *
      * @return true if it successfully started, false if a monitoring is already
-     *         started.
+     * started.
      */
     public boolean start() {
         if (!mIsActive) {
@@ -179,7 +210,8 @@ public class CameraEventObserver {
                 Log.d(TAG, "start() exec.");
                 // Call getEvent API continuously.
                 boolean firstCall = true;
-                MONITORLOOP: while (mWhileEventMonitoring) {
+                MONITORLOOP:
+                while (mWhileEventMonitoring) {
 
                     // At first, call as non-Long Polling.
                     boolean longPolling = !firstCall;
@@ -303,7 +335,7 @@ public class CameraEventObserver {
 
     /**
      * Checks to see whether a monitoring is already started.
-     * 
+     *
      * @return true when monitoring is started.
      */
     public boolean isStarted() {
@@ -312,7 +344,7 @@ public class CameraEventObserver {
 
     /**
      * Sets a listener object.
-     * 
+     *
      * @param listener
      */
     public void setEventChangeListener(ChangeListener listener) {
@@ -328,7 +360,7 @@ public class CameraEventObserver {
 
     /**
      * Returns the current Camera Status value.
-     * 
+     *
      * @return camera status
      */
     public String getCameraStatus() {
@@ -337,7 +369,7 @@ public class CameraEventObserver {
 
     /**
      * Returns the current Camera Status value.
-     * 
+     *
      * @return camera status
      */
     public boolean getLiveviewStatus() {
@@ -346,7 +378,7 @@ public class CameraEventObserver {
 
     /**
      * Returns the current Shoot Mode value.
-     * 
+     *
      * @return shoot mode
      */
     public String getShootMode() {
@@ -355,7 +387,7 @@ public class CameraEventObserver {
 
     /**
      * Returns the current Zoom Position value.
-     * 
+     *
      * @return zoom position
      */
     public int getZoomPosition() {
@@ -364,7 +396,7 @@ public class CameraEventObserver {
 
     /**
      * Returns the current Storage Id value.
-     * 
+     *
      * @return
      */
     public String getStorageId() {
@@ -373,7 +405,7 @@ public class CameraEventObserver {
 
     /**
      * Notify the change of available APIs
-     * 
+     *
      * @param availableApis
      */
     private void fireApiListModifiedListener(final List<String> availableApis) {
@@ -389,7 +421,7 @@ public class CameraEventObserver {
 
     /**
      * Notify the change of Camera Status.
-     * 
+     *
      * @param status
      */
     private void fireCameraStatusChangeListener(final String status) {
@@ -405,7 +437,7 @@ public class CameraEventObserver {
 
     /**
      * Notify the change of Liveview Status.
-     * 
+     *
      * @param status
      */
     private void fireLiveviewStatusChangeListener(final boolean status) {
@@ -421,7 +453,7 @@ public class CameraEventObserver {
 
     /**
      * Notify the change of Shoot Mode.
-     * 
+     *
      * @param shootMode
      */
     private void fireShootModeChangeListener(final String shootMode) {
@@ -437,15 +469,15 @@ public class CameraEventObserver {
 
     /**
      * Notify the change of Zoom Information
-     * 
+     *
      * @param zoomIndexCurrentBox
      * @param zoomNumberBox
      * @param zoomPosition
      * @param zoomPositionCurrentBox
      */
     private void fireZoomInformationChangeListener(final int zoomIndexCurrentBox,
-            final int zoomNumberBox,
-            final int zoomPosition, final int zoomPositionCurrentBox) {
+                                                   final int zoomNumberBox,
+                                                   final int zoomPosition, final int zoomPositionCurrentBox) {
         mUiHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -458,7 +490,7 @@ public class CameraEventObserver {
 
     /**
      * Notify the change of Storage Id.
-     * 
+     *
      * @param storageId
      */
     private void fireStorageIdChangeListener(final String storageId) {
@@ -474,7 +506,7 @@ public class CameraEventObserver {
 
     /**
      * Finds and extracts an error code from reply JSON data.
-     * 
+     *
      * @param replyJson
      * @return
      * @throws JSONException
@@ -491,7 +523,7 @@ public class CameraEventObserver {
     /**
      * Finds and extracts a list of available APIs from reply JSON data. As for
      * getEvent v1.0, results[0] => "availableApiList"
-     * 
+     *
      * @param replyJson
      * @return
      * @throws JSONException
@@ -518,7 +550,7 @@ public class CameraEventObserver {
     /**
      * Finds and extracts a value of Camera Status from reply JSON data. As for
      * getEvent v1.0, results[1] => "cameraStatus"
-     * 
+     *
      * @param replyJson
      * @return
      * @throws JSONException
@@ -542,7 +574,7 @@ public class CameraEventObserver {
     /**
      * Finds and extracts a value of Liveview Status from reply JSON data. As
      * for getEvent v1.0, results[3] => "liveviewStatus"
-     * 
+     *
      * @param replyJson
      * @return
      * @throws JSONException
@@ -566,7 +598,7 @@ public class CameraEventObserver {
     /**
      * Finds and extracts a value of Shoot Mode from reply JSON data. As for
      * getEvent v1.0, results[21] => "shootMode"
-     * 
+     *
      * @param replyJson
      * @return
      * @throws JSONException
@@ -590,7 +622,7 @@ public class CameraEventObserver {
     /**
      * Finds and extracts a value of Zoom Information from reply JSON data. As
      * for getEvent v1.0, results[2] => "zoomInformation"
-     * 
+     *
      * @param replyJson
      * @return
      * @throws JSONException
@@ -614,7 +646,7 @@ public class CameraEventObserver {
     /**
      * Finds and extracts value of Storage Id from reply JSON data. As for
      * getEvent v1.0, results[10] => "storageInformation"
-     * 
+     *
      * @param replyJson
      * @return
      * @throws JSONException
