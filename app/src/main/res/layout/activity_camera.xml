@@ -2,37 +2,46 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
-    <com.chien.sony.cameraremote.StreamSurfaceView
+    <com.chien.sony.cameraremote.widget.StreamSurfaceView
         android:id="@+id/surfaceview_liveview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <ImageButton
-        android:id="@+id/btn_capture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
-        android:src="@drawable/btn_capture_general"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
 
-    <ImageButton
-        android:id="@+id/btn_settings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginBottom="10dp"
-        android:src="@drawable/btn_settings"/>
+        <ImageView
+            android:id="@+id/img_shoot_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true" />
+
+        <ImageButton
+            android:id="@+id/btn_capture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/btn_capture_general" />
+
+        <ImageButton
+            android:id="@+id/btn_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/btn_settings" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="#66FFFFFF"
         android:orientation="vertical"
-        android:paddingRight="10dp" >
+        android:paddingRight="10dp">
 
         <Spinner
             android:id="@+id/spinner_shoot_mode"
@@ -58,7 +67,7 @@
         android:layout_gravity="bottom|center_horizontal"
         android:layout_marginBottom="10dp"
         android:layout_weight="1"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/button_zoom_out"
@@ -66,8 +75,7 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:drawableLeft="@android:drawable/btn_minus"
-            android:visibility="gone" >
-        </Button>
+            android:visibility="gone"></Button>
 
         <Button
             android:id="@+id/button_zoom_in"
@@ -75,8 +83,7 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:drawableLeft="@android:drawable/btn_plus"
-            android:visibility="gone" >
-        </Button>
+            android:visibility="gone"></Button>
     </LinearLayout>
 
     <TextView

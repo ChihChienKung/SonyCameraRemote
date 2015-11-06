@@ -12,6 +12,9 @@ import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
 
+import com.chien.sony.cameraremote.api.RemoteApi;
+import com.chien.sony.cameraremote.utils.CameraCandidates;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +49,7 @@ public class CameraEventObserver {
     public static final String STATUS_LOOP_WAIT_REC_STOP = "LoopWaitRecStop";
     public static final String STATUS_LOOP_SAVING = "LoopSaving";
     public static final String STATUS_WHITE_BALANCE_ONE_PUSH_CAPTURING = "WhiteBalanceOnePushCapturing";
-    public static final String STATUS_XONTENTS_TRANSFER = "ContentsTransfer";
+    public static final String STATUS_CONTENTS_TRANSFER = "ContentsTransfer";
     public static final String STATUS_STREAMING = "Streaming";
     public static final String STATUS_DELETING = "Deleting";
 
@@ -612,6 +615,9 @@ public class CameraEventObserver {
             String type = shootModeObj.getString("type");
             if ("shootMode".equals(type)) {
                 shootMode = shootModeObj.getString("currentShootMode");
+                JSONArray jsonArray = shootModeObj.getJSONArray("shootModeCandidates");
+                List<String> shootModeList = CameraCandidates.getInstance().ShootMode;
+                thanData(shootModeList, jsonArray);
             } else {
                 Log.w(TAG, "Event reply: Illegal Index (21: ShootMode) " + type);
             }
@@ -669,5 +675,21 @@ public class CameraEventObserver {
         }
 
         return storageId;
+    }
+
+    private static void thanData(List<String> data, JSONArray jsonArray) throws JSONException {
+        if (data.size() == jsonArray.length()) {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                if (!data.contains(jsonArray.getString(i))) {
+                    data.clear();
+                    thanData(data, jsonArray);
+                }
+            }
+        } else {
+            data.clear();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                data.add(jsonArray.getString(i));
+            }
+        }
     }
 }

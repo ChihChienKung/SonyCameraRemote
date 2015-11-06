@@ -4,7 +4,9 @@
 
 package com.chien.sony.cameraremote;
 
+import com.chien.sony.cameraremote.api.RemoteApi;
 import com.chien.sony.cameraremote.utils.DisplayHelper;
+import com.chien.sony.cameraremote.widget.StreamSurfaceView;
 
 import org.json.JSONException;
 import org.json.JSONObject;

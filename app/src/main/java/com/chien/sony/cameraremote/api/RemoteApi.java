@@ -2,8 +2,9 @@
  * Copyright 2014 Sony Corporation
  */
 
-package com.chien.sony.cameraremote;
+package com.chien.sony.cameraremote.api;
 
+import com.chien.sony.cameraremote.ServerDevice;
 import com.chien.sony.cameraremote.ServerDevice.ApiService;
 import com.chien.sony.cameraremote.utils.CameraHttpClient;
 

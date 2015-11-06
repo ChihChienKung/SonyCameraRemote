@@ -2,14 +2,13 @@
  * Copyright 2014 Sony Corporation
  */
 
-package com.chien.sony.cameraremote.utils;
-
-import com.chien.sony.cameraremote.RemoteApi;
+package com.chien.sony.cameraremote.api;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.IOException;
@@ -23,6 +22,22 @@ public final class RemoteApiHelper {
     private static final String TAG = RemoteApiHelper.class.getSimpleName();
 
     private RemoteApiHelper() {
+
+    }
+
+    public static void setShootMode(final RemoteApi remoteApi, final String shootMode) {
+        new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    remoteApi.setShootMode(shootMode);
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+
+        }.start();
 
     }
 
@@ -108,10 +123,10 @@ public final class RemoteApiHelper {
         return replyJson;
     }
 
-    private static List<String> getSupportedStorages(RemoteApi simpleRemoteApi) throws IOException, JSONException {
+    private static List<String> getSupportedStorages(RemoteApi remoteApi) throws IOException, JSONException {
 
         // Confirm Scheme
-        JSONObject replyJsonScheme = simpleRemoteApi.getSchemeList();
+        JSONObject replyJsonScheme = remoteApi.getSchemeList();
 
         if (RemoteApi.isErrorReply(replyJsonScheme)) {
             JSONArray resultsObjScheme = replyJsonScheme.getJSONArray("error");
@@ -133,7 +148,7 @@ public final class RemoteApiHelper {
         }
 
         // Confirm Source
-        JSONObject replyJsonSource = simpleRemoteApi.getSourceList("storage");
+        JSONObject replyJsonSource = remoteApi.getSourceList("storage");
 
         if (RemoteApi.isErrorReply(replyJsonSource)) {
             JSONArray resultsObjSource = replyJsonSource.getJSONArray("error");

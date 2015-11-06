@@ -4,8 +4,9 @@
 
 package com.chien.sony.cameraremote;
 
+import com.chien.sony.cameraremote.api.RemoteApi;
 import com.chien.sony.cameraremote.utils.DisplayHelper;
-import com.chien.sony.cameraremote.utils.RemoteApiHelper;
+import com.chien.sony.cameraremote.api.RemoteApiHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;

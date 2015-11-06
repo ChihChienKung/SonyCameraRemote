@@ -126,9 +126,11 @@ public class CameraConnectActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.connect, menu);
-        if (Build.VERSION.SDK_INT < 21) {
+
+        CameraApplication application = (CameraApplication)getApplication();
+        if (application.isNeedMrVector()) {
             MenuItem item = menu.findItem(R.id.menu_refresh);
-            item.setIcon(MrVector.inflate(getResources(), R.drawable.refresh));
+            item.setIcon(application.getMrVectorDrawable(R.drawable.ic_refresh));
         }
         return true;
     }
@@ -378,9 +380,6 @@ public class CameraConnectActivity extends AppCompatActivity {
         finish();
     }
 
-    /**
-     * Adapter class for DeviceList
-     */
     private static class DeviceListAdapter extends BaseAdapter {
 
         private final List<ApPoint> mApPointList;
@@ -421,7 +420,7 @@ public class CameraConnectActivity extends AppCompatActivity {
 
         @Override
         public long getItemId(int position) {
-            return 0; // not fine
+            return position;
         }
 
         @Override

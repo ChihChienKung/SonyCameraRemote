@@ -4,18 +4,25 @@
 
 package com.chien.sony.cameraremote;
 
+import com.chien.sony.cameraremote.api.RemoteApi;
+import com.chien.sony.cameraremote.dialog.SettingDialog;
+import com.chien.sony.cameraremote.utils.CameraCandidates;
 import com.chien.sony.cameraremote.utils.DisplayHelper;
+import com.chien.sony.cameraremote.widget.StreamSurfaceView;
+
+import android.support.v4.app.FragmentManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -39,13 +46,15 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * An Activity class of Sample Camera screen.
+ * Created by Chien on 2015/10/29.
  */
-public class CameraActivity extends Activity {
+public class CameraActivity extends AppCompatActivity {
 
     private static final String TAG = CameraActivity.class.getSimpleName();
 
     private ImageButton mCapture, mSettings;
+
+    private ImageView mShootMode;
 
     private ImageView mImagePictureWipe;
 
@@ -86,10 +95,14 @@ public class CameraActivity extends Activity {
         app.setRemoteApi(mRemoteApi);
         mEventObserver = new CameraEventObserver(getApplicationContext(), mRemoteApi);
 
+        //TODO Check widget.
+        mLiveviewSurface = (StreamSurfaceView) findViewById(R.id.surfaceview_liveview);
         mCapture = (ImageButton) findViewById(R.id.btn_capture);
         mSettings = (ImageButton) findViewById(R.id.btn_settings);
+        mShootMode = (ImageView) findViewById(R.id.img_shoot_mode);
 
 
+        //TODO Not check widget.
         mImagePictureWipe = (ImageView) findViewById(R.id.image_picture_wipe);
         mSpinnerShootMode = (Spinner) findViewById(R.id.spinner_shoot_mode);
         mButtonZoomIn = (Button) findViewById(R.id.button_zoom_in);
@@ -171,26 +184,69 @@ public class CameraActivity extends Activity {
         super.onResume();
 
         mEventObserver.activate();
-        mLiveviewSurface = (StreamSurfaceView) findViewById(R.id.surfaceview_liveview);
-        mSpinnerShootMode.setFocusable(false);
-        mButtonContentsListMode.setEnabled(false);
-
         mCapture.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
+                String cameraStatus = mEventObserver.getCameraStatus();
+                String shootMode = mEventObserver.getShootMode();
 
-                //TODO if picture
-                takeAndFetchPicture();
-
-                //TODO if video
-                if ("MovieRecording".equals(mEventObserver.getCameraStatus())) {
-                    stopMovieRec();
-                } else if ("IDLE".equals(mEventObserver.getCameraStatus())) {
-                    startMovieRec();
+                if (CameraEventObserver.SHOOT_MODE_STILL.equals(shootMode)) {
+                    takeAndFetchPicture();
+                } else if (CameraEventObserver.SHOOT_MODE_MOVIE.equals(shootMode)) {
+                    if (CameraEventObserver.STATUS_MOVIE_RECORDING.equals(cameraStatus)) {
+                        stopMovieRec();
+                    } else if (CameraEventObserver.STATUS_IDLE.equals(cameraStatus)) {
+                        startMovieRec();
+                    }
+                } else if (CameraEventObserver.SHOOT_MODE_AUDIO.equals(shootMode)) {
+                    if (CameraEventObserver.STATUS_AUDIO_RECORDING.equals(cameraStatus)) {
+                        stopAudioRec();
+                    } else if (CameraEventObserver.STATUS_IDLE.equals(cameraStatus)) {
+                        startAudioRec();
+                    }
+                } else if (CameraEventObserver.SHOOT_MODE_INTERVALSTILL.equals(shootMode)) {
+                    if (CameraEventObserver.STATUS_INTERVAL_RECORDING.equals(cameraStatus)) {
+                        stopIntervalStillRec();
+                    } else if (CameraEventObserver.STATUS_IDLE.equals(cameraStatus)) {
+                        startIntervalStillRec();
+                    }
+                } else if (CameraEventObserver.SHOOT_MODE_LOOPREC.equals(shootMode)) {
+                    if (CameraEventObserver.STATUS_LOOP_RECORDING.equals(cameraStatus)) {
+                        stopLoopRec();
+                    } else if (CameraEventObserver.STATUS_IDLE.equals(cameraStatus)) {
+                        startLoopRec();
+                    }
                 }
             }
         });
+        mSettings.setOnClickListener(new View.OnClickListener() {
+            private SettingDialog mSettingDialog;
+
+            @Override
+            public void onClick(View view) {
+                if (mSettingDialog == null) {
+                    synchronized (CameraActivity.class) {
+                        if (mSettingDialog == null) {
+                            mSettingDialog = new SettingDialog();
+                            mSettingDialog.setOnDismissListener(mOnDismissListener);
+                            final FragmentManager a = getSupportFragmentManager();
+                            mSettingDialog.show(a, null);
+                        }
+                    }
+                }
+            }
+
+            private DialogInterface.OnDismissListener mOnDismissListener = new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialogInterface) {
+
+                }
+            };
+        });
+
+        mSpinnerShootMode.setFocusable(false);
+        mButtonContentsListMode.setEnabled(false);
+
 
         mImagePictureWipe.setOnClickListener(new View.OnClickListener() {
 
@@ -290,6 +346,7 @@ public class CameraActivity extends Activity {
     protected void onPause() {
         super.onPause();
         closeConnection();
+        CameraCandidates.clear();
 
         Log.d(TAG, "onPause() completed.");
     }
@@ -374,24 +431,27 @@ public class CameraActivity extends Activity {
         }.start();
     }
 
-    private static boolean isShootingStatus(String currentStatus) {
-        Set<String> shootingStatus = new HashSet<String>();
-        shootingStatus.add("IDLE");
-        shootingStatus.add("StillCapturing");
-        shootingStatus.add("StillSaving");
-        shootingStatus.add("MovieWaitRecStart");
-        shootingStatus.add("MovieRecording");
-        shootingStatus.add("MovieWaitRecStop");
-        shootingStatus.add("MovieSaving");
-        shootingStatus.add("IntervalWaitRecStart");
-        shootingStatus.add("IntervalRecording");
-        shootingStatus.add("IntervalWaitRecStop");
-        shootingStatus.add("AudioWaitRecStart");
-        shootingStatus.add("AudioRecording");
-        shootingStatus.add("AudioWaitRecStop");
-        shootingStatus.add("AudioSaving");
+    private static Set<String> mShootingStatus = new HashSet<String>();
 
-        return shootingStatus.contains(currentStatus);
+    static {
+        mShootingStatus.add("IDLE");
+        mShootingStatus.add("StillCapturing");
+        mShootingStatus.add("StillSaving");
+        mShootingStatus.add("MovieWaitRecStart");
+        mShootingStatus.add("MovieRecording");
+        mShootingStatus.add("MovieWaitRecStop");
+        mShootingStatus.add("MovieSaving");
+        mShootingStatus.add("IntervalWaitRecStart");
+        mShootingStatus.add("IntervalRecording");
+        mShootingStatus.add("IntervalWaitRecStop");
+        mShootingStatus.add("AudioWaitRecStart");
+        mShootingStatus.add("AudioRecording");
+        mShootingStatus.add("AudioWaitRecStop");
+        mShootingStatus.add("AudioSaving");
+    }
+
+    private static boolean isShootingStatus(String currentStatus) {
+        return mShootingStatus.contains(currentStatus);
     }
 
     private void startOpenConnectionAfterChangeCameraState() {
@@ -407,7 +467,7 @@ public class CameraActivity extends Activity {
                             @Override
                             public void onCameraStatusChanged(String status) {
                                 Log.d(TAG, "onCameraStatusChanged:" + status);
-                                if ("IDLE".equals(status)) {
+                                if (CameraEventObserver.STATUS_IDLE.equals(status)) {
                                     openConnection();
                                 }
                                 refreshUi();
@@ -434,7 +494,6 @@ public class CameraActivity extends Activity {
      * and showing liveview.
      */
     private void openConnection() {
-
         mEventObserver.setEventChangeListener(mEventListener);
         new Thread() {
 
@@ -549,25 +608,27 @@ public class CameraActivity extends Activity {
         Log.d(TAG, "closeConnection(): completed.");
     }
 
-    /**
-     * Refresh UI appearance along with current "cameraStatus" and "shootMode".
-     */
     private void refreshUi() {
+        CameraApplication application = (CameraApplication)getApplication();
         String cameraStatus = mEventObserver.getCameraStatus();
         String shootMode = mEventObserver.getShootMode();
 
         // CameraStatus TextView
         mTextCameraStatus.setText(cameraStatus);
 
+        refreshShootModeIcon();
+
+
+
         if (CameraEventObserver.SHOOT_MODE_STILL.equals(shootMode)) {
-            if(CameraEventObserver.STATUS_IDLE.equals(cameraStatus)){
+            if (CameraEventObserver.STATUS_IDLE.equals(cameraStatus)) {
                 mCapture.setEnabled(true);
                 mCapture.setImageResource(R.drawable.btn_capture_still);
-            }else{
+            } else {
                 mCapture.setEnabled(false);
             }
-        } else if (CameraEventObserver.SHOOT_MODE_MOVIE.equals(shootMode)) {
-            if (CameraEventObserver.STATUS_MOVIE_RECORDING.equals(cameraStatus)) {
+        } else if (CameraEventObserver.SHOOT_MODE_MOVIE.equals(shootMode) || CameraEventObserver.SHOOT_MODE_AUDIO.equals(shootMode) || CameraEventObserver.SHOOT_MODE_INTERVALSTILL.equals(shootMode) || CameraEventObserver.SHOOT_MODE_LOOPREC.equals(shootMode)) {
+            if (CameraEventObserver.STATUS_MOVIE_RECORDING.equals(cameraStatus) || CameraEventObserver.STATUS_AUDIO_RECORDING.equals(cameraStatus) || CameraEventObserver.STATUS_INTERVAL_RECORDING.equals(cameraStatus) || CameraEventObserver.STATUS_LOOP_RECORDING.equals(cameraStatus)) {
                 mCapture.setEnabled(true);
                 mCapture.setImageResource(R.drawable.btn_capture_rec_stop);
             } else if (CameraEventObserver.STATUS_IDLE.equals(cameraStatus)) {
@@ -604,6 +665,41 @@ public class CameraActivity extends Activity {
             } else {
                 mButtonContentsListMode.setEnabled(true);
             }
+        }
+    }
+
+    private void refreshShootModeIcon(){
+        CameraApplication application = (CameraApplication)getApplication();
+        String shootMode = mEventObserver.getShootMode();
+        int resId;
+        switch (shootMode) {
+            case CameraEventObserver.SHOOT_MODE_STILL:
+                resId = R.drawable.ic_still;
+                break;
+            case CameraEventObserver.SHOOT_MODE_MOVIE:
+                resId = R.drawable.ic_movie;
+                break;
+            case CameraEventObserver.SHOOT_MODE_AUDIO:
+                resId = R.drawable.ic_audio;
+                break;
+            case CameraEventObserver.SHOOT_MODE_INTERVALSTILL:
+                resId = R.drawable.ic_intervalstill;
+                break;
+            case CameraEventObserver.SHOOT_MODE_LOOPREC:
+                resId = R.drawable.ic_looprec;
+                break;
+            default:
+                throw new NullPointerException("No have shoot mode.");
+        }
+        setImageDrawable(mShootMode, resId);
+    }
+
+    private void setImageDrawable(ImageView imageView, int resId){
+        CameraApplication application = (CameraApplication)getApplication();
+        if(application.isNeedMrVector()){
+            imageView.setImageDrawable(application.getMrVectorDrawable(resId));
+        }else{
+            imageView.setImageResource(resId);
         }
     }
 
@@ -950,9 +1046,6 @@ public class CameraActivity extends Activity {
         }.start();
     }
 
-    /**
-     * Call startMovieRec
-     */
     private void startMovieRec() {
         new Thread() {
 
@@ -979,9 +1072,6 @@ public class CameraActivity extends Activity {
         }.start();
     }
 
-    /**
-     * Call stopMovieRec
-     */
     private void stopMovieRec() {
         new Thread() {
 
@@ -1003,6 +1093,162 @@ public class CameraActivity extends Activity {
                     Log.w(TAG, "stopMovieRec: IOException: " + e.getMessage());
                 } catch (JSONException e) {
                     Log.w(TAG, "stopMovieRec: JSON format error.");
+                }
+            }
+        }.start();
+    }
+
+    private void startAudioRec() {
+        new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    Log.d(TAG, "startAudioRec: exec.");
+                    JSONObject replyJson = mRemoteApi.startAudioRec();
+                    JSONArray resultsObj = replyJson.getJSONArray("result");
+                    int resultCode = resultsObj.getInt(0);
+                    if (resultCode == 0) {
+                        DisplayHelper.toast(getApplicationContext(), R.string.msg_rec_start);
+                    } else {
+                        Log.w(TAG, "startAudioRec: error: " + resultCode);
+                        DisplayHelper.toast(getApplicationContext(), //
+                                R.string.msg_error_api_calling);
+                    }
+                } catch (IOException e) {
+                    Log.w(TAG, "startAudioRec: IOException: " + e.getMessage());
+                } catch (JSONException e) {
+                    Log.w(TAG, "startAudioRec: JSON format error.");
+                }
+            }
+        }.start();
+    }
+
+    private void stopAudioRec() {
+        new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    Log.d(TAG, "stopAudioRec: exec.");
+                    JSONObject replyJson = mRemoteApi.stopAudioRec();
+                    JSONArray resultsObj = replyJson.getJSONArray("result");
+                    String thumbnailUrl = resultsObj.getString(0);
+                    if (thumbnailUrl != null) {
+                        DisplayHelper.toast(getApplicationContext(), R.string.msg_rec_stop);
+                    } else {
+                        Log.w(TAG, "stopAudioRec: error");
+                        DisplayHelper.toast(getApplicationContext(), //
+                                R.string.msg_error_api_calling);
+                    }
+                } catch (IOException e) {
+                    Log.w(TAG, "stopAudioRec: IOException: " + e.getMessage());
+                } catch (JSONException e) {
+                    Log.w(TAG, "stopAudioRec: JSON format error.");
+                }
+            }
+        }.start();
+    }
+
+    private void startIntervalStillRec() {
+        new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    Log.d(TAG, "startIntervalStillRec: exec.");
+                    JSONObject replyJson = mRemoteApi.startIntervalStillRec();
+                    JSONArray resultsObj = replyJson.getJSONArray("result");
+                    int resultCode = resultsObj.getInt(0);
+                    if (resultCode == 0) {
+                        DisplayHelper.toast(getApplicationContext(), R.string.msg_rec_start);
+                    } else {
+                        Log.w(TAG, "startIntervalStillRec: error: " + resultCode);
+                        DisplayHelper.toast(getApplicationContext(), //
+                                R.string.msg_error_api_calling);
+                    }
+                } catch (IOException e) {
+                    Log.w(TAG, "startIntervalStillRec: IOException: " + e.getMessage());
+                } catch (JSONException e) {
+                    Log.w(TAG, "startIntervalStillRec: JSON format error.");
+                }
+            }
+        }.start();
+    }
+
+    private void stopIntervalStillRec() {
+        new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    Log.d(TAG, "stopIntervalStillRec: exec.");
+                    JSONObject replyJson = mRemoteApi.stopIntervalStillRec();
+                    JSONArray resultsObj = replyJson.getJSONArray("result");
+                    String thumbnailUrl = resultsObj.getString(0);
+                    if (thumbnailUrl != null) {
+                        DisplayHelper.toast(getApplicationContext(), R.string.msg_rec_stop);
+                    } else {
+                        Log.w(TAG, "stopIntervalStillRec: error");
+                        DisplayHelper.toast(getApplicationContext(), //
+                                R.string.msg_error_api_calling);
+                    }
+                } catch (IOException e) {
+                    Log.w(TAG, "stopIntervalStillRec: IOException: " + e.getMessage());
+                } catch (JSONException e) {
+                    Log.w(TAG, "stopIntervalStillRec: JSON format error.");
+                }
+            }
+        }.start();
+    }
+
+    private void startLoopRec() {
+        new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    Log.d(TAG, "startLoopRec: exec.");
+                    JSONObject replyJson = mRemoteApi.startLoopRec();
+                    JSONArray resultsObj = replyJson.getJSONArray("result");
+                    int resultCode = resultsObj.getInt(0);
+                    if (resultCode == 0) {
+                        DisplayHelper.toast(getApplicationContext(), R.string.msg_rec_start);
+                    } else {
+                        Log.w(TAG, "startLoopRec: error: " + resultCode);
+                        DisplayHelper.toast(getApplicationContext(), //
+                                R.string.msg_error_api_calling);
+                    }
+                } catch (IOException e) {
+                    Log.w(TAG, "startLoopRec: IOException: " + e.getMessage());
+                } catch (JSONException e) {
+                    Log.w(TAG, "startLoopRec: JSON format error.");
+                }
+            }
+        }.start();
+    }
+
+    private void stopLoopRec() {
+        new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    Log.d(TAG, "stopLoopRec: exec.");
+                    JSONObject replyJson = mRemoteApi.stopLoopRec();
+                    JSONArray resultsObj = replyJson.getJSONArray("result");
+                    String thumbnailUrl = resultsObj.getString(0);
+                    if (thumbnailUrl != null) {
+                        DisplayHelper.toast(getApplicationContext(), R.string.msg_rec_stop);
+                    } else {
+                        Log.w(TAG, "stopLoopRec: error");
+                        DisplayHelper.toast(getApplicationContext(), //
+                                R.string.msg_error_api_calling);
+                    }
+                } catch (IOException e) {
+                    Log.w(TAG, "stopLoopRec: IOException: " + e.getMessage());
+                } catch (JSONException e) {
+                    Log.w(TAG, "stopLoopRec: JSON format error.");
                 }
             }
         }.start();
@@ -1076,7 +1322,7 @@ public class CameraActivity extends Activity {
             @Override
             public void onCameraStatusChanged(String status) {
                 Log.d(TAG, "onCameraStatusChanged:" + status);
-                if ("ContentsTransfer".equals(status)) {
+                if (CameraEventObserver.STATUS_CONTENTS_TRANSFER.equals(status)) {
                     // start ContentsList mode
                     Intent intent = new Intent(getApplicationContext(), DateListActivity.class);
                     startActivity(intent);

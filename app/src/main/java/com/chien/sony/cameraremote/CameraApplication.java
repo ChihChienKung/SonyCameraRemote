@@ -6,7 +6,10 @@ package com.chien.sony.cameraremote;
 
 import android.app.Application;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 
+import com.chien.sony.cameraremote.api.RemoteApi;
 import com.telly.mrvector.MrVector;
 
 import java.util.Set;
@@ -74,6 +77,14 @@ public class CameraApplication extends Application {
      */
     public Set<String> getSupportedApiList() {
         return mSupportedApiSet;
+    }
+
+    public boolean isNeedMrVector(){
+        return Build.VERSION.SDK_INT < 21;
+    }
+
+    public Drawable getMrVectorDrawable(int resId){
+        return MrVector.inflate(getResources(), R.drawable.ic_refresh);
     }
 
     @Override
