@@ -1,31 +1,26 @@
-<?xml version="1.0" encoding="utf-8"?>
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:auto="http://schemas.android.com/apk/res-auto"
+﻿<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:targetApi="21"
-
     android:width="24dp"
     android:height="24dp"
-    android:viewportHeight="24"
+    app:width="24dp"
+    app:height="24dp"
     android:viewportWidth="24"
-
-    auto:width="24dp"
-    auto:height="24dp"
-    auto:viewportHeight="24"
-    auto:viewportWidth="24">
+    app:viewportWidth="24"
+    android:viewportHeight="24"
+    app:viewportHeight="24">
 
     <path
-        android:fillColor="#000000"
+        android:fillColor="#ffffff"
+        app:fillColor="#ffffff"
         android:pathData="M18 3v2h-2V3H8v2H6V3H4v18h2v-2h2v2h8v-2h2v2h2V3h-2zM8
 17H6v-2h2v2zm0-4H6v-2h2v2zm0-4H6V7h2v2zm10
 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2z"
-
-        auto:fillColor="#000000"
-        auto:pathData="M18 3v2h-2V3H8v2H6V3H4v18h2v-2h2v2h8v-2h2v2h2V3h-2zM8
+        app:pathData="M18 3v2h-2V3H8v2H6V3H4v18h2v-2h2v2h8v-2h2v2h2V3h-2zM8
 17H6v-2h2v2zm0-4H6v-2h2v2zm0-4H6V7h2v2zm10
 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2z" />
     <path
         android:pathData="M0 0h24v24H0z"
-
-        auto:pathData="M0 0h24v24H0z" />
+        app:pathData="M0 0h24v24H0z" />
 </vector>

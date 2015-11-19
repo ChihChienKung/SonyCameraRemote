@@ -1,25 +1,11 @@
 <!-- Copyright 2014 Sony Corporation -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary">
-
-        <ProgressBar
-            android:id="@+id/toolbar_progress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:visibility="gone"/>
-    </android.support.v7.widget.Toolbar>
+    android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/connect_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="35dp"
@@ -31,8 +17,18 @@
         android:id="@+id/list_device"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/connect_message"
         android:layout_marginTop="10dp"
         android:paddingLeft="30dp"
         android:paddingRight="30dp" />
 
-</LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btn_refresh"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp"
+        app:borderWidth="0dp"/>
+</RelativeLayout>

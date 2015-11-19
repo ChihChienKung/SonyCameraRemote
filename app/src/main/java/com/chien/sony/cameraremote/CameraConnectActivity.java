@@ -4,40 +4,35 @@
 
 package com.chien.sony.cameraremote;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.AnimationDrawable;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiConfiguration.KeyMgmt;
 import android.net.wifi.WifiConfiguration.AuthAlgorithm;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.design.widget.FloatingActionButton;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chien.sony.cameraremote.receiver.WifiBroadcastReceiver;
 import com.chien.sony.cameraremote.widget.ApPoint;
-import com.telly.mrvector.MrVector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +40,7 @@ import java.util.List;
 /**
  * An Activity class of Device Discovery screen.
  */
-public class CameraConnectActivity extends AppCompatActivity {
+public class CameraConnectActivity extends Activity {
 
     private static final String TAG = CameraConnectActivity.class.getSimpleName();
 
@@ -57,9 +52,7 @@ public class CameraConnectActivity extends AppCompatActivity {
 
     private DeviceListAdapter mListAdapter;
 
-    private ProgressBar mProgressBar;
-
-    private Toolbar mToolbar;
+    private FloatingActionButton mRefresh;
 
     private ConnectTask mTask;
 
@@ -70,15 +63,14 @@ public class CameraConnectActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connect_camera);
 
-        mProgressBar = (ProgressBar) findViewById(R.id.toolbar_progress);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        setSupportActionBar(mToolbar);
+        mRefresh = (FloatingActionButton) findViewById(R.id.btn_refresh);
 
         mSsdpClient = new SsdpClient();
         mListAdapter = new DeviceListAdapter(this);
-
+        loading(false);
         Log.d(TAG, "onCreate() completed.");
+
+        mRefresh.setOnClickListener(mOnClickListener);
     }
 
     @Override
@@ -122,41 +114,19 @@ public class CameraConnectActivity extends AppCompatActivity {
         Log.d(TAG, "onPause() completed.");
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.connect, menu);
-
-        CameraApplication application = (CameraApplication)getApplication();
-        if (application.isNeedMrVector()) {
-            MenuItem item = menu.findItem(R.id.menu_refresh);
-            item.setIcon(application.getMrVectorDrawable(R.drawable.ic_refresh));
+    private void loading(boolean enable) {
+        if (enable) {
+            mRefresh.setImageResource(android.R.drawable.ic_popup_sync);
+            AnimationDrawable animationDrawable = (AnimationDrawable) mRefresh.getDrawable();
+            animationDrawable.start();
+        } else {
+            CameraApplication application = (CameraApplication) getApplication();
+            if (application.isNeedMrVector()) {
+                mRefresh.setImageDrawable(application.getMrVectorDrawable(R.drawable.ic_refresh));
+            } else {
+                mRefresh.setImageResource(R.drawable.ic_refresh);
+            }
         }
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int item_id = item.getItemId();
-        switch (item_id) {
-            case R.id.menu_refresh:
-                wifiScan();
-                break;
-        }
-        return true;
-    }
-
-    private void progressBarVisibility(boolean visible) {
-        int visibility = visible ? View.VISIBLE : View.GONE;
-        if (visibility != mProgressBar.getVisibility())
-            mProgressBar.setVisibility(visibility);
-    }
-
-    private void menuRefreshVisibility(boolean visible) {
-        MenuItem item = mToolbar.getMenu().findItem(R.id.menu_refresh);
-
-        if (item != null && visible != item.isVisible())
-            item.setVisible(visible);
 
     }
 
@@ -200,8 +170,7 @@ public class CameraConnectActivity extends AppCompatActivity {
         if (mWifiScanActive == scannable)
             return;
         mWifiScanActive = scannable;
-        progressBarVisibility(scannable);
-        menuRefreshVisibility(!scannable);
+        loading(scannable);
         if (scannable)
             registerReceiver();
         else
@@ -364,21 +333,31 @@ public class CameraConnectActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Launch a SampleCameraActivity.
-     *
-     * @param device
-     */
     private void launchCameraActivity(ServerDevice device) {
         Log.d(TAG, "connect to " + device.getFriendlyName());
 
-        // Set target ServerDevice instance to control in Activity.
         CameraApplication app = (CameraApplication) getApplication();
         app.setTargetServerDevice(device);
         Intent intent = new Intent(this, CameraActivity.class);
         startActivity(intent);
         finish();
     }
+
+    private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            wifiScan();
+        }
+    };
+
+    private final WifiBroadcastReceiver.OnWifiScanListener mOnWifiScanListener = new WifiBroadcastReceiver.OnWifiScanListener() {
+
+        @Override
+        public void scanResults(final List<ApPoint> apPoints) {
+            mListAdapter.addDevice(apPoints);
+        }
+
+    };
 
     private static class DeviceListAdapter extends BaseAdapter {
 
@@ -450,15 +429,6 @@ public class CameraConnectActivity extends AppCompatActivity {
             return textView;
         }
     }
-
-    private final WifiBroadcastReceiver.OnWifiScanListener mOnWifiScanListener = new WifiBroadcastReceiver.OnWifiScanListener() {
-
-        @Override
-        public void scanResults(final List<ApPoint> apPoints) {
-            mListAdapter.addDevice(apPoints);
-        }
-
-    };
 
     private class ConnectTask extends AsyncTask<Void, Integer, String> {
         private final ApPoint mApPoint;

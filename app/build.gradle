@@ -20,4 +20,5 @@ android {
 dependencies {
     compile 'com.telly:mrvector:0.2.0'
     compile 'com.android.support:appcompat-v7:23.1.0'
+    compile 'com.android.support:design:23.1.0'
 }

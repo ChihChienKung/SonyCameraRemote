@@ -25,6 +25,12 @@ public class CameraApplication extends Application {
 
     private Set<String> mSupportedApiSet;
 
+    {{
+        MrVector.register(
+                R.drawable.ic_refresh
+        );
+    }}
+
     /**
      * Sets a target ServerDevice object.
      * 
@@ -84,7 +90,7 @@ public class CameraApplication extends Application {
     }
 
     public Drawable getMrVectorDrawable(int resId){
-        return MrVector.inflate(getResources(), R.drawable.ic_refresh);
+        return MrVector.inflate(getResources(), resId);
     }
 
     @Override
