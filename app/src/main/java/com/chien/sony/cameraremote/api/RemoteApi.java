@@ -76,7 +76,7 @@ public class RemoteApi {
     // Camera Service APIs
     private JSONObject command(String version, String service, String mothod, Object... params) throws IOException {
         JSONArray jsonArray = new JSONArray();
-        if (params.length > 1)
+        if (params.length > 0)
             for (Object obj : params)
                 jsonArray.put(obj);
         try {
@@ -114,7 +114,7 @@ public class RemoteApi {
     }
 
     public JSONObject setShootMode(String shootMode) throws IOException {
-        return command_v1_0(API_SERVICE_CAMERA, "getShootMode", shootMode);
+        return command_v1_0(API_SERVICE_CAMERA, "setShootMode", shootMode);
     }
 
     public JSONObject getShootMode() throws IOException {

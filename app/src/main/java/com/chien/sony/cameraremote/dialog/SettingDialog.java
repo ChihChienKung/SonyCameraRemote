@@ -3,6 +3,7 @@ package com.chien.sony.cameraremote.dialog;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.chien.sony.cameraremote.CameraEventObserver;
 import com.chien.sony.cameraremote.R;
 import com.chien.sony.cameraremote.utils.CameraCandidates;
 
@@ -33,22 +35,21 @@ public class SettingDialog extends ListDialog {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 
                 ItemAdapter adapter = (ItemAdapter) getAdapter();
-                switch (adapter.getItem(position)) {
-                    case "ShootMode":
-                        if(!isDialogExist()){
-                            mShowDialog = new ShootModeChooseDialog();
-                            showDialog();
-                        }
-                        break;
+                String selected = adapter.getItem(position);
+                if("ShootMode".equals(selected)){
+                    if (!isDialogExist()) {
+                        mShowDialog = new ShootModeChooseDialog();
+                        showDialog();
+                    }
                 }
             }
         });
     }
 
-    private boolean isDialogExist(){
-        if(mShowDialog == null){
-            synchronized (SettingDialog.class){
-                if(mShowDialog == null){
+    private boolean isDialogExist() {
+        if (mShowDialog == null) {
+            synchronized (SettingDialog.class) {
+                if (mShowDialog == null) {
                     return false;
                 }
             }
@@ -56,7 +57,7 @@ public class SettingDialog extends ListDialog {
         return true;
     }
 
-    private void showDialog(){
+    private void showDialog() {
         mShowDialog.setOnDismissListener(mOnDismissListener);
         mShowDialog.show(getFragmentManager(), null);
     }
@@ -64,9 +65,9 @@ public class SettingDialog extends ListDialog {
     private DialogInterface.OnDismissListener mOnDismissListener = new DialogInterface.OnDismissListener() {
         @Override
         public void onDismiss(DialogInterface dialogInterface) {
-            if(mShowDialog != null){
-                synchronized (SettingDialog.class){
-                    if(mShowDialog != null){
+            if (mShowDialog != null) {
+                synchronized (SettingDialog.class) {
+                    if (mShowDialog != null) {
                         mShowDialog = null;
                     }
                 }
@@ -83,7 +84,7 @@ public class SettingDialog extends ListDialog {
             CameraCandidates cameraCandidates = CameraCandidates.getInstance();
 
             mItemList = new ArrayList<String>();
-            if(cameraCandidates.ShootMode.size() > 0) {
+            if (cameraCandidates.ShootMode.size() > 0) {
                 mItemList.add("ShootMode");
             }
 

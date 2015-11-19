@@ -32,7 +32,6 @@ public abstract class ListDialog extends DialogFragment {
         final View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_list, null);
         init(view);
         dialog.setContentView(view);
-        dialog.getWindow().setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         return dialog;
     }
 

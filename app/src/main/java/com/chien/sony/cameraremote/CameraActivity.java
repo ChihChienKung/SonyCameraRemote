@@ -10,8 +10,6 @@ import com.chien.sony.cameraremote.utils.CameraCandidates;
 import com.chien.sony.cameraremote.utils.DisplayHelper;
 import com.chien.sony.cameraremote.widget.StreamSurfaceView;
 
-import android.support.v4.app.FragmentManager;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,7 +24,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -86,7 +83,6 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_camera);
 
         CameraApplication app = (CameraApplication) getApplication();
@@ -229,8 +225,7 @@ public class CameraActivity extends AppCompatActivity {
                         if (mSettingDialog == null) {
                             mSettingDialog = new SettingDialog();
                             mSettingDialog.setOnDismissListener(mOnDismissListener);
-                            final FragmentManager a = getSupportFragmentManager();
-                            mSettingDialog.show(a, null);
+                            mSettingDialog.show(getSupportFragmentManager(), null);
                         }
                     }
                 }
@@ -239,7 +234,13 @@ public class CameraActivity extends AppCompatActivity {
             private DialogInterface.OnDismissListener mOnDismissListener = new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialogInterface) {
-
+                    if (mSettingDialog != null) {
+                        synchronized (CameraActivity.class) {
+                            if (mSettingDialog != null) {
+                                mSettingDialog = null;
+                            }
+                        }
+                    }
                 }
             };
         });
@@ -609,16 +610,14 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     private void refreshUi() {
-        CameraApplication application = (CameraApplication)getApplication();
+        CameraApplication application = (CameraApplication) getApplication();
         String cameraStatus = mEventObserver.getCameraStatus();
         String shootMode = mEventObserver.getShootMode();
 
         // CameraStatus TextView
         mTextCameraStatus.setText(cameraStatus);
 
-        refreshShootModeIcon();
-
-
+        refreshShootModeICon();
 
         if (CameraEventObserver.SHOOT_MODE_STILL.equals(shootMode)) {
             if (CameraEventObserver.STATUS_IDLE.equals(cameraStatus)) {
@@ -668,37 +667,32 @@ public class CameraActivity extends AppCompatActivity {
         }
     }
 
-    private void refreshShootModeIcon(){
-        CameraApplication application = (CameraApplication)getApplication();
+    private void refreshShootModeICon() {
+        CameraApplication application = (CameraApplication) getApplication();
         String shootMode = mEventObserver.getShootMode();
         int resId;
-        switch (shootMode) {
-            case CameraEventObserver.SHOOT_MODE_STILL:
-                resId = R.drawable.ic_still;
-                break;
-            case CameraEventObserver.SHOOT_MODE_MOVIE:
-                resId = R.drawable.ic_movie;
-                break;
-            case CameraEventObserver.SHOOT_MODE_AUDIO:
-                resId = R.drawable.ic_audio;
-                break;
-            case CameraEventObserver.SHOOT_MODE_INTERVALSTILL:
-                resId = R.drawable.ic_intervalstill;
-                break;
-            case CameraEventObserver.SHOOT_MODE_LOOPREC:
-                resId = R.drawable.ic_looprec;
-                break;
-            default:
-                throw new NullPointerException("No have shoot mode.");
+        if (CameraEventObserver.SHOOT_MODE_STILL.equals(shootMode)) {
+            resId = R.drawable.ic_still;
+        } else if (CameraEventObserver.SHOOT_MODE_MOVIE.equals(shootMode)) {
+            resId = R.drawable.ic_movie;
+        } else if (CameraEventObserver.SHOOT_MODE_AUDIO.equals(shootMode)) {
+            resId = R.drawable.ic_audio;
+        } else if (CameraEventObserver.SHOOT_MODE_INTERVALSTILL.equals(shootMode)) {
+            resId = R.drawable.ic_intervalstill;
+        } else if (CameraEventObserver.SHOOT_MODE_LOOPREC.equals(shootMode)) {
+            resId = R.drawable.ic_looprec;
+        } else {
+            throw new NullPointerException("No have shoot mode.");
         }
+
         setImageDrawable(mShootMode, resId);
     }
 
-    private void setImageDrawable(ImageView imageView, int resId){
-        CameraApplication application = (CameraApplication)getApplication();
-        if(application.isNeedMrVector()){
+    private void setImageDrawable(ImageView imageView, int resId) {
+        CameraApplication application = (CameraApplication) getApplication();
+        if (application.isNeedMrVector()) {
             imageView.setImageDrawable(application.getMrVectorDrawable(resId));
-        }else{
+        } else {
             imageView.setImageResource(resId);
         }
     }
