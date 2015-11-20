@@ -51,12 +51,13 @@ public class CameraActivity extends AppCompatActivity {
 
     private ImageButton mCapture, mSettings;
 
+
+
     private ImageView mShootMode;
 
     private ImageView mImagePictureWipe;
 
     private Spinner mSpinnerShootMode;
-
 
     private Button mButtonZoomIn;
 
@@ -610,15 +611,21 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     private void refreshUi() {
+        if(!mEventObserver.isStarted()){
+            mEventObserver.start();
+        }
+
         CameraApplication application = (CameraApplication) getApplication();
         String cameraStatus = mEventObserver.getCameraStatus();
         String shootMode = mEventObserver.getShootMode();
 
         // CameraStatus TextView
         mTextCameraStatus.setText(cameraStatus);
-
-        refreshShootModeICon();
-
+        try {
+            refreshShootModeICon();
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
         if (CameraEventObserver.SHOOT_MODE_STILL.equals(shootMode)) {
             if (CameraEventObserver.STATUS_IDLE.equals(cameraStatus)) {
                 mCapture.setEnabled(true);
@@ -682,7 +689,7 @@ public class CameraActivity extends AppCompatActivity {
         } else if (CameraEventObserver.SHOOT_MODE_LOOPREC.equals(shootMode)) {
             resId = R.drawable.ic_looprec;
         } else {
-            throw new NullPointerException("No have shoot mode.");
+            throw new NullPointerException("No have shoot mode. shootMode="+shootMode);
         }
 
         setImageDrawable(mShootMode, resId);

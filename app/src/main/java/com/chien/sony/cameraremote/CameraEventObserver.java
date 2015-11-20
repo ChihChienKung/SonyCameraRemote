@@ -185,6 +185,7 @@ public class CameraEventObserver {
             throw new IllegalArgumentException("apiClient is null.");
         }
         mRemoteApi = apiClient;
+        mRemoteApi.addOnCommandListener(mOnCommandListener);
         mUiHandler = new Handler(context.getMainLooper());
     }
 
@@ -297,12 +298,13 @@ public class CameraEventObserver {
 
                         // :
                         // : add implementation for Event data as necessary.
-
                     } catch (IOException e) {
                         // Occurs when the server is not available now.
+                        e.printStackTrace();
                         Log.d(TAG, "getEvent timeout by client trigger.");
                         break MONITORLOOP;
                     } catch (JSONException e) {
+                        e.printStackTrace();
                         Log.w(TAG, "getEvent: JSON format error. " + e.getMessage());
                         break MONITORLOOP;
                     }
@@ -692,4 +694,12 @@ public class CameraEventObserver {
             }
         }
     }
+
+    private final RemoteApi.OnCommandListener mOnCommandListener = new RemoteApi.OnCommandListener() {
+        @Override
+        public void OnCommand(String version, String service, String mothod) {
+            if(mIsActive && !isStarted())
+                start();
+        }
+    };
 }

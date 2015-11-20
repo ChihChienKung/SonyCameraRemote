@@ -24,6 +24,16 @@ public class CameraApplication extends Application {
     private RemoteApi mRemoteApi;
 
     private Set<String> mSupportedApiSet;
+    {{
+        MrVector.register(
+                R.drawable.ic_refresh,
+                R.drawable.ic_still,
+                R.drawable.ic_movie,
+                R.drawable.ic_intervalstill,
+                R.drawable.ic_audio,
+                R.drawable.ic_looprec
+        );
+    }}
 
     {{
         MrVector.register(

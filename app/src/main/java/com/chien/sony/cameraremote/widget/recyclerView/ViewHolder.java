@@ -2,6 +2,7 @@
 package com.chien.sony.cameraremote.widget.recyclerView;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,19 +22,19 @@ public class ViewHolder extends RecyclerView.ViewHolder implements OnClickListen
     @Override
     public void onClick(final View v) {
         if (mOnItemAction != null)
-            mOnItemAction.onItemClick(v, getPosition());
+            mOnItemAction.onItemClick(v, getAdapterPosition());
     }
 
     @Override
     public void onFocusChange(final View v, final boolean hasFocus) {
         if (mOnItemAction != null)
-            mOnItemAction.onItemFocusChange(v, getPosition(), hasFocus);
+            mOnItemAction.onItemFocusChange(v, getAdapterPosition(), hasFocus);
     }
 
     @Override
     public boolean onKey(final View v, final int keyCode, final KeyEvent event) {
         if (mOnItemAction != null)
-            return mOnItemAction.onItemKey(v, getPosition(), keyCode, event);
+            return mOnItemAction.onItemKey(v, getAdapterPosition(), keyCode, event);
         return false;
     }
 

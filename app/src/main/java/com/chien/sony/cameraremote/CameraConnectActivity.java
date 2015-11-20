@@ -69,7 +69,7 @@ public class CameraConnectActivity extends Activity {
         mRefresh = (FloatingActionButton) findViewById(R.id.btn_refresh);
 
         mSsdpClient = new SsdpClient();
-        mListAdapter = new DeviceListAdapter(this);
+
         loading(false);
         Log.d(TAG, "onCreate() completed.");
 
@@ -84,6 +84,8 @@ public class CameraConnectActivity extends Activity {
         mActivityActive = true;
 
         wifiScan();
+
+        mListAdapter = new DeviceListAdapter(this);
         mDeviceList.setAdapter(mListAdapter);
         mListAdapter.setOnItemClickListener(new RecyclerAdapter.OnItemClickListener() {
             @Override
@@ -363,7 +365,7 @@ public class CameraConnectActivity extends Activity {
 
     };
 
-    private static class DeviceListAdapter extends RecyclerAdapter {
+    private static class DeviceListAdapter extends RecyclerAdapter<ViewHolder> {
 
         private final List<ApPoint> mApPointList;
 
@@ -407,12 +409,13 @@ public class CameraConnectActivity extends Activity {
         }
 
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             return new ViewHolder(new DeviceItem(mContext));
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            super.onBindViewHolder(holder, position);
             DeviceItem item = (DeviceItem) holder.itemView;
             ApPoint apPoint = getItem(position);
             item.setDeviceName(apPoint.getSSID());

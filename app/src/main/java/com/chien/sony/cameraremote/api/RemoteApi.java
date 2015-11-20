@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,12 +46,32 @@ public class RemoteApi {
     // API server device you want to send requests.
     private ServerDevice mTargetServer;
 
+    private List<OnCommandListener> mListeners = new ArrayList<OnCommandListener>();
+
     // Request ID of API calling. This will be counted up by each API calling.
     private int mRequestId;
 
     public RemoteApi(ServerDevice target) {
         mTargetServer = target;
         mRequestId = 1;
+    }
+
+    public void addOnCommandListener(OnCommandListener listener){
+        if(!mListeners.contains(listener)){
+            mListeners.add(listener);
+        }
+    }
+
+    public void removeOnCommandListener(OnCommandListener listener){
+        if(mListeners.contains(listener)){
+            mListeners.remove(listener);
+        }
+    }
+
+    private void sendListener(String version, String service, String mothod){
+        for(OnCommandListener listener:mListeners){
+            listener.OnCommand(version, service, mothod);
+        }
     }
 
     private String findActionListUrl(String service) throws IOException {
@@ -75,6 +96,7 @@ public class RemoteApi {
 
     // Camera Service APIs
     private JSONObject command(String version, String service, String mothod, Object... params) throws IOException {
+        sendListener(version, service, mothod);
         JSONArray jsonArray = new JSONArray();
         if (params.length > 0)
             for (Object obj : params)
@@ -1063,5 +1085,9 @@ public class RemoteApi {
     public static boolean isErrorReply(JSONObject replyJson) {
         boolean hasError = (replyJson != null && replyJson.has("error"));
         return hasError;
+    }
+
+    public interface OnCommandListener{
+        public void OnCommand(String version, String service, String mothod);
     }
 }
