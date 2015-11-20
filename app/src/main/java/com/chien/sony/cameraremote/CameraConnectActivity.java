@@ -19,20 +19,20 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chien.sony.cameraremote.receiver.WifiBroadcastReceiver;
 import com.chien.sony.cameraremote.widget.ApPoint;
+import com.chien.sony.cameraremote.widget.DeviceItem;
+import com.chien.sony.cameraremote.widget.recyclerView.RecyclerAdapter;
+import com.chien.sony.cameraremote.widget.recyclerView.ViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +50,8 @@ public class CameraConnectActivity extends Activity {
 
     private SsdpClient mSsdpClient;
 
+    private RecyclerView mDeviceList;
+
     private DeviceListAdapter mListAdapter;
 
     private FloatingActionButton mRefresh;
@@ -63,12 +65,15 @@ public class CameraConnectActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connect_camera);
 
+        mDeviceList = (RecyclerView) findViewById(R.id.device_list);
         mRefresh = (FloatingActionButton) findViewById(R.id.btn_refresh);
 
         mSsdpClient = new SsdpClient();
         mListAdapter = new DeviceListAdapter(this);
         loading(false);
         Log.d(TAG, "onCreate() completed.");
+
+        mDeviceList.setLayoutManager(new LinearLayoutManager(this));
 
         mRefresh.setOnClickListener(mOnClickListener);
     }
@@ -79,12 +84,10 @@ public class CameraConnectActivity extends Activity {
         mActivityActive = true;
 
         wifiScan();
-        ListView listView = (ListView) findViewById(R.id.list_device);
-        listView.setAdapter(mListAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
+        mDeviceList.setAdapter(mListAdapter);
+        mListAdapter.setOnItemClickListener(new RecyclerAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(View view, int position) {
                 if (mTask == null) {
                     synchronized (CameraConnectActivity.class) {
                         if (mTask == null) {
@@ -96,6 +99,7 @@ public class CameraConnectActivity extends Activity {
                     }
                 }
             }
+
         });
         //TODO do some thing.
         Log.d(TAG, "onResume() completed.");
@@ -359,27 +363,27 @@ public class CameraConnectActivity extends Activity {
 
     };
 
-    private static class DeviceListAdapter extends BaseAdapter {
+    private static class DeviceListAdapter extends RecyclerAdapter {
 
         private final List<ApPoint> mApPointList;
 
-        private final LayoutInflater mInflater;
+        private final Context mContext;
 
         public DeviceListAdapter(Context context) {
             mApPointList = new ArrayList<ApPoint>();
-            mInflater = LayoutInflater.from(context);
+            mContext = context;
         }
 
         public void addDevice(ApPoint apPoint) {
             mApPointList.add(apPoint);
-            notifyDataSetChanged();
+            notifyItemInserted(getItemCount());
         }
 
         public void addDevice(List<ApPoint> apPoints) {
-            mApPointList.clear();
-            for (final ApPoint apPoint : apPoints)
-                mApPointList.add(apPoint);
-            notifyDataSetChanged();
+//            mApPointList.clear();
+            clearDevices();
+            mApPointList.addAll(apPoints);
+            notifyItemRangeInserted(0, apPoints.size());
         }
 
         public void clearDevices() {
@@ -388,7 +392,7 @@ public class CameraConnectActivity extends Activity {
         }
 
         @Override
-        public int getCount() {
+        public int getItemCount() {
             return mApPointList.size();
         }
 
@@ -403,14 +407,15 @@ public class CameraConnectActivity extends Activity {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            return new ViewHolder(new DeviceItem(mContext));
+        }
 
-            TextView textView = (TextView) convertView;
-            if (textView == null) {
-                textView = (TextView) mInflater.inflate(R.layout.device_list_item, parent, false);
-            }
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            DeviceItem item = (DeviceItem) holder.itemView;
             ApPoint apPoint = getItem(position);
-            textView.setText(apPoint.getSSID());
+            item.setDeviceName(apPoint.getSSID());
 //            ServerDevice device =  (ServerDevice)getItem(position);
 //            ServerDevice.ApiService apiService = device.getApiService("camera");
 //            String endpointUrl = null;
@@ -425,9 +430,8 @@ public class CameraConnectActivity extends Activity {
 //                            "<br><small>Endpoint URL:  <font color=\"blue\">%s</font></small>", //
 //                            endpointUrl);
 //            textView.setText(Html.fromHtml(htmlLabel));
-
-            return textView;
         }
+
     }
 
     private class ConnectTask extends AsyncTask<Void, Integer, String> {
