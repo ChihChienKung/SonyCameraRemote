@@ -7,6 +7,7 @@ package com.chien.sony.cameraremote;
 import com.chien.sony.cameraremote.api.RemoteApi;
 import com.chien.sony.cameraremote.dialog.SettingDialog;
 import com.chien.sony.cameraremote.utils.CameraCandidates;
+import com.chien.sony.cameraremote.utils.CameraEventObserver;
 import com.chien.sony.cameraremote.utils.DisplayHelper;
 import com.chien.sony.cameraremote.widget.StreamSurfaceView;
 
@@ -187,33 +188,33 @@ public class CameraActivity extends AppCompatActivity {
         mCapture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String cameraStatus = mEventObserver.getCameraStatus();
+                String cameraStatus = CameraCandidates.getInstance().getCameraStatus();
                 String shootMode = mEventObserver.getShootMode();
 
                 if (CameraEventObserver.SHOOT_MODE_STILL.equals(shootMode)) {
                     takeAndFetchPicture();
                 } else if (CameraEventObserver.SHOOT_MODE_MOVIE.equals(shootMode)) {
-                    if (CameraEventObserver.STATUS_MOVIE_RECORDING.equals(cameraStatus)) {
+                    if (CameraCandidates.STATUS_MOVIE_RECORDING.equals(cameraStatus)) {
                         stopMovieRec();
-                    } else if (CameraEventObserver.STATUS_IDLE.equals(cameraStatus)) {
+                    } else if (CameraCandidates.STATUS_IDLE.equals(cameraStatus)) {
                         startMovieRec();
                     }
                 } else if (CameraEventObserver.SHOOT_MODE_AUDIO.equals(shootMode)) {
-                    if (CameraEventObserver.STATUS_AUDIO_RECORDING.equals(cameraStatus)) {
+                    if (CameraCandidates.STATUS_AUDIO_RECORDING.equals(cameraStatus)) {
                         stopAudioRec();
-                    } else if (CameraEventObserver.STATUS_IDLE.equals(cameraStatus)) {
+                    } else if (CameraCandidates.STATUS_IDLE.equals(cameraStatus)) {
                         startAudioRec();
                     }
                 } else if (CameraEventObserver.SHOOT_MODE_INTERVALSTILL.equals(shootMode)) {
-                    if (CameraEventObserver.STATUS_INTERVAL_RECORDING.equals(cameraStatus)) {
+                    if (CameraCandidates.STATUS_INTERVAL_RECORDING.equals(cameraStatus)) {
                         stopIntervalStillRec();
-                    } else if (CameraEventObserver.STATUS_IDLE.equals(cameraStatus)) {
+                    } else if (CameraCandidates.STATUS_IDLE.equals(cameraStatus)) {
                         startIntervalStillRec();
                     }
                 } else if (CameraEventObserver.SHOOT_MODE_LOOPREC.equals(shootMode)) {
-                    if (CameraEventObserver.STATUS_LOOP_RECORDING.equals(cameraStatus)) {
+                    if (CameraCandidates.STATUS_LOOP_RECORDING.equals(cameraStatus)) {
                         stopLoopRec();
-                    } else if (CameraEventObserver.STATUS_IDLE.equals(cameraStatus)) {
+                    } else if (CameraCandidates.STATUS_IDLE.equals(cameraStatus)) {
                         startLoopRec();
                     }
                 }
@@ -472,7 +473,7 @@ public class CameraActivity extends AppCompatActivity {
                             @Override
                             public void onCameraStatusChanged(String status) {
                                 Log.d(TAG, "onCameraStatusChanged:" + status);
-                                if (CameraEventObserver.STATUS_IDLE.equals(status)) {
+                                if (CameraCandidates.STATUS_IDLE.equals(status)) {
                                     openConnection();
                                 }
                                 refreshUi();
@@ -619,7 +620,7 @@ public class CameraActivity extends AppCompatActivity {
         }
 
         CameraApplication application = (CameraApplication) getApplication();
-        String cameraStatus = mEventObserver.getCameraStatus();
+        String cameraStatus = CameraCandidates.getInstance().getCameraStatus();
         String shootMode = mEventObserver.getShootMode();
 
         // CameraStatus TextView
@@ -630,17 +631,17 @@ public class CameraActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         if (CameraEventObserver.SHOOT_MODE_STILL.equals(shootMode)) {
-            if (CameraEventObserver.STATUS_IDLE.equals(cameraStatus)) {
+            if (CameraCandidates.STATUS_IDLE.equals(cameraStatus)) {
                 mCapture.setEnabled(true);
                 mCapture.setImageResource(R.drawable.btn_capture_still);
             } else {
                 mCapture.setEnabled(false);
             }
         } else if (CameraEventObserver.SHOOT_MODE_MOVIE.equals(shootMode) || CameraEventObserver.SHOOT_MODE_AUDIO.equals(shootMode) || CameraEventObserver.SHOOT_MODE_INTERVALSTILL.equals(shootMode) || CameraEventObserver.SHOOT_MODE_LOOPREC.equals(shootMode)) {
-            if (CameraEventObserver.STATUS_MOVIE_RECORDING.equals(cameraStatus) || CameraEventObserver.STATUS_AUDIO_RECORDING.equals(cameraStatus) || CameraEventObserver.STATUS_INTERVAL_RECORDING.equals(cameraStatus) || CameraEventObserver.STATUS_LOOP_RECORDING.equals(cameraStatus)) {
+            if (CameraCandidates.STATUS_MOVIE_RECORDING.equals(cameraStatus) || CameraCandidates.STATUS_AUDIO_RECORDING.equals(cameraStatus) || CameraCandidates.STATUS_INTERVAL_RECORDING.equals(cameraStatus) || CameraCandidates.STATUS_LOOP_RECORDING.equals(cameraStatus)) {
                 mCapture.setEnabled(true);
                 mCapture.setImageResource(R.drawable.btn_capture_rec_stop);
-            } else if (CameraEventObserver.STATUS_IDLE.equals(cameraStatus)) {
+            } else if (CameraCandidates.STATUS_IDLE.equals(cameraStatus)) {
                 mCapture.setEnabled(true);
                 mCapture.setImageResource(R.drawable.btn_capture_rec_start);
             } else {
@@ -655,9 +656,9 @@ public class CameraActivity extends AppCompatActivity {
         }
 
         // Shoot Mode Buttons
-        if (CameraEventObserver.STATUS_IDLE.equals(cameraStatus) || CameraEventObserver.STATUS_MOVIE_RECORDING.equals(cameraStatus)) {
+        if (CameraCandidates.STATUS_IDLE.equals(cameraStatus) || CameraCandidates.STATUS_MOVIE_RECORDING.equals(cameraStatus)) {
             mSpinnerShootMode.setEnabled(true);
-            selectionShootModeSpinner(mSpinnerShootMode, shootMode);
+//            selectionShootModeSpinner(mSpinnerShootMode, shootMode);
         } else {
             mSpinnerShootMode.setEnabled(false);
         }
@@ -858,23 +859,6 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     /**
-     * Selection for Spinner UI of Shoot Mode.
-     *
-     * @param spinner
-     * @param mode
-     */
-    private void selectionShootModeSpinner(Spinner spinner, String mode) {
-        if (!isSupportedShootMode(mode)) {
-            mode = "";
-        }
-        @SuppressWarnings("unchecked")
-        ArrayAdapter<String> adapter = (ArrayAdapter<String>) spinner.getAdapter();
-        if (adapter != null) {
-            mSpinnerShootMode.setSelection(adapter.getPosition(mode));
-        }
-    }
-
-    /**
      * Prepare for Spinner UI of Shoot Mode.
      *
      * @param availableShootModes
@@ -887,7 +871,7 @@ public class CameraActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinnerShootMode.setAdapter(adapter);
         mSpinnerShootMode.setPrompt(getString(R.string.prompt_shoot_mode));
-        selectionShootModeSpinner(mSpinnerShootMode, currentMode);
+//        selectionShootModeSpinner(mSpinnerShootMode, currentMode);
         mSpinnerShootMode.setOnItemSelectedListener(new OnItemSelectedListener() {
             // selected Spinner dropdown item
             @Override
@@ -904,15 +888,15 @@ public class CameraActivity extends AppCompatActivity {
                         DisplayHelper.toast(getApplicationContext(), //
                                 R.string.msg_error_no_supported_shootmode);
                         // now state that can not be changed
-                        selectionShootModeSpinner(spinner, currentMode);
+//                        selectionShootModeSpinner(spinner, currentMode);
                     } else {
-                        if ("IDLE".equals(mEventObserver.getCameraStatus()) //
-                                && !mode.equals(currentMode)) {
-                            setShootMode(mode);
-                        } else {
+//                        if ("IDLE".equals(mEventObserver.getCameraStatus()) //
+//                                && !mode.equals(currentMode)) {
+//                            setShootMode(mode); TODO
+//                        } else {
                             // now state that can not be changed
-                            selectionShootModeSpinner(spinner, currentMode);
-                        }
+//                            selectionShootModeSpinner(spinner, currentMode);
+//                        }
                     }
                 }
             }
@@ -955,37 +939,6 @@ public class CameraActivity extends AppCompatActivity {
             mButtonZoomOut.setVisibility(View.GONE);
             mButtonZoomIn.setVisibility(View.GONE);
         }
-    }
-
-    /**
-     * Call setShootMode
-     *
-     * @param mode
-     */
-    private void setShootMode(final String mode) {
-        new Thread() {
-
-            @Override
-            public void run() {
-                try {
-                    JSONObject replyJson = mRemoteApi.setShootMode(mode);
-                    JSONArray resultsObj = replyJson.getJSONArray("result");
-                    int resultCode = resultsObj.getInt(0);
-                    if (resultCode == 0) {
-                        // Success, but no refresh UI at the point.
-                        Log.v(TAG, "setShootMode: success.");
-                    } else {
-                        Log.w(TAG, "setShootMode: error: " + resultCode);
-                        DisplayHelper.toast(getApplicationContext(), //
-                                R.string.msg_error_api_calling);
-                    }
-                } catch (IOException e) {
-                    Log.w(TAG, "setShootMode: IOException: " + e.getMessage());
-                } catch (JSONException e) {
-                    Log.w(TAG, "setShootMode: JSON format error.");
-                }
-            }
-        }.start();
     }
 
     /**
@@ -1326,7 +1279,7 @@ public class CameraActivity extends AppCompatActivity {
             @Override
             public void onCameraStatusChanged(String status) {
                 Log.d(TAG, "onCameraStatusChanged:" + status);
-                if (CameraEventObserver.STATUS_CONTENTS_TRANSFER.equals(status)) {
+                if (CameraCandidates.STATUS_CONTENTS_TRANSFER.equals(status)) {
                     // start ContentsList mode
                     Intent intent = new Intent(getApplicationContext(), DateListActivity.class);
                     startActivity(intent);

@@ -5,6 +5,7 @@
 package com.chien.sony.cameraremote;
 
 import com.chien.sony.cameraremote.api.RemoteApi;
+import com.chien.sony.cameraremote.utils.CameraEventObserver;
 import com.chien.sony.cameraremote.utils.DisplayHelper;
 import com.chien.sony.cameraremote.api.RemoteApiHelper;
 

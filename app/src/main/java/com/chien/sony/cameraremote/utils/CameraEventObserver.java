@@ -2,7 +2,7 @@
  * Copyright 2014 Sony Corporation
  */
 
-package com.chien.sony.cameraremote;
+package com.chien.sony.cameraremote.utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,7 +13,6 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.chien.sony.cameraremote.api.RemoteApi;
-import com.chien.sony.cameraremote.utils.CameraCandidates;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,31 +26,6 @@ import java.util.List;
 public class CameraEventObserver {
 
     private static final String TAG = CameraEventObserver.class.getSimpleName();
-
-    public static final String STATUS_ERROR = "Error";
-    public static final String STATUS_NOT_READY = "NotReady";
-    public static final String STATUS_IDLE = "IDLE";
-    public static final String STATUS_STILL_CAPTURING = "StillCapturing";
-    public static final String STATUS_STILL_SAVING = "StillSaving";
-    public static final String STATUS_MOVIE_WAIT_REC_START = "MovieWaitRecStart";
-    public static final String STATUS_MOVIE_RECORDING = "MovieRecording";
-    public static final String STATUS_MOVIE_WAIT_REC_STOP = "MovieWaitRecStop";
-    public static final String STATUS_MOVIE_SAVING = "MovieSaving";
-    public static final String STATUS_AUDIO_WAIT_REC_START = "AudioWaitRecStart";
-    public static final String STATUS_AUDIO_RECORDING = "AudioRecording";
-    public static final String STATUS_AUDIO_WAIT_REC_STOP = "AudioWaitRecStop";
-    public static final String STATUS_AUDIO_SAVING = "AudioSaving";
-    public static final String STATUS_INTERVAL_WAIT_REC_START = "IntervalWaitRecStart";
-    public static final String STATUS_INTERVAL_RECORDING = "IntervalRecording";
-    public static final String STATUS_INTERVAL_WAIT_REC_STOP = "IntervalWaitRecStop";
-    public static final String STATUS_LOOP_WAIT_REC_START = "LoopWaitRecStart";
-    public static final String STATUS_LOOP_RECORDING = "LoopRecording";
-    public static final String STATUS_LOOP_WAIT_REC_STOP = "LoopWaitRecStop";
-    public static final String STATUS_LOOP_SAVING = "LoopSaving";
-    public static final String STATUS_WHITE_BALANCE_ONE_PUSH_CAPTURING = "WhiteBalanceOnePushCapturing";
-    public static final String STATUS_CONTENTS_TRANSFER = "ContentsTransfer";
-    public static final String STATUS_STREAMING = "Streaming";
-    public static final String STATUS_DELETING = "Deleting";
 
     public static final String SHOOT_MODE_STILL = "still";
     public static final String SHOOT_MODE_MOVIE = "movie";
@@ -153,9 +127,6 @@ public class CameraEventObserver {
 
     private boolean mIsActive = false;
 
-    // Current Camera Status value.
-    private String mCameraStatus;
-
     // Current Liveview Status value.
     private boolean mLiveviewStatus;
 
@@ -214,6 +185,9 @@ public class CameraEventObserver {
                 Log.d(TAG, "start() exec.");
                 // Call getEvent API continuously.
                 boolean firstCall = true;
+
+                CameraCandidates cameraCandidates = CameraCandidates.getInstance();
+
                 MONITORLOOP:
                 while (mWhileEventMonitoring) {
 
@@ -259,8 +233,8 @@ public class CameraEventObserver {
                         // CameraStatus
                         String cameraStatus = findCameraStatus(replyJson);
                         Log.d(TAG, "getEvent cameraStatus: " + cameraStatus);
-                        if (cameraStatus != null && !cameraStatus.equals(mCameraStatus)) {
-                            mCameraStatus = cameraStatus;
+                        if (cameraStatus != null && !cameraStatus.equals(cameraCandidates.mCameraStatus)) {
+                            cameraCandidates.mCameraStatus = cameraStatus;
                             fireCameraStatusChangeListener(cameraStatus);
                         }
 
@@ -361,15 +335,6 @@ public class CameraEventObserver {
      */
     public void clearEventChangeListener() {
         mListener = null;
-    }
-
-    /**
-     * Returns the current Camera Status value.
-     *
-     * @return camera status
-     */
-    public String getCameraStatus() {
-        return mCameraStatus;
     }
 
     /**
@@ -615,7 +580,7 @@ public class CameraEventObserver {
         if (!resultsObj.isNull(indexOfShootMode)) {
             JSONObject shootModeObj = resultsObj.getJSONObject(indexOfShootMode);
             String type = shootModeObj.getString("type");
-            if ("shootMode".equals(type)) {
+            if (CameraCandidates.SHOOT_MODE.equals(type)) {
                 shootMode = shootModeObj.getString("currentShootMode");
                 JSONArray jsonArray = shootModeObj.getJSONArray("shootModeCandidates");
                 List<String> shootModeList = CameraCandidates.getInstance().ShootMode;

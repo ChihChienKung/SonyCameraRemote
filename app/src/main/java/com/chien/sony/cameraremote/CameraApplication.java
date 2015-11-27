@@ -35,12 +35,6 @@ public class CameraApplication extends Application {
         );
     }}
 
-    {{
-        MrVector.register(
-                R.drawable.ic_refresh
-        );
-    }}
-
     /**
      * Sets a target ServerDevice object.
      * 

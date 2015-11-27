@@ -1,23 +1,11 @@
 
 package com.chien.sony.cameraremote.dialog;
 
-import android.content.Context;
 import android.content.DialogInterface;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.TextView;
 
-import com.chien.sony.cameraremote.R;
 import com.chien.sony.cameraremote.utils.CameraCandidates;
 import com.chien.sony.cameraremote.widget.recyclerView.RecyclerAdapter;
-import com.chien.sony.cameraremote.widget.recyclerView.ViewHolder;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Chien on 2015/11/4.
@@ -29,13 +17,14 @@ public class SettingDialog extends RecyclerDialog {
 
     @Override
     protected void init() {
-        addItem("ShootMode");
+        CameraCandidates cameraCandidates = CameraCandidates.getInstance();
+        addItem(cameraCandidates.getControlledList());
 
         setOnItemClickListener(new RecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(RecyclerAdapter<?> adapter, View view, int position) {
                 String selected = (String) adapter.getItem(position);
-                if ("ShootMode".equals(selected)) {
+                if (CameraCandidates.SHOOT_MODE.equals(selected)) {
                     if (!isDialogExist()) {
                         mShowDialog = new ShootModeChooseDialog();
                         showDialog();
