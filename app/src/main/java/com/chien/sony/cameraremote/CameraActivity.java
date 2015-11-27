@@ -20,6 +20,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -49,7 +50,9 @@ public class CameraActivity extends AppCompatActivity {
 
     private static final String TAG = CameraActivity.class.getSimpleName();
 
-    private ImageButton mCapture, mSettings;
+    private ImageButton mCapture;
+
+    private FloatingActionButton mSettings;
 
 
 
@@ -95,7 +98,7 @@ public class CameraActivity extends AppCompatActivity {
         //TODO Check widget.
         mLiveviewSurface = (StreamSurfaceView) findViewById(R.id.surfaceview_liveview);
         mCapture = (ImageButton) findViewById(R.id.btn_capture);
-        mSettings = (ImageButton) findViewById(R.id.btn_settings);
+        mSettings = (FloatingActionButton) findViewById(R.id.btn_settings);
         mShootMode = (ImageView) findViewById(R.id.img_shoot_mode);
 
 

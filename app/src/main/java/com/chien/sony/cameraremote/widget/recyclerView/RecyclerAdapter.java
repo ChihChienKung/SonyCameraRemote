@@ -51,33 +51,33 @@ public abstract class RecyclerAdapter<T extends ViewHolder> extends Adapter<T> {
         @Override
         public void onItemClick(final View view, final int position) {
             if (mOnItemClickListener != null)
-                mOnItemClickListener.onItemClick(view, position);
+                mOnItemClickListener.onItemClick(RecyclerAdapter.this, view, position);
         }
 
         @Override
         public void onItemFocusChange(final View view, final int position, final boolean hasFocus) {
             if (mOnItemFocusChangeListener != null)
-                mOnItemFocusChangeListener.onItemFocusChange(view, position, hasFocus);
+                mOnItemFocusChangeListener.onItemFocusChange(RecyclerAdapter.this, view, position, hasFocus);
         }
 
         @Override
         public boolean onItemKey(final View view, final int position, final int keyCode, final KeyEvent event) {
             if (mOnItemKeyListener != null)
-                return mOnItemKeyListener.onItemKey(view, position, keyCode, event);
+                return mOnItemKeyListener.onItemKey(RecyclerAdapter.this, view, position, keyCode, event);
             return false;
         }
     };
 
     public static interface OnItemClickListener {
-        public void onItemClick(View view, int position);
+        public void onItemClick(RecyclerAdapter<?> adapter, View view, int position);
     }
 
     public static interface OnItemFocusChangeListener {
-        public void onItemFocusChange(View view, int position, boolean hasFocus);
+        public void onItemFocusChange(RecyclerAdapter<?> adapter, View view, int position, boolean hasFocus);
     }
 
     public static interface OnItemKeyListener {
-        public boolean onItemKey(View view, int position, final int keyCode, final KeyEvent event);
+        public boolean onItemKey(RecyclerAdapter<?> adapter, View view, int position, final int keyCode, final KeyEvent event);
     }
 
     protected static interface OnItemAction {

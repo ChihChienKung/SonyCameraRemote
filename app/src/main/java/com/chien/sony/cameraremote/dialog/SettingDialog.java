@@ -3,7 +3,7 @@ package com.chien.sony.cameraremote.dialog;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +11,10 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.chien.sony.cameraremote.CameraEventObserver;
 import com.chien.sony.cameraremote.R;
 import com.chien.sony.cameraremote.utils.CameraCandidates;
+import com.chien.sony.cameraremote.widget.recyclerView.RecyclerAdapter;
+import com.chien.sony.cameraremote.widget.recyclerView.ViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,28 +22,27 @@ import java.util.List;
 /**
  * Created by Chien on 2015/11/4.
  */
-public class SettingDialog extends ListDialog {
+public class SettingDialog extends RecyclerDialog {
     private final String TAG = getClass().getSimpleName();
 
-    private ListDialog mShowDialog;
+    private RecyclerDialog mShowDialog;
 
     @Override
     protected void init() {
-        setAdapter(new ItemAdapter(getActivity()));
+        addItem("ShootMode");
 
-        setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        setOnItemClickListener(new RecyclerAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-
-                ItemAdapter adapter = (ItemAdapter) getAdapter();
-                String selected = adapter.getItem(position);
-                if("ShootMode".equals(selected)){
+            public void onItemClick(RecyclerAdapter<?> adapter, View view, int position) {
+                String selected = (String) adapter.getItem(position);
+                if ("ShootMode".equals(selected)) {
                     if (!isDialogExist()) {
                         mShowDialog = new ShootModeChooseDialog();
                         showDialog();
                     }
                 }
             }
+
         });
     }
 
@@ -75,47 +75,5 @@ public class SettingDialog extends ListDialog {
         }
     };
 
-    private static class ItemAdapter extends BaseAdapter {
-        private final List<String> mItemList;
 
-        private final LayoutInflater mInflater;
-
-        public ItemAdapter(Context context) {
-            CameraCandidates cameraCandidates = CameraCandidates.getInstance();
-
-            mItemList = new ArrayList<String>();
-            if (cameraCandidates.ShootMode.size() > 0) {
-                mItemList.add("ShootMode");
-            }
-
-            mInflater = LayoutInflater.from(context);
-        }
-
-
-        @Override
-        public int getCount() {
-            return mItemList.size();
-        }
-
-        @Override
-        public String getItem(int position) {
-            return mItemList.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            TextView textView = (TextView) convertView;
-            if (textView == null) {
-                textView = (TextView) mInflater.inflate(R.layout.device_list_item, parent, false);
-            }
-            textView.setText(getItem(position));
-            return textView;
-        }
-    }
 }

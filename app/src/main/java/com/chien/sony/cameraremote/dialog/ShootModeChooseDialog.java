@@ -10,74 +10,33 @@ import android.widget.TextView;
 
 import com.chien.sony.cameraremote.CameraApplication;
 import com.chien.sony.cameraremote.R;
-import com.chien.sony.cameraremote.api.RemoteApi;
 import com.chien.sony.cameraremote.api.RemoteApiHelper;
 import com.chien.sony.cameraremote.utils.CameraCandidates;
+import com.chien.sony.cameraremote.widget.recyclerView.RecyclerAdapter;
 
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Chien on 2015/11/4.
  */
-public class ShootModeChooseDialog extends ListDialog {
+public class ShootModeChooseDialog extends RecyclerDialog {
 
     private final String TAG = getClass().getSimpleName();
 
     @Override
     protected void init() {
         final CameraApplication app = (CameraApplication) getActivity().getApplication();
+        CameraCandidates cameraCandidates = CameraCandidates.getInstance();
+        addItem(cameraCandidates.ShootMode);
 
-        setAdapter(new ModeAdapter(getActivity()));
-
-        setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        setOnItemClickListener(new RecyclerAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                ModeAdapter adapter = (ModeAdapter) getAdapter();
-                RemoteApiHelper.setShootMode(app.getRemoteApi(), adapter.getItem(position));
+            public void onItemClick(RecyclerAdapter<?> adapter, View view, int position) {
+                RemoteApiHelper.setShootMode(app.getRemoteApi(), (String)adapter.getItem(position));
+                dismiss();
             }
+
         });
     }
 
-    private static class ModeAdapter extends BaseAdapter {
-        private final List<String> mItemList;
-
-        private final LayoutInflater mInflater;
-
-        public ModeAdapter(Context context) {
-            CameraCandidates cameraCandidates = CameraCandidates.getInstance();
-            mItemList = cameraCandidates.ShootMode;
-
-            mInflater = LayoutInflater.from(context);
-        }
-
-
-        @Override
-        public int getCount() {
-            return mItemList.size();
-        }
-
-        @Override
-        public String getItem(int position) {
-            return mItemList.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            TextView textView = (TextView) convertView;
-            if (textView == null) {
-                textView = (TextView) mInflater.inflate(R.layout.device_list_item, parent, false);
-            }
-            textView.setText(getItem(position));
-            return textView;
-        }
-    }
 }

@@ -30,7 +30,7 @@ import android.widget.Toast;
 
 import com.chien.sony.cameraremote.receiver.WifiBroadcastReceiver;
 import com.chien.sony.cameraremote.widget.ApPoint;
-import com.chien.sony.cameraremote.widget.DeviceItem;
+import com.chien.sony.cameraremote.widget.recyclerView.RecyclerStringItem;
 import com.chien.sony.cameraremote.widget.recyclerView.RecyclerAdapter;
 import com.chien.sony.cameraremote.widget.recyclerView.ViewHolder;
 
@@ -89,11 +89,11 @@ public class CameraConnectActivity extends Activity {
         mDeviceList.setAdapter(mListAdapter);
         mListAdapter.setOnItemClickListener(new RecyclerAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
+            public void onItemClick(RecyclerAdapter<?> adapter, View view, int position) {
                 if (mTask == null) {
                     synchronized (CameraConnectActivity.class) {
                         if (mTask == null) {
-                            ApPoint apPoint = mListAdapter.getItem(position);
+                            ApPoint apPoint = (ApPoint) adapter.getItem(position);
                             Log.v(TAG, "connect " + apPoint.getSSID());
                             mTask = new ConnectTask(apPoint, position);
                             mTask.execute();
@@ -101,7 +101,6 @@ public class CameraConnectActivity extends Activity {
                     }
                 }
             }
-
         });
         //TODO do some thing.
         Log.d(TAG, "onResume() completed.");
@@ -410,15 +409,15 @@ public class CameraConnectActivity extends Activity {
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new ViewHolder(new DeviceItem(mContext));
+            return new ViewHolder(new RecyclerStringItem(mContext));
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            super.onBindViewHolder(holder, position);
-            DeviceItem item = (DeviceItem) holder.itemView;
+        public void onBindViewHolder(ViewHolder viewHolder, int position) {
+            super.onBindViewHolder(viewHolder, position);
+            RecyclerStringItem item = (RecyclerStringItem) viewHolder.itemView;
             ApPoint apPoint = getItem(position);
-            item.setDeviceName(apPoint.getSSID());
+            item.setText(apPoint.getSSID());
 //            ServerDevice device =  (ServerDevice)getItem(position);
 //            ServerDevice.ApiService apiService = device.getApiService("camera");
 //            String endpointUrl = null;
