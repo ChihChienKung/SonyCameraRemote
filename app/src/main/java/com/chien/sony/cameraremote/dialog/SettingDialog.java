@@ -2,6 +2,7 @@
 package com.chien.sony.cameraremote.dialog;
 
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.View;
 
 import com.chien.sony.cameraremote.utils.CameraCandidates;
@@ -19,11 +20,15 @@ public class SettingDialog extends RecyclerDialog {
     protected void init() {
         CameraCandidates cameraCandidates = CameraCandidates.getInstance();
         addItem(cameraCandidates.getControlledList());
+    }
 
-        setOnItemClickListener(new RecyclerAdapter.OnItemClickListener() {
+    @Override
+    public RecyclerAdapter.OnItemClickListener getOnItemClickListener() {
+        return new RecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(RecyclerAdapter<?> adapter, View view, int position) {
                 String selected = (String) adapter.getItem(position);
+                Log.e(TAG, CameraCandidates.SHOOT_MODE+"  --  "+selected);
                 if (CameraCandidates.SHOOT_MODE.equals(selected)) {
                     if (!isDialogExist()) {
                         mShowDialog = new ShootModeChooseDialog();
@@ -32,7 +37,7 @@ public class SettingDialog extends RecyclerDialog {
                 }
             }
 
-        });
+        };
     }
 
     private boolean isDialogExist() {

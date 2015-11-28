@@ -28,8 +28,6 @@ public abstract class RecyclerDialog extends DialogFragment {
 
     private ItemAdapter mAdapter;
 
-    private RecyclerAdapter.OnItemClickListener mOnItemClickListener;
-
     private DialogInterface.OnDismissListener mOnDismissListener;
 
     @Override
@@ -50,7 +48,7 @@ public abstract class RecyclerDialog extends DialogFragment {
 
         mRecyclerView.setLayoutManager(new WrapContentLinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
-        mAdapter.setOnItemClickListener(mOnItemClickListener);
+        mAdapter.setOnItemClickListener(getOnItemClickListener());
 
         init();
     }
@@ -67,15 +65,7 @@ public abstract class RecyclerDialog extends DialogFragment {
         mAdapter.remove(item);
     }
 
-    public void setOnItemClickListener(RecyclerAdapter.OnItemClickListener listener) {
-        mOnItemClickListener = listener;
-        if (mAdapter != null)
-            mAdapter.setOnItemClickListener(listener);
-    }
-
-    public RecyclerAdapter.OnItemClickListener getOnItemClickListener() {
-        return mOnItemClickListener;
-    }
+    public abstract RecyclerAdapter.OnItemClickListener getOnItemClickListener();
 
     public void setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
         mOnDismissListener = onDismissListener;
@@ -134,12 +124,13 @@ public abstract class RecyclerDialog extends DialogFragment {
         }
 
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             return new ViewHolder(new RecyclerStringItem(mContext));
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            super.onBindViewHolder(holder, position);
             RecyclerStringItem item = (RecyclerStringItem) holder.itemView;
             String text = getItem(position);
             item.setText(text);

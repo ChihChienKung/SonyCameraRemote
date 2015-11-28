@@ -34,7 +34,7 @@ public class CameraCandidates {
     public static final String STATUS_STREAMING = "Streaming";
     public static final String STATUS_DELETING = "Deleting";
 
-    public static final String SHOOT_MODE = "ShootMode";
+    public static final String SHOOT_MODE = "shootMode";
 
     String mCameraStatus;
 

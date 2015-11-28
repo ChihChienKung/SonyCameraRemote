@@ -25,11 +25,15 @@ public class ShootModeChooseDialog extends RecyclerDialog {
 
     @Override
     protected void init() {
-        final CameraApplication app = (CameraApplication) getActivity().getApplication();
         final CameraCandidates cameraCandidates = CameraCandidates.getInstance();
         addItem(cameraCandidates.ShootMode);
+    }
 
-        setOnItemClickListener(new RecyclerAdapter.OnItemClickListener() {
+    @Override
+    public RecyclerAdapter.OnItemClickListener getOnItemClickListener() {
+        final CameraApplication app = (CameraApplication) getActivity().getApplication();
+        final CameraCandidates cameraCandidates = CameraCandidates.getInstance();
+        return new RecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(RecyclerAdapter<?> adapter, View view, int position) {
                 if (CameraCandidates.STATUS_IDLE.equals(cameraCandidates.getCameraStatus())) {
@@ -38,7 +42,6 @@ public class ShootModeChooseDialog extends RecyclerDialog {
                 }
             }
 
-        });
+        };
     }
-
 }
