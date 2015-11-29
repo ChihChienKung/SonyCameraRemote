@@ -79,8 +79,6 @@ public class CameraActivity extends AppCompatActivity {
 
     private CameraEventObserver mEventObserver;
 
-    private CameraEventObserver.ChangeListener mEventListener;
-
     private final Set<String> mAvailableCameraApiSet = new HashSet<String>();
 
     private final Set<String> mSupportedApiSet = new HashSet<String>();
@@ -113,70 +111,6 @@ public class CameraActivity extends AppCompatActivity {
 
         mSpinnerShootMode.setEnabled(false);
 
-        mEventListener = new CameraEventObserver.ChangeListenerTmpl() {
-
-            @Override
-            public void onShootModeChanged(String shootMode) {
-                Log.d(TAG, "onShootModeChanged() called: " + shootMode);
-                refreshUi();
-            }
-
-            @Override
-            public void onCameraStatusChanged(String status) {
-                Log.d(TAG, "onCameraStatusChanged() called: " + status);
-                refreshUi();
-            }
-
-            @Override
-            public void onApiListModified(List<String> apis) {
-                Log.d(TAG, "onApiListModified() called");
-                synchronized (mAvailableCameraApiSet) {
-                    mAvailableCameraApiSet.clear();
-                    for (String api : apis) {
-                        mAvailableCameraApiSet.add(api);
-                    }
-                    if (!mEventObserver.getLiveviewStatus() //
-                            && isCameraApiAvailable("startLiveview")) {
-                        if (mLiveviewSurface != null && !mLiveviewSurface.isStarted()) {
-                            startLiveview();
-                        }
-                    }
-                    if (isCameraApiAvailable("actZoom")) {
-                        Log.d(TAG, "onApiListModified(): prepareActZoomButtons()");
-                        prepareActZoomButtons(true);
-                    } else {
-                        prepareActZoomButtons(false);
-                    }
-                }
-            }
-
-            @Override
-            public void onZoomPositionChanged(int zoomPosition) {
-                Log.d(TAG, "onZoomPositionChanged() called = " + zoomPosition);
-                if (zoomPosition == 0) {
-                    mButtonZoomIn.setEnabled(true);
-                    mButtonZoomOut.setEnabled(false);
-                } else if (zoomPosition == 100) {
-                    mButtonZoomIn.setEnabled(false);
-                    mButtonZoomOut.setEnabled(true);
-                } else {
-                    mButtonZoomIn.setEnabled(true);
-                    mButtonZoomOut.setEnabled(true);
-                }
-            }
-
-            @Override
-            public void onLiveviewStatusChanged(boolean status) {
-                Log.d(TAG, "onLiveviewStatusChanged() called = " + status);
-            }
-
-            @Override
-            public void onStorageIdChanged(String storageId) {
-                Log.d(TAG, "onStorageIdChanged() called: " + storageId);
-                refreshUi();
-            }
-        };
-
         Log.d(TAG, "onCreate() completed.");
     }
 
@@ -185,70 +119,8 @@ public class CameraActivity extends AppCompatActivity {
         super.onResume();
 
         mEventObserver.activate();
-        mCapture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String cameraStatus = CameraCandidates.getInstance().getCameraStatus();
-                String shootMode = mEventObserver.getShootMode();
-
-                if (CameraEventObserver.SHOOT_MODE_STILL.equals(shootMode)) {
-                    takeAndFetchPicture();
-                } else if (CameraEventObserver.SHOOT_MODE_MOVIE.equals(shootMode)) {
-                    if (CameraCandidates.STATUS_MOVIE_RECORDING.equals(cameraStatus)) {
-                        stopMovieRec();
-                    } else if (CameraCandidates.STATUS_IDLE.equals(cameraStatus)) {
-                        startMovieRec();
-                    }
-                } else if (CameraEventObserver.SHOOT_MODE_AUDIO.equals(shootMode)) {
-                    if (CameraCandidates.STATUS_AUDIO_RECORDING.equals(cameraStatus)) {
-                        stopAudioRec();
-                    } else if (CameraCandidates.STATUS_IDLE.equals(cameraStatus)) {
-                        startAudioRec();
-                    }
-                } else if (CameraEventObserver.SHOOT_MODE_INTERVALSTILL.equals(shootMode)) {
-                    if (CameraCandidates.STATUS_INTERVAL_RECORDING.equals(cameraStatus)) {
-                        stopIntervalStillRec();
-                    } else if (CameraCandidates.STATUS_IDLE.equals(cameraStatus)) {
-                        startIntervalStillRec();
-                    }
-                } else if (CameraEventObserver.SHOOT_MODE_LOOPREC.equals(shootMode)) {
-                    if (CameraCandidates.STATUS_LOOP_RECORDING.equals(cameraStatus)) {
-                        stopLoopRec();
-                    } else if (CameraCandidates.STATUS_IDLE.equals(cameraStatus)) {
-                        startLoopRec();
-                    }
-                }
-            }
-        });
-        mSettings.setOnClickListener(new View.OnClickListener() {
-            private SettingDialog mSettingDialog;
-
-            @Override
-            public void onClick(View view) {
-                if (mSettingDialog == null) {
-                    synchronized (CameraActivity.class) {
-                        if (mSettingDialog == null) {
-                            mSettingDialog = new SettingDialog();
-                            mSettingDialog.setOnDismissListener(mOnDismissListener);
-                            mSettingDialog.show(getSupportFragmentManager(), null);
-                        }
-                    }
-                }
-            }
-
-            private DialogInterface.OnDismissListener mOnDismissListener = new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialogInterface) {
-                    if (mSettingDialog != null) {
-                        synchronized (CameraActivity.class) {
-                            if (mSettingDialog != null) {
-                                mSettingDialog = null;
-                            }
-                        }
-                    }
-                }
-            };
-        });
+        mCapture.setOnClickListener(mCaptureCLickListener);
+        mSettings.setOnClickListener(mSettingsClickListener);
 
         mSpinnerShootMode.setFocusable(false);
         mButtonContentsListMode.setEnabled(false);
@@ -1351,4 +1223,133 @@ public class CameraActivity extends AppCompatActivity {
         }.start();
     }
 
+    private final CameraEventObserver.ChangeListener mEventListener = new CameraEventObserver.ChangeListenerTmpl() {
+
+        @Override
+        public void onShootModeChanged(String shootMode) {
+            Log.d(TAG, "onShootModeChanged() called: " + shootMode);
+            refreshUi();
+        }
+
+        @Override
+        public void onCameraStatusChanged(String status) {
+            Log.d(TAG, "onCameraStatusChanged() called: " + status);
+            refreshUi();
+        }
+
+        @Override
+        public void onApiListModified(List<String> apis) {
+            Log.d(TAG, "onApiListModified() called");
+            synchronized (mAvailableCameraApiSet) {
+                mAvailableCameraApiSet.clear();
+                for (String api : apis) {
+                    mAvailableCameraApiSet.add(api);
+                }
+                if (!mEventObserver.getLiveviewStatus() //
+                        && isCameraApiAvailable("startLiveview")) {
+                    if (mLiveviewSurface != null && !mLiveviewSurface.isStarted()) {
+                        startLiveview();
+                    }
+                }
+                if (isCameraApiAvailable("actZoom")) {
+                    Log.d(TAG, "onApiListModified(): prepareActZoomButtons()");
+                    prepareActZoomButtons(true);
+                } else {
+                    prepareActZoomButtons(false);
+                }
+            }
+        }
+
+        @Override
+        public void onZoomPositionChanged(int zoomPosition) {
+            Log.d(TAG, "onZoomPositionChanged() called = " + zoomPosition);
+            if (zoomPosition == 0) {
+                mButtonZoomIn.setEnabled(true);
+                mButtonZoomOut.setEnabled(false);
+            } else if (zoomPosition == 100) {
+                mButtonZoomIn.setEnabled(false);
+                mButtonZoomOut.setEnabled(true);
+            } else {
+                mButtonZoomIn.setEnabled(true);
+                mButtonZoomOut.setEnabled(true);
+            }
+        }
+
+        @Override
+        public void onLiveviewStatusChanged(boolean status) {
+            Log.d(TAG, "onLiveviewStatusChanged() called = " + status);
+        }
+
+        @Override
+        public void onStorageIdChanged(String storageId) {
+            Log.d(TAG, "onStorageIdChanged() called: " + storageId);
+            refreshUi();
+        }
+    };
+
+    private final View.OnClickListener mCaptureCLickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            String cameraStatus = CameraCandidates.getInstance().getCameraStatus();
+            String shootMode = mEventObserver.getShootMode();
+
+            if (CameraEventObserver.SHOOT_MODE_STILL.equals(shootMode)) {
+                takeAndFetchPicture();
+            } else if (CameraEventObserver.SHOOT_MODE_MOVIE.equals(shootMode)) {
+                if (CameraCandidates.STATUS_MOVIE_RECORDING.equals(cameraStatus)) {
+                    stopMovieRec();
+                } else if (CameraCandidates.STATUS_IDLE.equals(cameraStatus)) {
+                    startMovieRec();
+                }
+            } else if (CameraEventObserver.SHOOT_MODE_AUDIO.equals(shootMode)) {
+                if (CameraCandidates.STATUS_AUDIO_RECORDING.equals(cameraStatus)) {
+                    stopAudioRec();
+                } else if (CameraCandidates.STATUS_IDLE.equals(cameraStatus)) {
+                    startAudioRec();
+                }
+            } else if (CameraEventObserver.SHOOT_MODE_INTERVALSTILL.equals(shootMode)) {
+                if (CameraCandidates.STATUS_INTERVAL_RECORDING.equals(cameraStatus)) {
+                    stopIntervalStillRec();
+                } else if (CameraCandidates.STATUS_IDLE.equals(cameraStatus)) {
+                    startIntervalStillRec();
+                }
+            } else if (CameraEventObserver.SHOOT_MODE_LOOPREC.equals(shootMode)) {
+                if (CameraCandidates.STATUS_LOOP_RECORDING.equals(cameraStatus)) {
+                    stopLoopRec();
+                } else if (CameraCandidates.STATUS_IDLE.equals(cameraStatus)) {
+                    startLoopRec();
+                }
+            }
+        }
+    };
+
+    private final View.OnClickListener mSettingsClickListener = new View.OnClickListener() {
+        private SettingDialog mSettingDialog;
+
+        @Override
+        public void onClick(View view) {
+            if (mSettingDialog == null) {
+                synchronized (CameraActivity.class) {
+                    if (mSettingDialog == null) {
+                        mSettingDialog = new SettingDialog();
+                        mSettingDialog.setOnDismissListener(mOnDismissListener);
+                        mSettingDialog.show(getSupportFragmentManager(), null);
+                    }
+                }
+            }
+        }
+
+        private DialogInterface.OnDismissListener mOnDismissListener = new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                if (mSettingDialog != null) {
+                    synchronized (CameraActivity.class) {
+                        if (mSettingDialog != null) {
+                            mSettingDialog = null;
+                        }
+                    }
+                }
+            }
+        };
+    };
 }

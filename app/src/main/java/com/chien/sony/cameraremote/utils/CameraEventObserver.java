@@ -655,6 +655,7 @@ public class CameraEventObserver {
         } else {
             data.clear();
             for (int i = 0; i < jsonArray.length(); i++) {
+                Log.w(TAG, "add "+jsonArray.getString(i));
                 data.add(jsonArray.getString(i));
             }
         }

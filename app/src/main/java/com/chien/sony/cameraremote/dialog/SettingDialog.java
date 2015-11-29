@@ -19,6 +19,7 @@ public class SettingDialog extends RecyclerDialog {
     @Override
     protected void init() {
         CameraCandidates cameraCandidates = CameraCandidates.getInstance();
+        Log.e(TAG, "" + cameraCandidates.getControlledList());
         addItem(cameraCandidates.getControlledList());
     }
 

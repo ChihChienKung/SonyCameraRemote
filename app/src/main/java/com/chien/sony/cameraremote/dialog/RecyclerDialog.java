@@ -93,7 +93,8 @@ public abstract class RecyclerDialog extends DialogFragment {
             for (String s : itemList)
                 if (!mItemList.contains(s))
                     mItemList.add(s);
-            notifyItemRangeInserted(oldCount, itemList.size());
+//            notifyItemRangeInserted(oldCount, itemList.size());
+            notifyDataSetChanged();
         }
 
         public void addItem(String item) {
