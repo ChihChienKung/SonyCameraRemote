@@ -82,20 +82,14 @@ public class CameraConnectActivity extends Activity {
 
 
         FloatingActionButtonSelect group = (FloatingActionButtonSelect) findViewById(R.id.group);
-        group.addChild("a", R.drawable.ic_audio, null);
-        group.addChild("b", R.drawable.ic_still, null);
-        group.addChild("c", R.drawable.ic_movie, null);
-        group.addChild("d", R.drawable.ic_intervalstill, null);
-        group.addChild("e", R.drawable.ic_looprec, null);
-        group.addChild("f", R.drawable.ic_refresh, null);
-        group.addChild("g", R.drawable.ic_zoom_in, null);
-        group.addChild("h", R.drawable.ic_zoom_out, null);
-        group.addChild("i", R.drawable.ic_audio, null);
-        group.addChild("j", R.drawable.ic_still, null);
-        group.addChild("k", R.drawable.ic_movie, null);
-        group.addChild("l", R.drawable.ic_audio, null);
-        group.addChild("m", R.drawable.ic_still, null);
-        group.addChild("n", R.drawable.ic_movie, null);
+        group.addChild("a", R.drawable.ic_audio);
+        group.addChild("b", R.drawable.ic_still);
+        group.addChild("c", R.drawable.ic_movie);
+        group.addChild("d", R.drawable.ic_intervalstill);
+        group.addChild("e", R.drawable.ic_looprec);
+        group.addChild("f", R.drawable.ic_refresh);
+        group.addChild("g", R.drawable.ic_zoom_in);
+        group.addChild("h", R.drawable.ic_zoom_out);
     }
 
     @Override
