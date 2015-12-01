@@ -1,7 +1,9 @@
 package com.chien.sony.cameraremote.utils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Jean.Gong on 2015/11/5.
@@ -11,6 +13,7 @@ public class CameraCandidates {
 
     public static final String STATUS_ERROR = "Error";
     public static final String STATUS_NOT_READY = "NotReady";
+
     public static final String STATUS_IDLE = "IDLE";
     public static final String STATUS_STILL_CAPTURING = "StillCapturing";
     public static final String STATUS_STILL_SAVING = "StillSaving";
@@ -25,6 +28,7 @@ public class CameraCandidates {
     public static final String STATUS_INTERVAL_WAIT_REC_START = "IntervalWaitRecStart";
     public static final String STATUS_INTERVAL_RECORDING = "IntervalRecording";
     public static final String STATUS_INTERVAL_WAIT_REC_STOP = "IntervalWaitRecStop";
+
     public static final String STATUS_LOOP_WAIT_REC_START = "LoopWaitRecStart";
     public static final String STATUS_LOOP_RECORDING = "LoopRecording";
     public static final String STATUS_LOOP_WAIT_REC_STOP = "LoopWaitRecStop";
@@ -35,6 +39,29 @@ public class CameraCandidates {
     public static final String STATUS_DELETING = "Deleting";
 
     public static final String SHOOT_MODE = "shootMode";
+
+    private static Set<String> mShootingStatus = new HashSet<String>();
+
+    static {
+        mShootingStatus.add(STATUS_IDLE);
+        mShootingStatus.add(STATUS_STILL_CAPTURING);
+        mShootingStatus.add(STATUS_STILL_SAVING);
+        mShootingStatus.add(STATUS_MOVIE_WAIT_REC_START);
+        mShootingStatus.add(STATUS_MOVIE_RECORDING);
+        mShootingStatus.add(STATUS_MOVIE_WAIT_REC_STOP);
+        mShootingStatus.add(STATUS_MOVIE_SAVING);
+        mShootingStatus.add(STATUS_INTERVAL_WAIT_REC_START);
+        mShootingStatus.add(STATUS_INTERVAL_RECORDING);
+        mShootingStatus.add(STATUS_INTERVAL_WAIT_REC_STOP);
+        mShootingStatus.add(STATUS_AUDIO_WAIT_REC_START);
+        mShootingStatus.add(STATUS_AUDIO_RECORDING);
+        mShootingStatus.add(STATUS_AUDIO_WAIT_REC_STOP);
+        mShootingStatus.add(STATUS_AUDIO_SAVING);
+    }
+
+    public static boolean isShootingStatus(String currentStatus) {
+        return mShootingStatus.contains(currentStatus);
+    }
 
     String mCameraStatus;
 

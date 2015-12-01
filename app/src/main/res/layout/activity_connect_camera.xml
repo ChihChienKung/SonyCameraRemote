@@ -24,11 +24,15 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/btn_refresh"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:elevation="6dp"
-        app:pressedTranslationZ="12dp"
-        app:borderWidth="0dp"/>
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        style="@style/FloatingActionButton"/>
+
+    <com.chien.sony.cameraremote.widget.FloatingActionButtonSelect
+        android:id="@+id/group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"/>
 </RelativeLayout>

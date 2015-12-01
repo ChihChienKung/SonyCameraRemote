@@ -9,6 +9,7 @@ import com.chien.sony.cameraremote.dialog.SettingDialog;
 import com.chien.sony.cameraremote.utils.CameraCandidates;
 import com.chien.sony.cameraremote.utils.CameraEventObserver;
 import com.chien.sony.cameraremote.utils.DisplayHelper;
+import com.chien.sony.cameraremote.utils.ImageDrawableUtil;
 import com.chien.sony.cameraremote.widget.StreamSurfaceView;
 
 import org.json.JSONArray;
@@ -26,13 +27,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.io.BufferedInputStream;
@@ -53,21 +49,14 @@ public class CameraActivity extends AppCompatActivity {
 
     private ImageButton mCapture;
 
-    private FloatingActionButton mSettings;
+    private FloatingActionButton mSettings, mShootMode;
 
-
-
-    private ImageView mShootMode;
 
     private ImageView mImagePictureWipe;
 
-    private Spinner mSpinnerShootMode;
+    private FloatingActionButton mButtonZoomIn;
 
-    private Button mButtonZoomIn;
-
-    private Button mButtonZoomOut;
-
-    private Button mButtonContentsListMode;
+    private FloatingActionButton mButtonZoomOut;
 
     private TextView mTextCameraStatus;
 
@@ -90,27 +79,33 @@ public class CameraActivity extends AppCompatActivity {
 
         CameraApplication app = (CameraApplication) getApplication();
         mTargetServer = app.getTargetServerDevice();
-        mRemoteApi = new RemoteApi(mTargetServer);
-        app.setRemoteApi(mRemoteApi);
+        mRemoteApi = app.getRemoteApi();
         mEventObserver = new CameraEventObserver(getApplicationContext(), mRemoteApi);
 
         //TODO Check widget.
         mLiveviewSurface = (StreamSurfaceView) findViewById(R.id.surfaceview_liveview);
         mCapture = (ImageButton) findViewById(R.id.btn_capture);
         mSettings = (FloatingActionButton) findViewById(R.id.btn_settings);
-        mShootMode = (ImageView) findViewById(R.id.img_shoot_mode);
-
+        mShootMode = (FloatingActionButton) findViewById(R.id.btn_shoot_mode);
 
         //TODO Not check widget.
         mImagePictureWipe = (ImageView) findViewById(R.id.image_picture_wipe);
-        mSpinnerShootMode = (Spinner) findViewById(R.id.spinner_shoot_mode);
-        mButtonZoomIn = (Button) findViewById(R.id.button_zoom_in);
-        mButtonZoomOut = (Button) findViewById(R.id.button_zoom_out);
-        mButtonContentsListMode = (Button) findViewById(R.id.button_contents_list);
+        mButtonZoomIn = (FloatingActionButton) findViewById(R.id.btn_zoom_in);
+        mButtonZoomOut = (FloatingActionButton) findViewById(R.id.btn_zoom_out);
         mTextCameraStatus = (TextView) findViewById(R.id.text_camera_status);
 
-        mSpinnerShootMode.setEnabled(false);
 
+        ImageDrawableUtil.setImageDrawable(app, mButtonZoomIn, R.drawable.ic_zoom_in);
+        ImageDrawableUtil.setImageDrawable(app, mButtonZoomOut, R.drawable.ic_zoom_out);
+
+        mCapture.setOnClickListener(mCaptureCLickListener);
+        mSettings.setOnClickListener(mSettingsClickListener);
+        mButtonZoomIn.setOnClickListener(mZoomClickListener);
+        mButtonZoomOut.setOnClickListener(mZoomClickListener);
+        mButtonZoomIn.setOnLongClickListener(mZoomLongClickListener);
+        mButtonZoomOut.setOnLongClickListener(mZoomLongClickListener);
+        mButtonZoomIn.setOnTouchListener(mZoomTouchListener);
+        mButtonZoomOut.setOnTouchListener(mZoomTouchListener);
         Log.d(TAG, "onCreate() completed.");
     }
 
@@ -119,12 +114,6 @@ public class CameraActivity extends AppCompatActivity {
         super.onResume();
 
         mEventObserver.activate();
-        mCapture.setOnClickListener(mCaptureCLickListener);
-        mSettings.setOnClickListener(mSettingsClickListener);
-
-        mSpinnerShootMode.setFocusable(false);
-        mButtonContentsListMode.setEnabled(false);
-
 
         mImagePictureWipe.setOnClickListener(new View.OnClickListener() {
 
@@ -134,86 +123,6 @@ public class CameraActivity extends AppCompatActivity {
             }
         });
 
-        mButtonZoomIn.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                actZoom("in", "1shot");
-            }
-        });
-
-        mButtonZoomOut.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                actZoom("out", "1shot");
-            }
-        });
-
-        mButtonZoomIn.setOnLongClickListener(new View.OnLongClickListener() {
-
-            @Override
-            public boolean onLongClick(View arg0) {
-                actZoom("in", "start");
-                return true;
-            }
-        });
-
-        mButtonZoomOut.setOnLongClickListener(new View.OnLongClickListener() {
-
-            @Override
-            public boolean onLongClick(View arg0) {
-                actZoom("out", "start");
-                return true;
-            }
-        });
-
-        mButtonZoomIn.setOnTouchListener(new View.OnTouchListener() {
-
-            private long downTime = -1;
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (System.currentTimeMillis() - downTime > 500) {
-                        actZoom("in", "stop");
-                    }
-                }
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    downTime = System.currentTimeMillis();
-                }
-                return false;
-            }
-        });
-
-        mButtonZoomOut.setOnTouchListener(new View.OnTouchListener() {
-
-            private long downTime = -1;
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (System.currentTimeMillis() - downTime > 500) {
-                        actZoom("out", "stop");
-                    }
-                }
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    downTime = System.currentTimeMillis();
-                }
-                return false;
-            }
-        });
-
-        mButtonContentsListMode.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Clicked contents list mode button");
-                prepareToStartContentsListMode();
-            }
-        });
 
         prepareOpenConnection();
 
@@ -254,7 +163,7 @@ public class CameraActivity extends AppCompatActivity {
                     CameraApplication app = (CameraApplication) getApplication();
                     app.setSupportedApiList(mSupportedApiSet);
 
-                    if (!isApiSupported("setCameraFunction")) {
+                    if (!app.isApiSupported("setCameraFunction")) {
 
                         // this device does not support setCameraFunction.
                         // No need to check camera status.
@@ -267,7 +176,7 @@ public class CameraActivity extends AppCompatActivity {
                         // after confirmation of camera state, open connection.
                         Log.d(TAG, "this device support set camera function");
 
-                        if (!isApiSupported("getEvent")) {
+                        if (!app.isApiSupported("getEvent")) {
                             Log.e(TAG, "this device is not support getEvent");
                             openConnection();
                             return;
@@ -285,7 +194,7 @@ public class CameraActivity extends AppCompatActivity {
                             throw new IOException();
                         }
 
-                        if (isShootingStatus(cameraStatus)) {
+                        if (CameraCandidates.isShootingStatus(cameraStatus)) {
                             Log.d(TAG, "camera function is Remote Shooting.");
                             openConnection();
                         } else {
@@ -309,29 +218,6 @@ public class CameraActivity extends AppCompatActivity {
         }.start();
     }
 
-    private static Set<String> mShootingStatus = new HashSet<String>();
-
-    static {
-        mShootingStatus.add("IDLE");
-        mShootingStatus.add("StillCapturing");
-        mShootingStatus.add("StillSaving");
-        mShootingStatus.add("MovieWaitRecStart");
-        mShootingStatus.add("MovieRecording");
-        mShootingStatus.add("MovieWaitRecStop");
-        mShootingStatus.add("MovieSaving");
-        mShootingStatus.add("IntervalWaitRecStart");
-        mShootingStatus.add("IntervalRecording");
-        mShootingStatus.add("IntervalWaitRecStop");
-        mShootingStatus.add("AudioWaitRecStart");
-        mShootingStatus.add("AudioRecording");
-        mShootingStatus.add("AudioWaitRecStop");
-        mShootingStatus.add("AudioSaving");
-    }
-
-    private static boolean isShootingStatus(String currentStatus) {
-        return mShootingStatus.contains(currentStatus);
-    }
-
     private void startOpenConnectionAfterChangeCameraState() {
         Log.d(TAG, "startOpenConectiontAfterChangeCameraState() exec");
 
@@ -339,28 +225,27 @@ public class CameraActivity extends AppCompatActivity {
 
             @Override
             public void run() {
-                mEventObserver
-                        .setEventChangeListener(new CameraEventObserver.ChangeListenerTmpl() {
+                mEventObserver.setEventChangeListener(new CameraEventObserver.ChangeListenerTmpl() {
 
-                            @Override
-                            public void onCameraStatusChanged(String status) {
-                                Log.d(TAG, "onCameraStatusChanged:" + status);
-                                if (CameraCandidates.STATUS_IDLE.equals(status)) {
-                                    openConnection();
-                                }
-                                refreshUi();
-                            }
+                    @Override
+                    public void onCameraStatusChanged(String status) {
+                        Log.d(TAG, "onCameraStatusChanged:" + status);
+                        if (CameraCandidates.STATUS_IDLE.equals(status)) {
+                            openConnection();
+                        }
+                        refreshUi();
+                    }
 
-                            @Override
-                            public void onShootModeChanged(String shootMode) {
-                                refreshUi();
-                            }
+                    @Override
+                    public void onShootModeChanged(String shootMode) {
+                        refreshUi();
+                    }
 
-                            @Override
-                            public void onStorageIdChanged(String storageId) {
-                                refreshUi();
-                            }
-                        });
+                    @Override
+                    public void onStorageIdChanged(String storageId) {
+                        refreshUi();
+                    }
+                });
 
                 mEventObserver.start();
             }
@@ -487,7 +372,7 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     private void refreshUi() {
-        if(!mEventObserver.isStarted()){
+        if (!mEventObserver.isStarted()) {
             mEventObserver.start();
         }
 
@@ -499,7 +384,7 @@ public class CameraActivity extends AppCompatActivity {
         mTextCameraStatus.setText(cameraStatus);
         try {
             refreshShootModeICon();
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
         if (CameraEventObserver.SHOOT_MODE_STILL.equals(shootMode)) {
@@ -529,29 +414,28 @@ public class CameraActivity extends AppCompatActivity {
 
         // Shoot Mode Buttons
         if (CameraCandidates.STATUS_IDLE.equals(cameraStatus) || CameraCandidates.STATUS_MOVIE_RECORDING.equals(cameraStatus)) {
-            mSpinnerShootMode.setEnabled(true);
+//            mSpinnerShootMode.setEnabled(true);
 //            selectionShootModeSpinner(mSpinnerShootMode, shootMode);
         } else {
-            mSpinnerShootMode.setEnabled(false);
+//            mSpinnerShootMode.setEnabled(false);
         }
 
+        CameraApplication app = (CameraApplication) getApplication();
+
         // Contents List Button
-        if (isApiSupported("getContentList") //
-                && isApiSupported("getSchemeList") //
-                && isApiSupported("getSourceList")) {
+        if (app.isApiSupported("getContentList") && app.isApiSupported("getSchemeList") && app.isApiSupported("getSourceList")) {
             String storageId = mEventObserver.getStorageId();
             if (storageId == null) {
                 Log.d(TAG, "not update ContentsList button ");
             } else if ("No Media".equals(storageId)) {
-                mButtonContentsListMode.setEnabled(false);
+//                mButtonContentsListMode.setEnabled(false);
             } else {
-                mButtonContentsListMode.setEnabled(true);
+//                mButtonContentsListMode.setEnabled(true);
             }
         }
     }
 
     private void refreshShootModeICon() {
-        CameraApplication application = (CameraApplication) getApplication();
         String shootMode = mEventObserver.getShootMode();
         int resId;
         if (CameraEventObserver.SHOOT_MODE_STILL.equals(shootMode)) {
@@ -565,20 +449,13 @@ public class CameraActivity extends AppCompatActivity {
         } else if (CameraEventObserver.SHOOT_MODE_LOOPREC.equals(shootMode)) {
             resId = R.drawable.ic_looprec;
         } else {
-            throw new NullPointerException("No have shoot mode. shootMode="+shootMode);
+            throw new NullPointerException("No have shoot mode. shootMode=" + shootMode);
         }
 
-        setImageDrawable(mShootMode, resId);
+        ImageDrawableUtil.setImageDrawable((CameraApplication) getApplication(), mShootMode, resId);
     }
 
-    private void setImageDrawable(ImageView imageView, int resId) {
-        CameraApplication application = (CameraApplication) getApplication();
-        if (application.isNeedMrVector()) {
-            imageView.setImageDrawable(application.getMrVectorDrawable(resId));
-        } else {
-            imageView.setImageResource(resId);
-        }
-    }
+
 
     /**
      * Retrieve a list of APIs that are available at present.
@@ -633,20 +510,6 @@ public class CameraActivity extends AppCompatActivity {
         return isAvailable;
     }
 
-    /**
-     * Check if the specified API is supported. This is for camera and avContent
-     * service API. The result of this method does not change dynamically.
-     *
-     * @param apiName
-     * @return
-     */
-    private boolean isApiSupported(String apiName) {
-        boolean isAvailable = false;
-        synchronized (mSupportedApiSet) {
-            isAvailable = mSupportedApiSet.contains(apiName);
-        }
-        return isAvailable;
-    }
 
     /**
      * Check if the version of the server is supported in this application.
@@ -713,8 +576,7 @@ public class CameraActivity extends AppCompatActivity {
 
                         @Override
                         public void run() {
-                            prepareShootModeSpinnerUi(//
-                                    availableModes.toArray(new String[0]), currentMode);
+                            refreshShootModeICon();
                             // Hide progress indeterminately on title bar.
                             setProgressBarIndeterminateVisibility(false);
                         }
@@ -728,57 +590,6 @@ public class CameraActivity extends AppCompatActivity {
 
             ;
         }.start();
-    }
-
-    /**
-     * Prepare for Spinner UI of Shoot Mode.
-     *
-     * @param availableShootModes
-     * @param currentMode
-     */
-    private void prepareShootModeSpinnerUi(String[] availableShootModes, String currentMode) {
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, //
-                android.R.layout.simple_spinner_item, availableShootModes);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpinnerShootMode.setAdapter(adapter);
-        mSpinnerShootMode.setPrompt(getString(R.string.prompt_shoot_mode));
-//        selectionShootModeSpinner(mSpinnerShootMode, currentMode);
-        mSpinnerShootMode.setOnItemSelectedListener(new OnItemSelectedListener() {
-            // selected Spinner dropdown item
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Spinner spinner = (Spinner) parent;
-                if (!spinner.isFocusable()) {
-                    // ignored the first call, because shoot mode has not
-                    // changed
-                    spinner.setFocusable(true);
-                } else {
-                    String mode = spinner.getSelectedItem().toString();
-                    String currentMode = mEventObserver.getShootMode();
-                    if (mode.isEmpty()) {
-                        DisplayHelper.toast(getApplicationContext(), //
-                                R.string.msg_error_no_supported_shootmode);
-                        // now state that can not be changed
-//                        selectionShootModeSpinner(spinner, currentMode);
-                    } else {
-//                        if ("IDLE".equals(mEventObserver.getCameraStatus()) //
-//                                && !mode.equals(currentMode)) {
-//                            setShootMode(mode); TODO
-//                        } else {
-                            // now state that can not be changed
-//                            selectionShootModeSpinner(spinner, currentMode);
-//                        }
-                    }
-                }
-            }
-
-            // not selected Spinner dropdown item
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-
     }
 
     /**
@@ -1284,6 +1095,71 @@ public class CameraActivity extends AppCompatActivity {
         public void onStorageIdChanged(String storageId) {
             Log.d(TAG, "onStorageIdChanged() called: " + storageId);
             refreshUi();
+        }
+    };
+
+    private final View.OnClickListener mZoomClickListener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.btn_zoom_in:
+                    actZoom("in", "1shot");
+                    break;
+                case R.id.btn_zoom_out:
+                    actZoom("out", "1shot");
+                    break;
+            }
+        }
+    };
+
+    private final View.OnLongClickListener mZoomLongClickListener = new View.OnLongClickListener() {
+
+        @Override
+        public boolean onLongClick(View v) {
+            switch (v.getId()) {
+                case R.id.btn_zoom_in:
+                    actZoom("in", "start");
+                    break;
+                case R.id.btn_zoom_out:
+                    actZoom("out", "start");
+                    break;
+            }
+            return true;
+        }
+    };
+
+    private final View.OnTouchListener mZoomTouchListener = new View.OnTouchListener() {
+
+        private long zoomInDownTime = -1;
+        private long zoomOutDownTime = -1;
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                switch (v.getId()) {
+                    case R.id.btn_zoom_in:
+                        if (System.currentTimeMillis() - zoomInDownTime > 500) {
+                            actZoom("in", "stop");
+                        }
+                        break;
+                    case R.id.btn_zoom_out:
+                        if (System.currentTimeMillis() - zoomOutDownTime > 500) {
+                            actZoom("out", "stop");
+                        }
+                        break;
+                }
+            } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                switch (v.getId()) {
+                    case R.id.btn_zoom_in:
+                        zoomInDownTime = System.currentTimeMillis();
+                        break;
+                    case R.id.btn_zoom_out:
+                        zoomOutDownTime = System.currentTimeMillis();
+                        break;
+                }
+            }
+            return false;
         }
     };
 

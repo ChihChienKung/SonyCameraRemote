@@ -77,6 +77,7 @@ public class WrapContentLinearLayoutManager extends LinearLayoutManager {
     }
 
     private void measureScrapChild(final RecyclerView.Recycler recycler, final int position, final int widthSpec, final int heightSpec, final int[] measuredDimension) {
+
         final View view = recycler.getViewForPosition(position);
         if (view != null) {
             final RecyclerView.LayoutParams p = (RecyclerView.LayoutParams)view.getLayoutParams();

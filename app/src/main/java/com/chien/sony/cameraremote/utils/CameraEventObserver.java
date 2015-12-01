@@ -33,90 +33,6 @@ public class CameraEventObserver {
     public static final String SHOOT_MODE_INTERVALSTILL = "intervalstill";
     public static final String SHOOT_MODE_LOOPREC = "looprec";
 
-    /**
-     * A listener interface to receive these changes. These methods will be
-     * called by UI thread.
-     */
-    public interface ChangeListener {
-
-        /**
-         * Called when the list of available APIs is modified.
-         *
-         * @param apis a list of available APIs
-         */
-        void onApiListModified(List<String> apis);
-
-        /**
-         * Called when the value of "Camera Status" is changed.
-         *
-         * @param status camera status (ex."IDLE")
-         */
-        void onCameraStatusChanged(String status);
-
-        /**
-         * Called when the value of "Liveview Status" is changed.
-         *
-         * @param status liveview status (ex.true)
-         */
-        void onLiveviewStatusChanged(boolean status);
-
-        /**
-         * Called when the value of "Shoot Mode" is changed.
-         *
-         * @param shootMode shoot mode (ex."still")
-         */
-        void onShootModeChanged(String shootMode);
-
-        /**
-         * Called when the value of "zoomPosition" is changed.
-         *
-         * @param zoomPosition zoom position (ex.12)
-         */
-        void onZoomPositionChanged(int zoomPosition);
-
-        /**
-         * Called when the value of "storageId" is changed.
-         *
-         * @param storageId storageId (ex. "Memory Card 1")
-         */
-        void onStorageIdChanged(String storageId);
-
-        // :
-        // : add methods for Event data as necessary.
-    }
-
-    /**
-     * Abstract class to receive these changes. please override methods that you
-     * need.
-     */
-    public abstract static class ChangeListenerTmpl implements ChangeListener {
-
-        @Override
-        public void onApiListModified(List<String> apis) {
-        }
-
-        @Override
-        public void onCameraStatusChanged(String status) {
-        }
-
-        @Override
-        public void onLiveviewStatusChanged(boolean status) {
-        }
-
-        @Override
-        public void onShootModeChanged(String shootMode) {
-        }
-
-        @Override
-        public void onZoomPositionChanged(int zoomPosition) {
-        }
-
-        @Override
-        public void onStorageIdChanged(String storageId) {
-        }
-
-    }
-
     private final Handler mUiHandler;
 
     private RemoteApi mRemoteApi;
@@ -668,4 +584,88 @@ public class CameraEventObserver {
                 start();
         }
     };
+
+    /**
+     * A listener interface to receive these changes. These methods will be
+     * called by UI thread.
+     */
+    public interface ChangeListener {
+
+        /**
+         * Called when the list of available APIs is modified.
+         *
+         * @param apis a list of available APIs
+         */
+        void onApiListModified(List<String> apis);
+
+        /**
+         * Called when the value of "Camera Status" is changed.
+         *
+         * @param status camera status (ex."IDLE")
+         */
+        void onCameraStatusChanged(String status);
+
+        /**
+         * Called when the value of "Liveview Status" is changed.
+         *
+         * @param status liveview status (ex.true)
+         */
+        void onLiveviewStatusChanged(boolean status);
+
+        /**
+         * Called when the value of "Shoot Mode" is changed.
+         *
+         * @param shootMode shoot mode (ex."still")
+         */
+        void onShootModeChanged(String shootMode);
+
+        /**
+         * Called when the value of "zoomPosition" is changed.
+         *
+         * @param zoomPosition zoom position (ex.12)
+         */
+        void onZoomPositionChanged(int zoomPosition);
+
+        /**
+         * Called when the value of "storageId" is changed.
+         *
+         * @param storageId storageId (ex. "Memory Card 1")
+         */
+        void onStorageIdChanged(String storageId);
+
+        // :
+        // : add methods for Event data as necessary.
+    }
+
+    /**
+     * Abstract class to receive these changes. please override methods that you
+     * need.
+     */
+    public abstract static class ChangeListenerTmpl implements ChangeListener {
+
+        @Override
+        public void onApiListModified(List<String> apis) {
+        }
+
+        @Override
+        public void onCameraStatusChanged(String status) {
+        }
+
+        @Override
+        public void onLiveviewStatusChanged(boolean status) {
+        }
+
+        @Override
+        public void onShootModeChanged(String shootMode) {
+        }
+
+        @Override
+        public void onZoomPositionChanged(int zoomPosition) {
+        }
+
+        @Override
+        public void onStorageIdChanged(String storageId) {
+        }
+
+    }
 }
