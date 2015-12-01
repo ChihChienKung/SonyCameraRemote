@@ -55,6 +55,9 @@ public class FloatingActionButtonSelect extends RelativeLayout {
         mChildFrame.setOnTouchListener(mOnTouchListener);
         mMain.setOnClickListener(mOnClickListener);
 
+        if(isInEditMode())
+            return;
+
         mFabMargin = getResources().getDimensionPixelOffset(R.dimen.codelab_fab_margin);
         DisplayMetrics dm = new DisplayMetrics();
         ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -81,6 +84,10 @@ public class FloatingActionButtonSelect extends RelativeLayout {
 
     public OnSelectListener getOnSelectListener() {
         return mOnSelectListener;
+    }
+
+    public int getDrawableId(){
+        return mChildDataMap.get(mMain.getTag().toString()).drawable;
     }
 
     public void select(String tag) {
