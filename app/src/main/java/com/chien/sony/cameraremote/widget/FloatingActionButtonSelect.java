@@ -68,7 +68,7 @@ public class FloatingActionButtonSelect extends RelativeLayout {
             @Override
             public void onGlobalLayout() {
                 if (Build.VERSION.SDK_INT >= 16)
-                    mChildFrame.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    mChildFrame.getViewTreeObserver().removeOnGlobalLayoutListener(this); 
                 else
                     mChildFrame.getViewTreeObserver().removeGlobalOnLayoutListener(this);
 
