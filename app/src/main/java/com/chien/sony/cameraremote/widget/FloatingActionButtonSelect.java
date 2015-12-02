@@ -12,9 +12,7 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.chien.sony.cameraremote.CameraApplication;
@@ -35,10 +33,13 @@ public class FloatingActionButtonSelect extends RelativeLayout {
     private FloatingActionButton mMain;
 
     private Map<String, Offset> mOffsetList = new HashMap<String, Offset>();
+    private Map<String, ChildData> mChildDataMap = new HashMap<String, ChildData>();
 
     private boolean mIsExpand = false;
 
     private int mDeviceWidth, mDeviceHeight, mFabMargin;
+
+    private OnSelectListener mOnSelectListener;
 
     public FloatingActionButtonSelect(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -53,6 +54,9 @@ public class FloatingActionButtonSelect extends RelativeLayout {
 
         mChildFrame.setOnTouchListener(mOnTouchListener);
         mMain.setOnClickListener(mOnClickListener);
+
+        if(isInEditMode())
+            return;
 
         mFabMargin = getResources().getDimensionPixelOffset(R.dimen.codelab_fab_margin);
         DisplayMetrics dm = new DisplayMetrics();
@@ -78,16 +82,60 @@ public class FloatingActionButtonSelect extends RelativeLayout {
         });
     }
 
-    public void addChild(String tag, int drawableResId, OnClickListener action) {
-        FloatingActionButton fab = (FloatingActionButton) LayoutInflater.from(getContext()).inflate(R.layout.widget_mini_floating_cation_button, null);
-        fab.setId(drawableResId);
-        fab.setOnClickListener(action);
-        ImageDrawableUtil.setImageDrawable((CameraApplication) getContext().getApplicationContext(), fab, drawableResId);
-        fab.setTag(tag);
-        mChildFrame.addView(fab);
+    public void setOnSelectListener(OnSelectListener onSelectListener) {
+        mOnSelectListener = onSelectListener;
+    }
+
+    public OnSelectListener getOnSelectListener() {
+        return mOnSelectListener;
+    }
+
+    public int getDrawableId(){
+        return mChildDataMap.get(mMain.getTag().toString()).drawable;
+    }
+
+    public void select(String tag) {
+        ChildData data = mChildDataMap.get(tag);
+        if(data == null)
+            return;
+        FloatingActionButton child = (FloatingActionButton) findViewWithTag(tag);
+        Object mainTag = mMain.getTag();
+        child.setTag(mainTag);
+        ImageDrawableUtil.setImageDrawable((CameraApplication) getContext().getApplicationContext(), child, mChildDataMap.get(mainTag).drawable);
+        ImageDrawableUtil.setImageDrawable((CameraApplication) getContext().getApplicationContext(), mMain, data.drawable);
+        mMain.setTag(tag);
+
+        Offset offset = mOffsetList.get(tag);
+        mOffsetList.remove(offset);
+        mOffsetList.put(mainTag.toString(), offset);
+
+        if(mIsExpand)
+            mMain.performClick();
+
+        if (mOnSelectListener != null)
+            mOnSelectListener.onSelect(this, tag);
+    }
+
+    public void addChild(String tag, int drawableResId) {
+        if(mChildDataMap.containsKey(tag))
+            return;
+        mChildDataMap.put(tag, new ChildData(tag, drawableResId));
+        if(mChildDataMap.size() == 1){
+            ImageDrawableUtil.setImageDrawable((CameraApplication) getContext().getApplicationContext(), mMain, drawableResId);
+            mMain.setTag(tag);
+        }else {
+            FloatingActionButton fab = (FloatingActionButton) LayoutInflater.from(getContext()).inflate(R.layout.widget_mini_floating_cation_button, null);
+            fab.setOnClickListener(mChildClick);
+            ImageDrawableUtil.setImageDrawable((CameraApplication) getContext().getApplicationContext(), fab, drawableResId);
+            fab.setTag(tag);
+            mChildFrame.addView(fab);
+        }
     }
 
     public void removeChild(String tag) {
+        if(!mChildDataMap.containsKey(tag))
+            return;
+        mChildDataMap.remove(tag);
         View v = mChildFrame.findViewWithTag(tag);
         mChildFrame.removeView(v);
     }
@@ -258,6 +306,13 @@ public class FloatingActionButtonSelect extends RelativeLayout {
         }
     };
 
+    private final OnClickListener mChildClick = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            select(v.getTag().toString());
+        }
+    };
+
     private final OnClickListener mOnClickListener = new OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -282,5 +337,18 @@ public class FloatingActionButtonSelect extends RelativeLayout {
 
     private class Offset {
         float x, y;
+    }
+
+    private class ChildData{
+        String tag;
+        int drawable;
+        public ChildData(String tag, int drawable){
+            this.tag = tag;
+            this.drawable = drawable;
+        }
+    }
+
+    public interface OnSelectListener {
+        public void onSelect(FloatingActionButtonSelect parent, String tag);
     }
 }

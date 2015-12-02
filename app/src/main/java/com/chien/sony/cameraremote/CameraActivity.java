@@ -10,6 +10,7 @@ import com.chien.sony.cameraremote.utils.CameraCandidates;
 import com.chien.sony.cameraremote.utils.CameraEventObserver;
 import com.chien.sony.cameraremote.utils.DisplayHelper;
 import com.chien.sony.cameraremote.utils.ImageDrawableUtil;
+import com.chien.sony.cameraremote.widget.FloatingActionButtonSelect;
 import com.chien.sony.cameraremote.widget.StreamSurfaceView;
 
 import org.json.JSONArray;
@@ -49,7 +50,9 @@ public class CameraActivity extends AppCompatActivity {
 
     private ImageButton mCapture;
 
-    private FloatingActionButton mSettings, mShootMode;
+    private FloatingActionButton mSettings;
+
+    private FloatingActionButtonSelect mShootMode;
 
 
     private ImageView mImagePictureWipe;
@@ -86,7 +89,7 @@ public class CameraActivity extends AppCompatActivity {
         mLiveviewSurface = (StreamSurfaceView) findViewById(R.id.surfaceview_liveview);
         mCapture = (ImageButton) findViewById(R.id.btn_capture);
         mSettings = (FloatingActionButton) findViewById(R.id.btn_settings);
-        mShootMode = (FloatingActionButton) findViewById(R.id.btn_shoot_mode);
+        mShootMode = (FloatingActionButtonSelect) findViewById(R.id.btn_shoot_mode);
 
         //TODO Not check widget.
         mImagePictureWipe = (ImageView) findViewById(R.id.image_picture_wipe);
@@ -451,8 +454,10 @@ public class CameraActivity extends AppCompatActivity {
         } else {
             throw new NullPointerException("No have shoot mode. shootMode=" + shootMode);
         }
-
-        ImageDrawableUtil.setImageDrawable((CameraApplication) getApplication(), mShootMode, resId);
+        //TODO mShootMode還沒塞資料
+        if(resId != mShootMode.getDrawableId())
+            mShootMode.select(String.valueOf(resId));
+//        ImageDrawableUtil.setImageDrawable((CameraApplication) getApplication(), mShootMode, resId);
     }
 
 

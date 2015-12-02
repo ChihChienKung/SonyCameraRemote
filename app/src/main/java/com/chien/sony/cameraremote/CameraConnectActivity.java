@@ -78,24 +78,6 @@ public class CameraConnectActivity extends Activity {
         mDeviceList.setLayoutManager(new LinearLayoutManager(this));
 
         mRefresh.setOnClickListener(mOnClickListener);
-
-
-
-        FloatingActionButtonSelect group = (FloatingActionButtonSelect) findViewById(R.id.group);
-        group.addChild("a", R.drawable.ic_audio, null);
-        group.addChild("b", R.drawable.ic_still, null);
-        group.addChild("c", R.drawable.ic_movie, null);
-        group.addChild("d", R.drawable.ic_intervalstill, null);
-        group.addChild("e", R.drawable.ic_looprec, null);
-        group.addChild("f", R.drawable.ic_refresh, null);
-        group.addChild("g", R.drawable.ic_zoom_in, null);
-        group.addChild("h", R.drawable.ic_zoom_out, null);
-        group.addChild("i", R.drawable.ic_audio, null);
-        group.addChild("j", R.drawable.ic_still, null);
-        group.addChild("k", R.drawable.ic_movie, null);
-        group.addChild("l", R.drawable.ic_audio, null);
-        group.addChild("m", R.drawable.ic_still, null);
-        group.addChild("n", R.drawable.ic_movie, null);
     }
 
     @Override
