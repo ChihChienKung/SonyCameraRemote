@@ -26,20 +26,14 @@ public class ShootModeChooseDialog extends RecyclerDialog {
     @Override
     protected void init() {
         final CameraCandidates cameraCandidates = CameraCandidates.getInstance();
-        addItem(cameraCandidates.ShootMode);
+        addItem(cameraCandidates.getShootModeList());
     }
 
     @Override
     public RecyclerAdapter.OnItemClickListener getOnItemClickListener() {
-        final CameraApplication app = (CameraApplication) getActivity().getApplication();
-        final CameraCandidates cameraCandidates = CameraCandidates.getInstance();
         return new RecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(RecyclerAdapter<?> adapter, View view, int position) {
-                if (CameraCandidates.STATUS_IDLE.equals(cameraCandidates.getCameraStatus())) {
-                    RemoteApiHelper.setShootMode(app.getRemoteApi(), (String) adapter.getItem(position));
-                    dismiss();
-                }
             }
 
         };

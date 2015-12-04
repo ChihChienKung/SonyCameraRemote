@@ -27,7 +27,6 @@ public final class RemoteApiHelper {
 
     public static void setShootMode(final RemoteApi remoteApi, final String shootMode) {
         new Thread() {
-
             @Override
             public void run() {
                 try {

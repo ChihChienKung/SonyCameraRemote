@@ -31,7 +31,6 @@ import android.widget.Toast;
 import com.chien.sony.cameraremote.receiver.WifiBroadcastReceiver;
 import com.chien.sony.cameraremote.utils.ImageDrawableUtil;
 import com.chien.sony.cameraremote.widget.ApPoint;
-import com.chien.sony.cameraremote.widget.FloatingActionButtonSelect;
 import com.chien.sony.cameraremote.widget.recyclerView.RecyclerStringItem;
 import com.chien.sony.cameraremote.widget.recyclerView.RecyclerAdapter;
 import com.chien.sony.cameraremote.widget.recyclerView.ViewHolder;

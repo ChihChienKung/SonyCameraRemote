@@ -38,7 +38,33 @@ public class CameraCandidates {
     public static final String STATUS_STREAMING = "Streaming";
     public static final String STATUS_DELETING = "Deleting";
 
-    public static final String SHOOT_MODE = "shootMode";
+    public static final String TYPE_AVAILABLE_API_LIST = "availableApiList";
+    public static final String TYPE_CAMERA_STATUS = "cameraStatus";
+    public static final String TYPE_ZOOM_INFORMATION = "zoomInformation";
+    public static final String TYPE_LIVEVIEW_STATUS = "liveviewStatus";
+    public static final String TYPE_LIVEVIEW_ORIENTATION = "liveviewOrientation";
+    public static final String TYPE_TAKE_PICTURE = "takePicture";
+    public static final String TYPE_STORAGE_INFORMATION = "storageInformation";
+    public static final String TYPE_BEEP_MODE = "beepMode";
+    public static final String TYPE_CAMERA_FUNCTION = "cameraFunction";
+    public static final String TYPE_MOVE_QUALITY = "movieQuality";
+    public static final String TYPE_STILL_SIZE = "stillSize";
+    public static final String TYPE_CAMERA_FUNCTION_RESULT = "cameraFunctionResult";
+    public static final String TYPE_STEADY_MODE = "steadyMode";
+    public static final String TYPE_VIEW_ANGLE = "viewAngle";
+    public static final String TYPE_EXPOSURE_MODE = "exposureMode";
+    public static final String TYPE_POSTVIEW_IMAGE_SIZE = "postviewImageSize";
+    public static final String TYPE_SELF_TIMER = "selfTimer";
+    public static final String TYPE_SHOOT_MODE = "shootMode";
+    public static final String TYPE_EXPOSURE_COMPENSATION = "exposureCompensation";
+    public static final String TYPE_FLASH_MODE = "flashMode";
+    public static final String TYPE_F_NUMBER = "fNumber";
+    public static final String TYPE_FOCUS_MODE = "focusMode";
+    public static final String TYPE_ISO_SPEED_RATE = "isoSpeedRate";
+    public static final String TYPE_PROGRAM_SHIFT = "programShift";
+    public static final String TYPE_SHUTTER_SPEED = "shutterSpeed";
+    public static final String TYPE_WHITE_BALANCE = "whiteBalance";
+    public static final String TYPE_TOUCH_AF_POSITION = "touchAFPosition";
 
     private static Set<String> mShootingStatus = new HashSet<String>();
 
@@ -63,9 +89,17 @@ public class CameraCandidates {
         return mShootingStatus.contains(currentStatus);
     }
 
-    String mCameraStatus;
+    boolean mLiveviewStatus;
 
-    public List<String> ShootMode = new ArrayList<String>();
+    String mShootMode;
+
+    List<String> mShootModeList;
+
+    int mZoomPosition;
+
+    String mStorageId;
+
+    String mCameraStatus;
 
     public static CameraCandidates getInstance() {
         if (mCameraCandidates == null) {
@@ -88,9 +122,25 @@ public class CameraCandidates {
         }
     }
 
-//    void setCameraCandidates(String cameraStatus){
-//        mCameraStatus = cameraStatus;
-//    }
+    public boolean getLiveviewStatus() {
+        return mLiveviewStatus;
+    }
+
+    public String getShootMode() {
+        return mShootMode;
+    }
+
+    public List<String> getShootModeList(){
+        return mShootModeList;
+    }
+
+    public int getZoomPosition() {
+        return mZoomPosition;
+    }
+
+    public String getStorageId() {
+        return mStorageId;
+    }
 
     public String getCameraStatus(){
         return mCameraStatus;
@@ -98,8 +148,6 @@ public class CameraCandidates {
 
     public List<String> getControlledList() {
         List<String> controlledList = new ArrayList<String>();
-        if (ShootMode.size() > 1)
-            controlledList.add(SHOOT_MODE);
 
         return controlledList;
     }

@@ -39,6 +39,15 @@ public class RemoteApi {
     public static final String VERSION_1_2 = "1.2";
     public static final String VERSION_1_3 = "1.3";
 
+    public static final String API_RESULTS = "results";
+    public static final String API_RESULT = "result";
+
+    public static final String API_SET_CAMERA_FUNCTION_REMOTE_SHOOTING = "Remote Shooting";
+    public static final String API_SET_CAMERA_FUNCTION_CONTENTS_TRANSFER = "Contents Transfer";
+
+    public static final String API_GET_EVENT_TYPE = "type";
+    public static final String API_GET_EVENT_CAMERA_STATUS = "cameraStatus";
+
     // If you'd like to suppress detailed log output, change this value into
     // false.
     private static final boolean FULL_LOG = true;

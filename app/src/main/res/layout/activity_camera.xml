@@ -52,8 +52,8 @@
             android:visibility="gone"
             app:fabSize="mini" />
 
-        <com.chien.sony.cameraremote.widget.FloatingActionButtonSelect
-            android:id="@+id/btn_shoot_mode"
+        <com.chien.sony.cameraremote.widget.FloatingActionButtonSpinner
+            android:id="@+id/btn_shoot_mode_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true" />

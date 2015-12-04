@@ -19,7 +19,6 @@ public class SettingDialog extends RecyclerDialog {
     @Override
     protected void init() {
         CameraCandidates cameraCandidates = CameraCandidates.getInstance();
-        Log.e(TAG, "" + cameraCandidates.getControlledList());
         addItem(cameraCandidates.getControlledList());
     }
 
@@ -29,13 +28,7 @@ public class SettingDialog extends RecyclerDialog {
             @Override
             public void onItemClick(RecyclerAdapter<?> adapter, View view, int position) {
                 String selected = (String) adapter.getItem(position);
-                Log.e(TAG, CameraCandidates.SHOOT_MODE+"  --  "+selected);
-                if (CameraCandidates.SHOOT_MODE.equals(selected)) {
-                    if (!isDialogExist()) {
-                        mShowDialog = new ShootModeChooseDialog();
-                        showDialog();
-                    }
-                }
+                Log.v(TAG, "select = "+selected);
             }
 
         };

@@ -19,14 +19,16 @@ import com.chien.sony.cameraremote.CameraApplication;
 import com.chien.sony.cameraremote.R;
 import com.chien.sony.cameraremote.utils.ImageDrawableUtil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Created by Jean.Gong on 2015/11/30.
  */
-public class FloatingActionButtonSelect extends RelativeLayout {
-    private static final String TAG = FloatingActionButtonSelect.class.getSimpleName();
+public class FloatingActionButtonSpinner extends RelativeLayout {
+    private static final String TAG = FloatingActionButtonSpinner.class.getSimpleName();
 
     private RelativeLayout mChildFrame;
 
@@ -41,7 +43,7 @@ public class FloatingActionButtonSelect extends RelativeLayout {
 
     private OnSelectListener mOnSelectListener;
 
-    public FloatingActionButtonSelect(Context context, AttributeSet attrs) {
+    public FloatingActionButtonSpinner(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
@@ -55,10 +57,10 @@ public class FloatingActionButtonSelect extends RelativeLayout {
         mChildFrame.setOnTouchListener(mOnTouchListener);
         mMain.setOnClickListener(mOnClickListener);
 
-        if(isInEditMode())
+        if (isInEditMode())
             return;
 
-        mFabMargin = getResources().getDimensionPixelOffset(R.dimen.codelab_fab_margin);
+        mFabMargin = getResources().getDimensionPixelOffset(R.dimen.floating_action_button_margin);
         DisplayMetrics dm = new DisplayMetrics();
         ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(dm);
         mDeviceWidth = dm.widthPixels;
@@ -68,7 +70,7 @@ public class FloatingActionButtonSelect extends RelativeLayout {
             @Override
             public void onGlobalLayout() {
                 if (Build.VERSION.SDK_INT >= 16)
-                    mChildFrame.getViewTreeObserver().removeOnGlobalLayoutListener(this); 
+                    mChildFrame.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 else
                     mChildFrame.getViewTreeObserver().removeGlobalOnLayoutListener(this);
 
@@ -90,16 +92,14 @@ public class FloatingActionButtonSelect extends RelativeLayout {
         return mOnSelectListener;
     }
 
-    public int getDrawableId(){
-        return mChildDataMap.get(mMain.getTag().toString()).drawable;
-    }
-
     public void select(String tag) {
         ChildData data = mChildDataMap.get(tag);
-        if(data == null)
+        if (data == null)
+            return;
+        Object mainTag = mMain.getTag();
+        if(mainTag.equals(tag))
             return;
         FloatingActionButton child = (FloatingActionButton) findViewWithTag(tag);
-        Object mainTag = mMain.getTag();
         child.setTag(mainTag);
         ImageDrawableUtil.setImageDrawable((CameraApplication) getContext().getApplicationContext(), child, mChildDataMap.get(mainTag).drawable);
         ImageDrawableUtil.setImageDrawable((CameraApplication) getContext().getApplicationContext(), mMain, data.drawable);
@@ -109,35 +109,53 @@ public class FloatingActionButtonSelect extends RelativeLayout {
         mOffsetList.remove(offset);
         mOffsetList.put(mainTag.toString(), offset);
 
-        if(mIsExpand)
+        if (mIsExpand)
             mMain.performClick();
 
         if (mOnSelectListener != null)
             mOnSelectListener.onSelect(this, tag);
     }
 
-    public void addChild(String tag, int drawableResId) {
-        if(mChildDataMap.containsKey(tag))
+    public void addChild(ChildData childData) {
+        if (mChildDataMap.containsKey(childData.tag))
             return;
-        mChildDataMap.put(tag, new ChildData(tag, drawableResId));
-        if(mChildDataMap.size() == 1){
-            ImageDrawableUtil.setImageDrawable((CameraApplication) getContext().getApplicationContext(), mMain, drawableResId);
-            mMain.setTag(tag);
-        }else {
+        mChildDataMap.put(childData.tag, childData);
+        if (mChildDataMap.size() == 1) {
+            ImageDrawableUtil.setImageDrawable((CameraApplication) getContext().getApplicationContext(), mMain, childData.drawable);
+            mMain.setTag(childData.tag);
+        } else {
             FloatingActionButton fab = (FloatingActionButton) LayoutInflater.from(getContext()).inflate(R.layout.widget_mini_floating_cation_button, null);
             fab.setOnClickListener(mChildClick);
-            ImageDrawableUtil.setImageDrawable((CameraApplication) getContext().getApplicationContext(), fab, drawableResId);
-            fab.setTag(tag);
+            ImageDrawableUtil.setImageDrawable((CameraApplication) getContext().getApplicationContext(), fab, childData.drawable);
+            fab.setTag(childData.tag);
             mChildFrame.addView(fab);
         }
     }
 
     public void removeChild(String tag) {
-        if(!mChildDataMap.containsKey(tag))
+        if (!mChildDataMap.containsKey(tag))
             return;
         mChildDataMap.remove(tag);
         View v = mChildFrame.findViewWithTag(tag);
         mChildFrame.removeView(v);
+    }
+
+    public void removeAllChild(){
+        mChildDataMap.clear();
+        mOffsetList.clear();
+        mChildFrame.removeAllViews();
+    }
+
+    public int size() {
+        return mChildDataMap.size();
+    }
+
+    public List<ChildData> getChild() {
+        List<ChildData> childList = new ArrayList<ChildData>();
+        for (String tag : mChildDataMap.keySet()) {
+            childList.add(mChildDataMap.get(tag).clone());
+        }
+        return childList;
     }
 
     private void collapseFab() {
@@ -153,7 +171,7 @@ public class FloatingActionButtonSelect extends RelativeLayout {
             animators[i + count * 2] = collapseScaleXAnimator(v);
             animators[i + count * 3] = collapseScaleYAnimator(v);
         }
-
+        mOffsetList.clear();
         animatorSet.playTogether(animators);
         animatorSet.addListener(mAnimatorListener);
         animatorSet.start();
@@ -317,14 +335,14 @@ public class FloatingActionButtonSelect extends RelativeLayout {
         @Override
         public void onClick(View view) {
             if (mIsExpand) {
-                synchronized (FloatingActionButtonSelect.this) {
+                synchronized (FloatingActionButtonSpinner.this) {
                     if (mIsExpand) {
                         collapseFab();
                         mIsExpand = false;
                     }
                 }
             } else {
-                synchronized (FloatingActionButtonSelect.this) {
+                synchronized (FloatingActionButtonSpinner.this) {
                     if (!mIsExpand) {
                         mChildFrame.setVisibility(VISIBLE);
                         expandFab();
@@ -339,16 +357,43 @@ public class FloatingActionButtonSelect extends RelativeLayout {
         float x, y;
     }
 
-    private class ChildData{
-        String tag;
-        int drawable;
-        public ChildData(String tag, int drawable){
+    public static class ChildData {
+        private String tag;
+        private int drawable;
+
+        public ChildData(String tag, int drawable) {
             this.tag = tag;
             this.drawable = drawable;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof ChildData))
+                return false;
+            ChildData objData = (ChildData) obj;
+
+            if (objData.tag == null && tag != null)
+                return false;
+
+            if (objData.tag != null && tag == null)
+                return false;
+
+            if (!objData.tag.equals(tag))
+                return false;
+
+            if (objData.drawable != drawable)
+                return false;
+
+            return true;
+        }
+
+        @Override
+        protected ChildData clone() {
+            return new ChildData(tag, drawable);
         }
     }
 
     public interface OnSelectListener {
-        public void onSelect(FloatingActionButtonSelect parent, String tag);
+        public void onSelect(FloatingActionButtonSpinner parent, String tag);
     }
 }

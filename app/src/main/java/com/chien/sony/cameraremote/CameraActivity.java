@@ -5,12 +5,13 @@
 package com.chien.sony.cameraremote;
 
 import com.chien.sony.cameraremote.api.RemoteApi;
+import com.chien.sony.cameraremote.api.RemoteApiHelper;
 import com.chien.sony.cameraremote.dialog.SettingDialog;
 import com.chien.sony.cameraremote.utils.CameraCandidates;
 import com.chien.sony.cameraremote.utils.CameraEventObserver;
 import com.chien.sony.cameraremote.utils.DisplayHelper;
 import com.chien.sony.cameraremote.utils.ImageDrawableUtil;
-import com.chien.sony.cameraremote.widget.FloatingActionButtonSelect;
+import com.chien.sony.cameraremote.widget.FloatingActionButtonSpinner;
 import com.chien.sony.cameraremote.widget.StreamSurfaceView;
 
 import org.json.JSONArray;
@@ -52,7 +53,7 @@ public class CameraActivity extends AppCompatActivity {
 
     private FloatingActionButton mSettings;
 
-    private FloatingActionButtonSelect mShootMode;
+    private FloatingActionButtonSpinner mShootModeSpinner;
 
 
     private ImageView mImagePictureWipe;
@@ -75,6 +76,8 @@ public class CameraActivity extends AppCompatActivity {
 
     private final Set<String> mSupportedApiSet = new HashSet<String>();
 
+    private CameraCandidates mCameraCandidates;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,7 +92,7 @@ public class CameraActivity extends AppCompatActivity {
         mLiveviewSurface = (StreamSurfaceView) findViewById(R.id.surfaceview_liveview);
         mCapture = (ImageButton) findViewById(R.id.btn_capture);
         mSettings = (FloatingActionButton) findViewById(R.id.btn_settings);
-        mShootMode = (FloatingActionButtonSelect) findViewById(R.id.btn_shoot_mode);
+        mShootModeSpinner = (FloatingActionButtonSpinner) findViewById(R.id.btn_shoot_mode_spinner);
 
         //TODO Not check widget.
         mImagePictureWipe = (ImageView) findViewById(R.id.image_picture_wipe);
@@ -103,6 +106,7 @@ public class CameraActivity extends AppCompatActivity {
 
         mCapture.setOnClickListener(mCaptureCLickListener);
         mSettings.setOnClickListener(mSettingsClickListener);
+        mShootModeSpinner.setOnSelectListener(mShootModeSelectListener);
         mButtonZoomIn.setOnClickListener(mZoomClickListener);
         mButtonZoomOut.setOnClickListener(mZoomClickListener);
         mButtonZoomIn.setOnLongClickListener(mZoomLongClickListener);
@@ -115,7 +119,7 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        mCameraCandidates = CameraCandidates.getInstance();
         mEventObserver.activate();
 
         mImagePictureWipe.setOnClickListener(new View.OnClickListener() {
@@ -188,11 +192,11 @@ public class CameraActivity extends AppCompatActivity {
                         // confirm current camera status
                         String cameraStatus = null;
                         JSONObject replyJson = mRemoteApi.getEvent_v1_0(false);
-                        JSONArray resultsObj = replyJson.getJSONArray("result");
+                        JSONArray resultsObj = replyJson.getJSONArray(RemoteApi.API_RESULT);
                         JSONObject cameraStatusObj = resultsObj.getJSONObject(1);
-                        String type = cameraStatusObj.getString("type");
-                        if ("cameraStatus".equals(type)) {
-                            cameraStatus = cameraStatusObj.getString("cameraStatus");
+                        String type = cameraStatusObj.getString(RemoteApi.API_GET_EVENT_TYPE);
+                        if (RemoteApi.API_GET_EVENT_CAMERA_STATUS.equals(type)) {
+                            cameraStatus = cameraStatusObj.getString(RemoteApi.API_GET_EVENT_CAMERA_STATUS);
                         } else {
                             throw new IOException();
                         }
@@ -205,7 +209,7 @@ public class CameraActivity extends AppCompatActivity {
                             startOpenConnectionAfterChangeCameraState();
 
                             // set Camera function to Remote Shooting
-                            replyJson = mRemoteApi.setCameraFunction("Remote Shooting");
+                            replyJson = mRemoteApi.setCameraFunction(RemoteApi.API_SET_CAMERA_FUNCTION_REMOTE_SHOOTING);
                         }
                     }
                 } catch (IOException e) {
@@ -241,6 +245,11 @@ public class CameraActivity extends AppCompatActivity {
 
                     @Override
                     public void onShootModeChanged(String shootMode) {
+                        refreshUi();
+                    }
+
+                    @Override
+                    public void onShootModeListChanged(List<String> shootModeList) {
                         refreshUi();
                     }
 
@@ -347,7 +356,7 @@ public class CameraActivity extends AppCompatActivity {
         Log.d(TAG, "closeConnection(): LiveviewSurface.stop()");
         if (mLiveviewSurface != null) {
             mLiveviewSurface.stop();
-            mLiveviewSurface = null;
+//            mLiveviewSurface = null;
             stopLiveview();
         }
 
@@ -380,8 +389,8 @@ public class CameraActivity extends AppCompatActivity {
         }
 
         CameraApplication application = (CameraApplication) getApplication();
-        String cameraStatus = CameraCandidates.getInstance().getCameraStatus();
-        String shootMode = mEventObserver.getShootMode();
+        String cameraStatus = mCameraCandidates.getCameraStatus();
+        String shootMode = mCameraCandidates.getShootMode();
 
         // CameraStatus TextView
         mTextCameraStatus.setText(cameraStatus);
@@ -427,7 +436,7 @@ public class CameraActivity extends AppCompatActivity {
 
         // Contents List Button
         if (app.isApiSupported("getContentList") && app.isApiSupported("getSchemeList") && app.isApiSupported("getSourceList")) {
-            String storageId = mEventObserver.getStorageId();
+            String storageId = mCameraCandidates.getStorageId();
             if (storageId == null) {
                 Log.d(TAG, "not update ContentsList button ");
             } else if ("No Media".equals(storageId)) {
@@ -439,27 +448,33 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     private void refreshShootModeICon() {
-        String shootMode = mEventObserver.getShootMode();
-        int resId;
-        if (CameraEventObserver.SHOOT_MODE_STILL.equals(shootMode)) {
-            resId = R.drawable.ic_still;
-        } else if (CameraEventObserver.SHOOT_MODE_MOVIE.equals(shootMode)) {
-            resId = R.drawable.ic_movie;
-        } else if (CameraEventObserver.SHOOT_MODE_AUDIO.equals(shootMode)) {
-            resId = R.drawable.ic_audio;
-        } else if (CameraEventObserver.SHOOT_MODE_INTERVALSTILL.equals(shootMode)) {
-            resId = R.drawable.ic_intervalstill;
-        } else if (CameraEventObserver.SHOOT_MODE_LOOPREC.equals(shootMode)) {
-            resId = R.drawable.ic_looprec;
-        } else {
-            throw new NullPointerException("No have shoot mode. shootMode=" + shootMode);
-        }
-        //TODO mShootMode還沒塞資料
-        if(resId != mShootMode.getDrawableId())
-            mShootMode.select(String.valueOf(resId));
-//        ImageDrawableUtil.setImageDrawable((CameraApplication) getApplication(), mShootMode, resId);
+        String shootMode = mCameraCandidates.getShootMode();
+        mShootModeSpinner.select(shootMode);
     }
 
+    private void refreshShootMode() {
+        mShootModeSpinner.removeAllChild();
+        String shootMode = mCameraCandidates.getShootMode();
+        List<String> shootModeList = mCameraCandidates.getShootModeList();
+        for (String tag : shootModeList) {
+            int resId;
+            if (CameraEventObserver.SHOOT_MODE_STILL.equals(tag)) {
+                resId = R.drawable.ic_still;
+            } else if (CameraEventObserver.SHOOT_MODE_MOVIE.equals(tag)) {
+                resId = R.drawable.ic_movie;
+            } else if (CameraEventObserver.SHOOT_MODE_AUDIO.equals(tag)) {
+                resId = R.drawable.ic_audio;
+            } else if (CameraEventObserver.SHOOT_MODE_INTERVALSTILL.equals(tag)) {
+                resId = R.drawable.ic_intervalstill;
+            } else if (CameraEventObserver.SHOOT_MODE_LOOPREC.equals(tag)) {
+                resId = R.drawable.ic_looprec;
+            } else {
+                throw new NullPointerException("No have shoot mode. shootMode=" + tag);
+            }
+            mShootModeSpinner.addChild(new FloatingActionButtonSpinner.ChildData(tag, resId));
+        }
+        mShootModeSpinner.select(shootMode);
+    }
 
 
     /**
@@ -490,7 +505,7 @@ public class CameraActivity extends AppCompatActivity {
     private void loadSupportedApiList(JSONObject replyJson) {
         synchronized (mSupportedApiSet) {
             try {
-                JSONArray resultArrayJson = replyJson.getJSONArray("results");
+                JSONArray resultArrayJson = replyJson.getJSONArray(RemoteApi.API_RESULTS);
                 for (int i = 0; i < resultArrayJson.length(); i++) {
                     mSupportedApiSet.add(resultArrayJson.getJSONArray(i).getString(0));
                 }
@@ -980,6 +995,11 @@ public class CameraActivity extends AppCompatActivity {
             public void onShootModeChanged(String shootMode) {
                 refreshUi();
             }
+
+            @Override
+            public void onShootModeListChanged(List<String> shootModeList) {
+                refreshShootMode();
+            }
         });
     }
 
@@ -1048,6 +1068,12 @@ public class CameraActivity extends AppCompatActivity {
         }
 
         @Override
+        public void onShootModeListChanged(List<String> shootModeList) {
+            Log.d(TAG, "onShootModeListChanged() called: " + shootModeList);
+            refreshShootMode();
+        }
+
+        @Override
         public void onCameraStatusChanged(String status) {
             Log.d(TAG, "onCameraStatusChanged() called: " + status);
             refreshUi();
@@ -1061,7 +1087,7 @@ public class CameraActivity extends AppCompatActivity {
                 for (String api : apis) {
                     mAvailableCameraApiSet.add(api);
                 }
-                if (!mEventObserver.getLiveviewStatus() //
+                if (!mCameraCandidates.getLiveviewStatus() //
                         && isCameraApiAvailable("startLiveview")) {
                     if (mLiveviewSurface != null && !mLiveviewSurface.isStarted()) {
                         startLiveview();
@@ -1171,8 +1197,8 @@ public class CameraActivity extends AppCompatActivity {
     private final View.OnClickListener mCaptureCLickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            String cameraStatus = CameraCandidates.getInstance().getCameraStatus();
-            String shootMode = mEventObserver.getShootMode();
+            String cameraStatus = mCameraCandidates.getCameraStatus();
+            String shootMode = mCameraCandidates.getShootMode();
 
             if (CameraEventObserver.SHOOT_MODE_STILL.equals(shootMode)) {
                 takeAndFetchPicture();
@@ -1232,5 +1258,14 @@ public class CameraActivity extends AppCompatActivity {
                 }
             }
         };
+    };
+
+    private final FloatingActionButtonSpinner.OnSelectListener mShootModeSelectListener = new FloatingActionButtonSpinner.OnSelectListener() {
+        @Override
+        public void onSelect(FloatingActionButtonSpinner parent, String tag) {
+            if (CameraCandidates.STATUS_IDLE.equals(mCameraCandidates.getCameraStatus())) {
+                RemoteApiHelper.setShootMode(mRemoteApi, tag);
+            }
+        }
     };
 }

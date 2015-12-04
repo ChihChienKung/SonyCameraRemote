@@ -43,17 +43,6 @@ public class CameraEventObserver {
 
     private boolean mIsActive = false;
 
-    // Current Liveview Status value.
-    private boolean mLiveviewStatus;
-
-    // Current Shoot Mode value.
-    private String mShootMode;
-
-    // Current Zoom Position value.
-    private int mZoomPosition;
-
-    // Current Storage Id value.
-    private String mStorageId;
 
     // :
     // : add attributes for Event data as necessary.
@@ -157,32 +146,38 @@ public class CameraEventObserver {
                         // LiveviewStatus
                         Boolean liveviewStatus = findLiveviewStatus(replyJson);
                         Log.d(TAG, "getEvent liveviewStatus: " + liveviewStatus);
-                        if (liveviewStatus != null && !liveviewStatus.equals(mLiveviewStatus)) {
-                            mLiveviewStatus = liveviewStatus;
+                        if (liveviewStatus != null && !liveviewStatus.equals(cameraCandidates.mLiveviewStatus)) {
+                            cameraCandidates.mLiveviewStatus = liveviewStatus;
                             fireLiveviewStatusChangeListener(liveviewStatus);
                         }
 
                         // ShootMode
                         String shootMode = findShootMode(replyJson);
                         Log.d(TAG, "getEvent shootMode: " + shootMode);
-                        if (shootMode != null && !shootMode.equals(mShootMode)) {
-                            mShootMode = shootMode;
+                        if (shootMode != null && !shootMode.equals(cameraCandidates.mShootMode)) {
+                            cameraCandidates.mShootMode = shootMode;
                             fireShootModeChangeListener(shootMode);
+                        }
+
+                        List<String> shootModeList = findShootModeList(replyJson);
+                        if(shootModeList != null && shootModeList.equals(cameraCandidates.mShootModeList)){
+                            cameraCandidates.mShootModeList = shootModeList;
+                            fireShootModeListChangeListener(shootModeList);
                         }
 
                         // zoomPosition
                         int zoomPosition = findZoomInformation(replyJson);
                         Log.d(TAG, "getEvent zoomPosition: " + zoomPosition);
                         if (zoomPosition != -1) {
-                            mZoomPosition = zoomPosition;
+                            cameraCandidates.mZoomPosition = zoomPosition;
                             fireZoomInformationChangeListener(0, 0, zoomPosition, 0);
                         }
 
                         // storageId
                         String storageId = findStorageId(replyJson);
                         Log.d(TAG, "getEvent storageId:" + storageId);
-                        if (storageId != null && !storageId.equals(mStorageId)) {
-                            mStorageId = storageId;
+                        if (storageId != null && !storageId.equals(cameraCandidates.mStorageId)) {
+                            cameraCandidates.mStorageId = storageId;
                             fireStorageIdChangeListener(storageId);
                         }
 
@@ -254,42 +249,6 @@ public class CameraEventObserver {
     }
 
     /**
-     * Returns the current Camera Status value.
-     *
-     * @return camera status
-     */
-    public boolean getLiveviewStatus() {
-        return mLiveviewStatus;
-    }
-
-    /**
-     * Returns the current Shoot Mode value.
-     *
-     * @return shoot mode
-     */
-    public String getShootMode() {
-        return mShootMode;
-    }
-
-    /**
-     * Returns the current Zoom Position value.
-     *
-     * @return zoom position
-     */
-    public int getZoomPosition() {
-        return mZoomPosition;
-    }
-
-    /**
-     * Returns the current Storage Id value.
-     *
-     * @return
-     */
-    public String getStorageId() {
-        return mStorageId;
-    }
-
-    /**
      * Notify the change of available APIs
      *
      * @param availableApis
@@ -348,6 +307,17 @@ public class CameraEventObserver {
             public void run() {
                 if (mListener != null) {
                     mListener.onShootModeChanged(shootMode);
+                }
+            }
+        });
+    }
+
+    private void fireShootModeListChangeListener(final List<String> shootModeList) {
+        mUiHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mListener != null) {
+                    mListener.onShootModeListChanged(shootModeList);
                 }
             }
         });
@@ -496,16 +466,33 @@ public class CameraEventObserver {
         if (!resultsObj.isNull(indexOfShootMode)) {
             JSONObject shootModeObj = resultsObj.getJSONObject(indexOfShootMode);
             String type = shootModeObj.getString("type");
-            if (CameraCandidates.SHOOT_MODE.equals(type)) {
+            if (CameraCandidates.TYPE_SHOOT_MODE.equals(type)) {
                 shootMode = shootModeObj.getString("currentShootMode");
-                JSONArray jsonArray = shootModeObj.getJSONArray("shootModeCandidates");
-                List<String> shootModeList = CameraCandidates.getInstance().ShootMode;
-                thanData(shootModeList, jsonArray);
             } else {
                 Log.w(TAG, "Event reply: Illegal Index (21: ShootMode) " + type);
             }
         }
         return shootMode;
+    }
+
+    private static List<String> findShootModeList(JSONObject replyJson) throws JSONException {
+        List<String> shootModeList = null;
+        int indexOfShootMode = 21;
+        JSONArray resultsObj = replyJson.getJSONArray("result");
+        if (!resultsObj.isNull(indexOfShootMode)) {
+            JSONObject shootModeObj = resultsObj.getJSONObject(indexOfShootMode);
+            String type = shootModeObj.getString("type");
+            if (CameraCandidates.TYPE_SHOOT_MODE.equals(type)) {
+                JSONArray jsonArray = shootModeObj.getJSONArray("shootModeCandidates");
+                shootModeList = new ArrayList<String>();
+                for (int i = 0, size = jsonArray.length(); i < size; i++) {
+                    shootModeList.add(jsonArray.getString(i));
+                }
+            } else {
+                Log.w(TAG, "Event reply: Illegal Index (21: ShootMode) " + type);
+            }
+        }
+        return shootModeList;
     }
 
     /**
@@ -619,6 +606,9 @@ public class CameraEventObserver {
          */
         void onShootModeChanged(String shootMode);
 
+
+        void onShootModeListChanged(List<String> shootModeList);
+
         /**
          * Called when the value of "zoomPosition" is changed.
          *
@@ -657,6 +647,10 @@ public class CameraEventObserver {
 
         @Override
         public void onShootModeChanged(String shootMode) {
+        }
+
+        @Override
+        public void onShootModeListChanged(List<String> shootModeList) {
         }
 
         @Override

@@ -170,18 +170,17 @@ public class ContentsGridActivity extends Activity {
                             mEventObserver = new CameraEventObserver(//
                                     ContentsGridActivity.this.getApplicationContext(), mRemoteApi);
                             mEventObserver.activate();
-                            mEventObserver
-                                    .setEventChangeListener(new CameraEventObserver.ChangeListenerTmpl() {
+                            mEventObserver.setEventChangeListener(new CameraEventObserver.ChangeListenerTmpl() {
 
-                                        @Override
-                                        public void onCameraStatusChanged(String status) {
-                                            Log.d(TAG, "onCameraStatusChanged:" + status);
-                                            if ("ContentsTransfer".equals(status)) {
-                                                mEventObserver.release();
-                                                updateThumbnails();
-                                            }
-                                        }
-                                    });
+                                @Override
+                                public void onCameraStatusChanged(String status) {
+                                    Log.d(TAG, "onCameraStatusChanged:" + status);
+                                    if ("ContentsTransfer".equals(status)) {
+                                        mEventObserver.release();
+                                        updateThumbnails();
+                                    }
+                                }
+                            });
                             mEventObserver.start();
 
                         } else {
@@ -214,7 +213,7 @@ public class ContentsGridActivity extends Activity {
 
     /**
      * Pick up non Browsable items to display.
-     * 
+     *
      * @param items
      */
     private void updatePhotoAdapter(JSONArray items) {
@@ -289,7 +288,7 @@ public class ContentsGridActivity extends Activity {
         private String mFileName;
 
         PhotoThumbnail(String thumbnailUrl, String largeUrl, //
-                String contentKind, String uri, String fileName) {
+                       String contentKind, String uri, String fileName) {
             mThumbnailUrl = thumbnailUrl;
             mLargeUrl = largeUrl;
             mContentKind = contentKind;
@@ -380,7 +379,7 @@ public class ContentsGridActivity extends Activity {
             } else {
                 // recycle bitmap that is used in old view
                 final ImageView imageView = //
-                (ImageView) convertView.findViewById(R.id.photo_grid_image);
+                        (ImageView) convertView.findViewById(R.id.photo_grid_image);
                 recycleBitmap(imageView);
 
                 // clear still and movie mark.
