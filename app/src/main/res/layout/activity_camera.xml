@@ -12,8 +12,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp">
+        android:layout_height="match_parent">
 
         <ImageButton
             android:id="@+id/btn_capture"
@@ -28,8 +27,6 @@
             style="@style/FloatingActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
             android:src="@drawable/btn_settings" />
 
 
@@ -52,6 +49,9 @@
             android:visibility="gone"
             app:fabSize="mini" />
 
+        <include layout="@layout/include_picture_wipe"/>
+
+
         <com.chien.sony.cameraremote.widget.FloatingActionButtonSpinner
             android:id="@+id/btn_shoot_mode_spinner"
             android:layout_width="wrap_content"
@@ -69,16 +69,5 @@
         android:text=""
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
-    <ImageView
-        android:id="@+id/image_picture_wipe"
-        android:layout_width="150dp"
-        android:layout_height="100dp"
-        android:layout_gravity="bottom|right"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/picture_wipe_boarder"
-        android:contentDescription="@string/no_image"
-        android:src="@android:drawable/ic_menu_report_image"
-        android:visibility="invisible" />
 
 </RelativeLayout>

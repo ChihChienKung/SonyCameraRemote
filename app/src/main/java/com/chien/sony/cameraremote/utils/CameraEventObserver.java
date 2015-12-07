@@ -160,8 +160,10 @@ public class CameraEventObserver {
                         }
 
                         List<String> shootModeList = findShootModeList(replyJson);
-                        if(shootModeList != null && shootModeList.equals(cameraCandidates.mShootModeList)){
+                        Log.d(TAG, "getEvent shootModeList: " + shootModeList);
+                        if(shootModeList != null && !shootModeList.equals(cameraCandidates.mShootModeList)){
                             cameraCandidates.mShootModeList = shootModeList;
+                            Log.e(TAG, "getEvent shootModeList: " + cameraCandidates.mShootModeList);
                             fireShootModeListChangeListener(shootModeList);
                         }
 
@@ -238,7 +240,16 @@ public class CameraEventObserver {
      * @param listener
      */
     public void setEventChangeListener(ChangeListener listener) {
+        Log.e(TAG, "setEventChangeListener()");
+        boolean sendToListener = listener != null && mListener == null;
         mListener = listener;
+        if(sendToListener){
+            CameraCandidates cameraCandidates = CameraCandidates.getInstance();
+            fireCameraStatusChangeListener(cameraCandidates.mCameraStatus);
+            fireShootModeChangeListener(cameraCandidates.mShootMode);
+            fireShootModeListChangeListener(cameraCandidates.mShootModeList);
+        }
+
     }
 
     /**
