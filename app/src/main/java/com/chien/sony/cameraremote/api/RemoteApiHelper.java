@@ -21,21 +21,45 @@ public final class RemoteApiHelper {
 
     private static final String TAG = RemoteApiHelper.class.getSimpleName();
 
-    private RemoteApiHelper() {
+    private static RemoteApiHelper mRemoteApiHelper;
 
+    private RemoteApi mRemoteApi;
+
+    public static RemoteApiHelper getInserts(RemoteApi remoteApi){
+        if(mRemoteApiHelper == null){
+            synchronized (RemoteApiHelper.class){
+                if(mRemoteApiHelper == null){
+                    mRemoteApiHelper = new RemoteApiHelper(remoteApi);
+                }
+            }
+        }
+        return mRemoteApiHelper;
     }
 
-    public static void setShootMode(final RemoteApi remoteApi, final String shootMode) {
+    public static void clear(){
+        if(mRemoteApiHelper != null){
+            synchronized (RemoteApiHelper.class){
+                if(mRemoteApiHelper != null){
+                    mRemoteApiHelper = null;
+                }
+            }
+        }
+    }
+
+    private RemoteApiHelper(RemoteApi remoteApi) {
+        mRemoteApi = remoteApi;
+    }
+
+    public void setShootMode(final String shootMode) {
         new Thread() {
             @Override
             public void run() {
                 try {
-                    remoteApi.setShootMode(shootMode);
+                    mRemoteApi.setShootMode(shootMode);
                 }catch (IOException e){
                     e.printStackTrace();
                 }
             }
-
         }.start();
 
     }

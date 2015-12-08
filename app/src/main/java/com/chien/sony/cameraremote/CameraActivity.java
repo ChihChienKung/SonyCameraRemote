@@ -68,6 +68,8 @@ public class CameraActivity extends AppCompatActivity {
 
     private RemoteApi mRemoteApi;
 
+    private RemoteApiHelper mRemoteApiHelper;
+
     private StreamSurfaceView mLiveviewSurface;
 
     private CameraEventObserver mEventObserver;
@@ -120,6 +122,7 @@ public class CameraActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         mCameraCandidates = CameraCandidates.getInstance();
+        mRemoteApiHelper = RemoteApiHelper.getInserts(mRemoteApi);
         mEventObserver.activate();
 
         mImagePictureWipe.setOnClickListener(new View.OnClickListener() {
@@ -321,13 +324,6 @@ public class CameraActivity extends AppCompatActivity {
                     }
 
                     // prepare UIs
-                    if (isCameraApiAvailable("getAvailableShootMode")) {
-                        Log.d(TAG, "openConnection(): prepareShootModeSpinner()");
-                        prepareShootModeSpinner();
-                        // Note: hide progress bar on title after this calling.
-                    }
-
-                    // prepare UIs
                     if (isCameraApiAvailable("actZoom")) {
                         Log.d(TAG, "openConnection(): prepareActZoomButtons()");
                         prepareActZoomButtons(true);
@@ -379,7 +375,7 @@ public class CameraActivity extends AppCompatActivity {
                 }
             }.start();
         }
-
+        mRemoteApiHelper.clear();
         Log.d(TAG, "closeConnection(): completed.");
     }
 
@@ -388,7 +384,7 @@ public class CameraActivity extends AppCompatActivity {
             mEventObserver.start();
         }
 
-        CameraApplication application = (CameraApplication) getApplication();
+//        CameraApplication application = (CameraApplication) getApplication();
         String cameraStatus = mCameraCandidates.getCameraStatus();
         String shootMode = mCameraCandidates.getShootMode();
 
@@ -486,7 +482,7 @@ public class CameraActivity extends AppCompatActivity {
         synchronized (mAvailableCameraApiSet) {
             mAvailableCameraApiSet.clear();
             try {
-                JSONArray resultArrayJson = replyJson.getJSONArray("result");
+                JSONArray resultArrayJson = replyJson.getJSONArray(RemoteApi.API_RESULT);
                 JSONArray apiListJson = resultArrayJson.getJSONArray(0);
                 for (int i = 0; i < apiListJson.length(); i++) {
                     mAvailableCameraApiSet.add(apiListJson.getString(i));
@@ -552,64 +548,6 @@ public class CameraActivity extends AppCompatActivity {
             Log.w(TAG, "isSupportedServerVersion: Number format error.");
         }
         return false;
-    }
-
-    /**
-     * Check if the shoot mode is supported in this application.
-     *
-     * @param mode
-     * @return
-     */
-    private boolean isSupportedShootMode(String mode) {
-        if ("still".equals(mode) || "movie".equals(mode)) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Prepare for Spinner to select "shootMode" by user.
-     */
-    private void prepareShootModeSpinner() {
-        new Thread() {
-
-            @Override
-            public void run() {
-                Log.d(TAG, "prepareShootModeSpinner(): exec.");
-                JSONObject replyJson = null;
-                try {
-                    replyJson = mRemoteApi.getAvailableShootMode();
-
-                    JSONArray resultsObj = replyJson.getJSONArray("result");
-                    final String currentMode = resultsObj.getString(0);
-                    JSONArray availableModesJson = resultsObj.getJSONArray(1);
-                    final List<String> availableModes = new ArrayList<String>();
-
-                    for (int i = 0; i < availableModesJson.length(); i++) {
-                        String mode = availableModesJson.getString(i);
-                        if (!isSupportedShootMode(mode)) {
-                            mode = "";
-                        }
-                        availableModes.add(mode);
-                    }
-                    runOnUiThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            refreshShootModeICon();
-                            // Hide progress indeterminately on title bar.
-                            setProgressBarIndeterminateVisibility(false);
-                        }
-                    });
-                } catch (IOException e) {
-                    Log.w(TAG, "prepareShootModeRadioButtons: IOException: " + e.getMessage());
-                } catch (JSONException e) {
-                    Log.w(TAG, "prepareShootModeRadioButtons: JSON format error.");
-                }
-            }
-
-            ;
-        }.start();
     }
 
     /**
@@ -1264,7 +1202,7 @@ public class CameraActivity extends AppCompatActivity {
         @Override
         public void onSelect(FloatingActionButtonSpinner parent, String tag) {
             if (CameraCandidates.STATUS_IDLE.equals(mCameraCandidates.getCameraStatus())) {
-                RemoteApiHelper.setShootMode(mRemoteApi, tag);
+                mRemoteApiHelper.setShootMode(tag);
             }
         }
     };
