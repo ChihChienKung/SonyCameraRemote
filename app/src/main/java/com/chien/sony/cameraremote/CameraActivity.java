@@ -11,6 +11,7 @@ import com.chien.sony.cameraremote.utils.CameraCandidates;
 import com.chien.sony.cameraremote.utils.CameraEventObserver;
 import com.chien.sony.cameraremote.utils.DisplayHelper;
 import com.chien.sony.cameraremote.utils.ImageDrawableUtil;
+import com.chien.sony.cameraremote.utils.ViewAnimation;
 import com.chien.sony.cameraremote.widget.FloatingActionButtonSpinner;
 import com.chien.sony.cameraremote.widget.StreamSurfaceView;
 
@@ -55,8 +56,8 @@ public class CameraActivity extends AppCompatActivity {
 
     private FloatingActionButtonSpinner mShootModeSpinner;
 
-
     private ImageView mImagePictureWipe;
+
 
     private FloatingActionButton mButtonZoomIn;
 
@@ -95,13 +96,12 @@ public class CameraActivity extends AppCompatActivity {
         mCapture = (ImageButton) findViewById(R.id.btn_capture);
         mSettings = (FloatingActionButton) findViewById(R.id.btn_settings);
         mShootModeSpinner = (FloatingActionButtonSpinner) findViewById(R.id.btn_shoot_mode_spinner);
+        mImagePictureWipe = (ImageView) findViewById(R.id.image_picture_wipe);
 
         //TODO Not check widget.
-        mImagePictureWipe = (ImageView) findViewById(R.id.image_picture_wipe);
         mButtonZoomIn = (FloatingActionButton) findViewById(R.id.btn_zoom_in);
         mButtonZoomOut = (FloatingActionButton) findViewById(R.id.btn_zoom_out);
         mTextCameraStatus = (TextView) findViewById(R.id.text_camera_status);
-
 
         ImageDrawableUtil.setImageDrawable(app, mButtonZoomIn, R.drawable.ic_zoom_in);
         ImageDrawableUtil.setImageDrawable(app, mButtonZoomOut, R.drawable.ic_zoom_out);
@@ -109,6 +109,8 @@ public class CameraActivity extends AppCompatActivity {
         mCapture.setOnClickListener(mCaptureCLickListener);
         mSettings.setOnClickListener(mSettingsClickListener);
         mShootModeSpinner.setOnSelectListener(mShootModeSelectListener);
+        mImagePictureWipe.setOnClickListener(mPictureWipeClickListener);
+
         mButtonZoomIn.setOnClickListener(mZoomClickListener);
         mButtonZoomOut.setOnClickListener(mZoomClickListener);
         mButtonZoomIn.setOnLongClickListener(mZoomLongClickListener);
@@ -125,13 +127,6 @@ public class CameraActivity extends AppCompatActivity {
         mRemoteApiHelper = RemoteApiHelper.getInserts(mRemoteApi);
         mEventObserver.activate();
 
-        mImagePictureWipe.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                mImagePictureWipe.setVisibility(View.INVISIBLE);
-            }
-        });
 
 
         prepareOpenConnection();
@@ -149,7 +144,7 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     private void prepareOpenConnection() {
-        Log.d(TAG, "prepareToOpenConection() exec");
+        Log.w(TAG, "prepareToOpenConection() exec");
 
         setProgressBarIndeterminateVisibility(true);
 
@@ -272,6 +267,7 @@ public class CameraActivity extends AppCompatActivity {
      * and showing liveview.
      */
     private void openConnection() {
+        Log.w(TAG, "openConnection()");
         mEventObserver.setEventChangeListener(mEventListener);
         new Thread() {
 
@@ -417,7 +413,8 @@ public class CameraActivity extends AppCompatActivity {
 
         // Picture wipe Image
         if (!CameraEventObserver.SHOOT_MODE_STILL.equals(shootMode)) {
-            mImagePictureWipe.setVisibility(View.INVISIBLE);
+//            mImagePictureWipe.setVisibility(View.INVISIBLE);
+            ViewAnimation.hide(mImagePictureWipe);
         }
 
         // Shoot Mode Buttons
@@ -597,7 +594,7 @@ public class CameraActivity extends AppCompatActivity {
             public void run() {
                 try {
                     JSONObject replyJson = mRemoteApi.actTakePicture();
-                    JSONArray resultsObj = replyJson.getJSONArray("result");
+                    JSONArray resultsObj = replyJson.getJSONArray(RemoteApi.API_RESULT);
                     JSONArray imageUrlsObj = resultsObj.getJSONArray(0);
                     String postImageUrl = null;
                     if (1 <= imageUrlsObj.length()) {
@@ -605,8 +602,7 @@ public class CameraActivity extends AppCompatActivity {
                     }
                     if (postImageUrl == null) {
                         Log.w(TAG, "takeAndFetchPicture: post image URL is null.");
-                        DisplayHelper.toast(getApplicationContext(), //
-                                R.string.msg_error_take_picture);
+                        DisplayHelper.toast(getApplicationContext(), R.string.msg_error_take_picture);
                         return;
                     }
                     // Show progress indicator
@@ -616,15 +612,15 @@ public class CameraActivity extends AppCompatActivity {
                     InputStream istream = new BufferedInputStream(url.openStream());
                     BitmapFactory.Options options = new BitmapFactory.Options();
                     options.inSampleSize = 4; // irresponsible value
-                    final Drawable pictureDrawable =
-                            new BitmapDrawable(getResources(), //
-                                    BitmapFactory.decodeStream(istream, null, options));
+                    final Drawable pictureDrawable = new BitmapDrawable(getResources(), BitmapFactory.decodeStream(istream, null, options));
                     istream.close();
                     runOnUiThread(new Runnable() {
 
                         @Override
                         public void run() {
-                            mImagePictureWipe.setVisibility(View.VISIBLE);
+
+                            ViewAnimation.show(mImagePictureWipe);
+//                            mImagePictureWipe.setVisibility(View.VISIBLE);
                             mImagePictureWipe.setImageDrawable(pictureDrawable);
                         }
                     });
@@ -912,7 +908,7 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     private void moveToDateListAfterChangeCameraState() {
-        Log.d(TAG, "moveToDateListAfterChangeCameraState() exec");
+        Log.w(TAG, "moveToDateListAfterChangeCameraState() exec");
 
         // set Listener
         mEventObserver.setEventChangeListener(new CameraEventObserver.ChangeListenerTmpl() {
@@ -936,6 +932,7 @@ public class CameraActivity extends AppCompatActivity {
 
             @Override
             public void onShootModeListChanged(List<String> shootModeList) {
+                Log.w(TAG, "onShootModeListChanged() called: " + shootModeList);
                 refreshShootMode();
             }
         });
@@ -1007,7 +1004,7 @@ public class CameraActivity extends AppCompatActivity {
 
         @Override
         public void onShootModeListChanged(List<String> shootModeList) {
-            Log.d(TAG, "onShootModeListChanged() called: " + shootModeList);
+            Log.w(TAG, "onShootModeListChanged() called: " + shootModeList);
             refreshShootMode();
         }
 
@@ -1025,8 +1022,7 @@ public class CameraActivity extends AppCompatActivity {
                 for (String api : apis) {
                     mAvailableCameraApiSet.add(api);
                 }
-                if (!mCameraCandidates.getLiveviewStatus() //
-                        && isCameraApiAvailable("startLiveview")) {
+                if (!mCameraCandidates.getLiveviewStatus() && isCameraApiAvailable("startLiveview")) {
                     if (mLiveviewSurface != null && !mLiveviewSurface.isStarted()) {
                         startLiveview();
                     }
@@ -1165,6 +1161,14 @@ public class CameraActivity extends AppCompatActivity {
                     startLoopRec();
                 }
             }
+        }
+    };
+
+    private final View.OnClickListener mPictureWipeClickListener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            ViewAnimation.hide(mImagePictureWipe);
         }
     };
 
