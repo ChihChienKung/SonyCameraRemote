@@ -23,7 +23,9 @@ public final class RemoteApiHelper {
 
     private static RemoteApiHelper mRemoteApiHelper;
 
-    private RemoteApi mRemoteApi;
+    private final RemoteApi mRemoteApi;
+
+    private IApiResultListener mListener;
 
     public static RemoteApiHelper getInserts(RemoteApi remoteApi){
         if(mRemoteApiHelper == null){
@@ -46,23 +48,55 @@ public final class RemoteApiHelper {
         }
     }
 
+    public void setApiResultListener(IApiResultListener listener){
+        mListener = listener;
+    }
+
     private RemoteApiHelper(RemoteApi remoteApi) {
         mRemoteApi = remoteApi;
     }
 
     public void setShootMode(final String shootMode) {
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    mRemoteApi.setShootMode(shootMode);
-                }catch (IOException e){
-                    e.printStackTrace();
-                }
-            }
-        }.start();
-
+        ApiTask task = new SetShootModeTask(mRemoteApi, mListener);
+        task.execute(shootMode);
     }
+
+    public void getShootMode() {
+        ApiTask task = new GetShootModeTask(mRemoteApi, mListener);
+        task.execute();
+    }
+
+    public void getSupportedShootMode() {
+        ApiTask task = new GetSupportedShootModeTask(mRemoteApi, mListener);
+        task.execute();
+    }
+
+    public void getAvailableShootMode() {
+        ApiTask task = new GetAvailableShootModeTask(mRemoteApi, mListener);
+        task.execute();
+    }
+
+    public void actTakePicture() {
+        ApiTask task = new ActTakePictureTask(mRemoteApi, mListener);
+        task.execute();
+    }
+
+    public void awaitTakePicture() {
+        ApiTask task = new AwaitTakePictureTask(mRemoteApi, mListener);
+        task.execute();
+    }
+
+    public void startContShooting() {
+        ApiTask task = new StartContShootingTask(mRemoteApi, mListener);
+        task.execute();
+    }
+
+    public void stopContShooting() {
+        ApiTask task = new StopContShootingTask(mRemoteApi, mListener);
+        task.execute();
+    }
+
+
 
     /**
      * Prepare request params and calls SimpleRemoteApi method to get date list

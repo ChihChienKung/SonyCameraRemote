@@ -41,6 +41,7 @@ public class RemoteApi {
 
     public static final String API_RESULTS = "results";
     public static final String API_RESULT = "result";
+    public static final String API_ID = "id";
 
     public static final String API_SET_CAMERA_FUNCTION_REMOTE_SHOOTING = "Remote Shooting";
     public static final String API_SET_CAMERA_FUNCTION_CONTENTS_TRANSFER = "Contents Transfer";
