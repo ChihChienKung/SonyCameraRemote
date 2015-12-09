@@ -11,7 +11,11 @@
   <component name="ChangeListManager">
     <list default="true" id="67758dc1-f759-4fd4-9d25-8cd1eb0eb59c" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/CameraActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/CameraActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/api/RemoteApiHelper.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/api/RemoteApiHelper.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/CameraConnectActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/CameraConnectActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/dialog/RecyclerDialog.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/dialog/RecyclerDialog.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/dialog/SettingDialog.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/dialog/SettingDialog.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/dialog/ShootModeChooseDialog.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/dialog/ShootModeChooseDialog.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_camera.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_camera.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="SonyCameraRemote.iws" />
@@ -53,29 +57,36 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="CameraActivity.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/CameraActivity.java">
+      <file leaf-file-name="CameraConnectActivity.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/CameraConnectActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.13824885">
-              <caret line="1179" column="45" selection-start-line="1179" selection-start-column="45" selection-end-line="1179" selection-end-column="45" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#5197#8916#0" expanded="true" />
-                <element signature="e#8915#8916#0" expanded="true" />
-                <element signature="e#9091#10224#0" expanded="true" />
-                <element signature="e#10223#10224#0" expanded="true" />
-                <element signature="e#10464#13260#0" expanded="true" />
-                <element signature="e#13259#13260#0" expanded="true" />
-                <element signature="e#13919#14327#0" expanded="true" />
-                <element signature="e#14326#14327#0" expanded="true" />
-                <element signature="e#22494#24979#0" expanded="true" />
-                <element signature="e#24978#24979#0" expanded="true" />
-                <element signature="e#37002#37003#0" expanded="true" />
-                <element signature="e#37052#37053#0" expanded="true" />
-                <element signature="e#47041#47364#0" expanded="true" />
-                <element signature="e#47363#47364#0" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="0.0">
+              <caret line="510" column="0" selection-start-line="510" selection-start-column="0" selection-end-line="510" selection-end-column="0" />
+              <folding />
             </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ShootModeChooseDialog.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/dialog/ShootModeChooseDialog.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.28725037">
+              <caret line="25" column="13" selection-start-line="25" selection-start-column="13" selection-end-line="25" selection-end-column="13" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="activity_camera.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_camera.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-7.137931">
+              <caret line="27" column="24" selection-start-line="27" selection-start-column="24" selection-end-line="27" selection-end-column="24" />
+              <folding />
+            </state>
+          </provider>
+          <provider editor-type-id="android-designer">
+            <state />
           </provider>
         </entry>
       </file>
@@ -87,8 +98,6 @@
               <folding>
                 <element signature="e#1223#1224#0" expanded="true" />
                 <element signature="e#1261#1262#0" expanded="true" />
-                <element signature="e#1327#1596#0" expanded="true" />
-                <element signature="e#1595#1596#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -97,7 +106,7 @@
       <file leaf-file-name="RemoteApi.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/api/RemoteApi.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-91.92593">
+            <state vertical-scroll-proportion="0.0">
               <caret line="162" column="27" selection-start-line="162" selection-start-column="27" selection-end-line="162" selection-end-column="27" />
               <folding />
             </state>
@@ -1596,16 +1605,18 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/utils/ImageDrawableUtil.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/dimens.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/widget/FloatingActionButtonSelect.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/dialog/SettingDialog.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/dialog/ShootModeChooseDialog.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_camera.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/utils/CameraEventObserver.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/widget/FloatingActionButtonSpinner.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/utils/CameraCandidates.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/ContentsGridActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/api/RemoteApi.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/api/RemoteApiHelper.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/CameraConnectActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_camera.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/CameraActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/dialog/SettingDialog.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/dialog/RecyclerDialog.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/dialog/ShootModeChooseDialog.java" />
       </list>
     </option>
   </component>
@@ -1647,9 +1658,7 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="ProjectPane" />
       <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="AndroidView">
         <subPane>
           <PATH>
@@ -1810,6 +1819,28 @@
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="receiver" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SonyCameraRemote" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="cameraremote" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="dialog" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -1848,7 +1879,9 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="Scratches" />
+      <pane id="ProjectPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -2070,7 +2103,6 @@
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3297568" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298969" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3078056" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -2079,17 +2111,18 @@
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298969" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298969" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3297568" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3297568" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24964234" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24964234" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298969" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24964234" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298969" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -2099,15 +2132,15 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3078056" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
+      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24964234" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24964234" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298969" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24964234" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
@@ -2120,8 +2153,8 @@
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="true" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout-to-restore>
   </component>
@@ -2141,26 +2174,57 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/CameraConnectActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="469" column="38" selection-start-line="469" selection-start-column="38" selection-end-line="469" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/CameraActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="53" column="0" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/api/RemoteApiHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="19" column="19" selection-start-line="19" selection-start-column="19" selection-end-line="19" selection-end-column="19" />
+          <folding>
+            <element signature="e#1223#1224#0" expanded="true" />
+            <element signature="e#1261#1262#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/api/RemoteApi.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="162" column="27" selection-start-line="162" selection-start-column="27" selection-end-line="162" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/utils/CameraCandidates.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="132" column="35" selection-start-line="132" selection-start-column="35" selection-end-line="132" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/CameraActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="390" column="55" selection-start-line="390" selection-start-column="55" selection-end-line="390" selection-end-column="55" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#5197#8916#0" expanded="true" />
-            <element signature="e#8915#8916#0" expanded="true" />
-            <element signature="e#9091#10224#0" expanded="true" />
-            <element signature="e#10223#10224#0" expanded="true" />
-            <element signature="e#10464#13260#0" expanded="true" />
-            <element signature="e#13259#13260#0" expanded="true" />
-            <element signature="e#13919#14327#0" expanded="true" />
-            <element signature="e#14326#14327#0" expanded="true" />
-            <element signature="e#22494#24979#0" expanded="true" />
-            <element signature="e#24978#24979#0" expanded="true" />
-            <element signature="e#37002#37003#0" expanded="true" />
-            <element signature="e#37052#37053#0" expanded="true" />
-            <element signature="e#47041#47364#0" expanded="true" />
-            <element signature="e#47363#47364#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2172,8 +2236,6 @@
           <folding>
             <element signature="e#1223#1224#0" expanded="true" />
             <element signature="e#1261#1262#0" expanded="true" />
-            <element signature="e#1327#1596#0" expanded="true" />
-            <element signature="e#1595#1596#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2192,20 +2254,6 @@
           <caret line="80" column="13" selection-start-line="80" selection-start-column="13" selection-end-line="80" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#5197#8916#0" expanded="true" />
-            <element signature="e#8915#8916#0" expanded="true" />
-            <element signature="e#9091#10224#0" expanded="true" />
-            <element signature="e#10223#10224#0" expanded="true" />
-            <element signature="e#10464#13260#0" expanded="true" />
-            <element signature="e#13259#13260#0" expanded="true" />
-            <element signature="e#13919#14327#0" expanded="true" />
-            <element signature="e#14326#14327#0" expanded="true" />
-            <element signature="e#22494#24979#0" expanded="true" />
-            <element signature="e#24978#24979#0" expanded="true" />
-            <element signature="e#37002#37003#0" expanded="true" />
-            <element signature="e#37052#37053#0" expanded="true" />
-            <element signature="e#47041#47364#0" expanded="true" />
-            <element signature="e#47363#47364#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2261,20 +2309,6 @@
           <caret line="458" column="26" selection-start-line="458" selection-start-column="26" selection-end-line="458" selection-end-column="26" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#5197#8916#0" expanded="true" />
-            <element signature="e#8915#8916#0" expanded="true" />
-            <element signature="e#9091#10224#0" expanded="true" />
-            <element signature="e#10223#10224#0" expanded="true" />
-            <element signature="e#10464#13260#0" expanded="true" />
-            <element signature="e#13259#13260#0" expanded="true" />
-            <element signature="e#13919#14327#0" expanded="true" />
-            <element signature="e#14326#14327#0" expanded="true" />
-            <element signature="e#22494#24979#0" expanded="true" />
-            <element signature="e#24978#24979#0" expanded="true" />
-            <element signature="e#37002#37003#0" expanded="true" />
-            <element signature="e#37052#37053#0" expanded="true" />
-            <element signature="e#47041#47364#0" expanded="true" />
-            <element signature="e#47363#47364#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2378,41 +2412,15 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/dialog/ShootModeChooseDialog.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.57450074">
-          <caret line="36" column="13" selection-start-line="36" selection-start-column="13" selection-end-line="36" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/dialog/SettingDialog.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.40092167">
-          <caret line="27" column="21" selection-start-line="27" selection-start-column="21" selection-end-line="27" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_camera.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6012862">
-          <caret line="62" column="41" selection-start-line="62" selection-start-column="41" selection-end-line="62" selection-end-column="41" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_connect_camera.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.40996784">
           <caret line="15" column="43" selection-start-line="15" selection-start-column="43" selection-end-line="15" selection-end-column="43" />
           <folding />
         </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/widget/FloatingActionButtonSpinner.java">
@@ -2465,7 +2473,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.31336406">
           <caret line="122" column="35" selection-start-line="122" selection-start-column="35" selection-end-line="122" selection-end-column="35" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2473,15 +2480,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="218" column="31" selection-start-line="218" selection-start-column="31" selection-end-line="218" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/CameraConnectActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.01843318">
-          <caret line="503" column="37" selection-start-line="503" selection-start-column="37" selection-end-line="503" selection-end-column="37" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2516,7 +2514,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/api/RemoteApi.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-91.92593">
+        <state vertical-scroll-proportion="0.0">
           <caret line="162" column="27" selection-start-line="162" selection-start-column="27" selection-end-line="162" selection-end-column="27" />
           <folding />
         </state>
@@ -2529,8 +2527,6 @@
           <folding>
             <element signature="e#1223#1224#0" expanded="true" />
             <element signature="e#1261#1262#0" expanded="true" />
-            <element signature="e#1327#1596#0" expanded="true" />
-            <element signature="e#1595#1596#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2543,27 +2539,68 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/CameraActivity.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/CameraConnectActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.13824885">
-          <caret line="1179" column="45" selection-start-line="1179" selection-start-column="45" selection-end-line="1179" selection-end-column="45" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="510" column="0" selection-start-line="510" selection-start-column="0" selection-end-line="510" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/build/generated/source/r/debug/com/chien/sony/cameraremote/R.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.34775642">
+          <caret line="2624" column="32" selection-start-line="2624" selection-start-column="32" selection-end-line="2624" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_camera.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-7.137931">
+          <caret line="27" column="24" selection-start-line="27" selection-start-column="24" selection-end-line="27" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/dialog/RecyclerDialog.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.052227344">
+          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#5197#8916#0" expanded="true" />
-            <element signature="e#8915#8916#0" expanded="true" />
-            <element signature="e#9091#10224#0" expanded="true" />
-            <element signature="e#10223#10224#0" expanded="true" />
-            <element signature="e#10464#13260#0" expanded="true" />
-            <element signature="e#13259#13260#0" expanded="true" />
-            <element signature="e#13919#14327#0" expanded="true" />
-            <element signature="e#14326#14327#0" expanded="true" />
-            <element signature="e#22494#24979#0" expanded="true" />
-            <element signature="e#24978#24979#0" expanded="true" />
-            <element signature="e#37002#37003#0" expanded="true" />
-            <element signature="e#37052#37053#0" expanded="true" />
-            <element signature="e#47041#47364#0" expanded="true" />
-            <element signature="e#47363#47364#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/dialog/SettingDialog.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33947772">
+          <caret line="13" column="43" selection-start-line="13" selection-start-column="43" selection-end-line="13" selection-end-column="43" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/CameraActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="10.113671">
+          <caret line="1178" column="50" selection-start-line="1178" selection-start-column="50" selection-end-line="1178" selection-end-column="50" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/dialog/ShootModeChooseDialog.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.28725037">
+          <caret line="25" column="13" selection-start-line="25" selection-start-column="13" selection-end-line="25" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>
