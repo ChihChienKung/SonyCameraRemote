@@ -31,6 +31,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="67758dc1-f759-4fd4-9d25-8cd1eb0eb59c" name="Default" comment="">
+<<<<<<< Updated upstream
 <<<<<<< HEAD
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_camera.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_camera.xml" />
 =======
@@ -49,6 +50,8 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_annotations_23_1_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_annotations_23_1_0.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_v4_23_1_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_v4_23_1_0.xml" />
 >>>>>>> 6007d92e46eae6c53fb820db9f49cf219abbb6ac
+=======
+>>>>>>> Stashed changes
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="SonyCameraRemote.iws" />
@@ -94,6 +97,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
+<<<<<<< Updated upstream
 <<<<<<< HEAD
       <file leaf-file-name="CameraConnectActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/CameraConnectActivity.java">
@@ -129,14 +133,22 @@
                 <element signature="e#5696#5707#0" expanded="true" />
 =======
       <file leaf-file-name="CameraActivity.java" pinned="false" current-in-tab="true">
+=======
+      <file leaf-file-name="CameraActivity.java" pinned="false" current-in-tab="false">
+>>>>>>> Stashed changes
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/CameraActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="14.828737">
-              <caret line="1228" column="67" selection-start-line="1228" selection-start-column="67" selection-end-line="1228" selection-end-column="67" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="591" column="34" selection-start-line="591" selection-start-column="34" selection-end-line="591" selection-end-column="34" />
               <folding>
+<<<<<<< Updated upstream
                 <element signature="e#48167#48319#0" expanded="true" />
                 <element signature="e#48318#48319#0" expanded="true" />
 >>>>>>> 6007d92e46eae6c53fb820db9f49cf219abbb6ac
+=======
+                <element signature="e#22963#23307#0" expanded="true" />
+                <element signature="e#23306#23307#0" expanded="true" />
+>>>>>>> Stashed changes
               </folding>
             </state>
           </provider>
@@ -156,10 +168,13 @@
 =======
       <file leaf-file-name="activity_camera.xml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_camera.xml">
+<<<<<<< Updated upstream
           <provider editor-type-id="android-designer">
             <state />
 >>>>>>> 6007d92e46eae6c53fb820db9f49cf219abbb6ac
           </provider>
+=======
+>>>>>>> Stashed changes
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
 <<<<<<< HEAD
@@ -169,6 +184,9 @@
 >>>>>>> 6007d92e46eae6c53fb820db9f49cf219abbb6ac
               <folding />
             </state>
+          </provider>
+          <provider editor-type-id="android-designer">
+            <state />
           </provider>
         </entry>
       </file>
@@ -188,12 +206,17 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="RemoteApi.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="RemoteApi.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/api/RemoteApi.java">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< Updated upstream
             <state vertical-scroll-proportion="0.0">
               <caret line="162" column="31" selection-start-line="162" selection-start-column="31" selection-end-line="162" selection-end-column="31" />
 >>>>>>> 6007d92e46eae6c53fb820db9f49cf219abbb6ac
+=======
+            <state vertical-scroll-proportion="0.41944847">
+              <caret line="179" column="20" selection-start-line="179" selection-start-column="20" selection-end-line="179" selection-end-column="20" />
+>>>>>>> Stashed changes
               <folding />
             </state>
           </provider>
@@ -1758,10 +1781,15 @@
       <sortByType />
     </navigator>
     <panes>
+<<<<<<< Updated upstream
 <<<<<<< HEAD
       <pane id="PackagesPane" />
 =======
 >>>>>>> 6007d92e46eae6c53fb820db9f49cf219abbb6ac
+=======
+      <pane id="ProjectPane" />
+      <pane id="PackagesPane" />
+>>>>>>> Stashed changes
       <pane id="AndroidView">
         <subPane>
           <PATH>
@@ -1816,6 +1844,7 @@
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+<<<<<<< Updated upstream
               <option name="myItemId" value="widget" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -1839,6 +1868,9 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="utils" />
+=======
+              <option name="myItemId" value="api" />
+>>>>>>> Stashed changes
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1926,11 +1958,13 @@
 =======
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
       <pane id="Scratches" />
       <pane id="Scope" />
+<<<<<<< Updated upstream
 >>>>>>> 6007d92e46eae6c53fb820db9f49cf219abbb6ac
       <pane id="ProjectPane" />
+=======
+>>>>>>> Stashed changes
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -2196,11 +2230,11 @@
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24928367" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24928367" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3286908" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24928367" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3295129" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3286908" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
 >>>>>>> 6007d92e46eae6c53fb820db9f49cf219abbb6ac
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -2212,11 +2246,11 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3078056" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24964234" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298969" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -2233,8 +2267,8 @@
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="true" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout-to-restore>
   </component>
@@ -2338,9 +2372,14 @@
 =======
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
+<<<<<<< Updated upstream
             <element signature="e#48167#48319#0" expanded="true" />
             <element signature="e#48318#48319#0" expanded="true" />
 >>>>>>> 6007d92e46eae6c53fb820db9f49cf219abbb6ac
+=======
+            <element signature="e#22963#23307#0" expanded="true" />
+            <element signature="e#23306#23307#0" expanded="true" />
+>>>>>>> Stashed changes
           </folding>
         </state>
       </provider>
@@ -2463,6 +2502,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
+<<<<<<< Updated upstream
 <<<<<<< HEAD
             <element signature="e#1223#1242#0" expanded="true" />
             <element signature="e#2561#3172#0" expanded="true" />
@@ -2476,6 +2516,10 @@
             <element signature="e#48167#48319#0" expanded="true" />
             <element signature="e#48318#48319#0" expanded="true" />
 >>>>>>> 6007d92e46eae6c53fb820db9f49cf219abbb6ac
+=======
+            <element signature="e#22963#23307#0" expanded="true" />
+            <element signature="e#23306#23307#0" expanded="true" />
+>>>>>>> Stashed changes
           </folding>
         </state>
       </provider>
@@ -2568,8 +2612,8 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="458" column="26" selection-start-line="458" selection-start-column="26" selection-end-line="458" selection-end-column="26" />
           <folding>
-            <element signature="e#48167#48319#0" expanded="true" />
-            <element signature="e#48318#48319#0" expanded="true" />
+            <element signature="e#22963#23307#0" expanded="true" />
+            <element signature="e#23306#23307#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2647,12 +2691,15 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_connect_camera.xml">
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 =======
       <provider editor-type-id="android-designer">
         <state />
       </provider>
 >>>>>>> 6007d92e46eae6c53fb820db9f49cf219abbb6ac
+=======
+>>>>>>> Stashed changes
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.40996784">
           <caret line="15" column="43" selection-start-line="15" selection-start-column="43" selection-end-line="15" selection-end-column="43" />
@@ -2662,6 +2709,7 @@
       <provider editor-type-id="android-designer">
         <state />
       </provider>
+<<<<<<< Updated upstream
     </entry>
 <<<<<<< HEAD
     <entry file="file://$USER_HOME$/Desktop/sony camera api/CameraRemoteAPIbeta_SDK_2.20/CameraRemoteSampleApp/Android/CameraRemoteSampleApp/src/main/java/com/example/sony/cameraremote/utils/SimpleHttpClient.java">
@@ -2670,6 +2718,8 @@
           <caret line="25" column="0" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
         </state>
       </provider>
+=======
+>>>>>>> Stashed changes
     </entry>
     <entry file="file://$USER_HOME$/Desktop/sony camera api/CameraRemoteAPIbeta_SDK_2.20/CameraRemoteSampleApp/Android/CameraRemoteSampleApp/src/main/java/com/example/sony/cameraremote/utils/SimpleRemoteApiHelper.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -2934,6 +2984,7 @@
         </state>
       </provider>
     </entry>
+<<<<<<< Updated upstream
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/api/RemoteApi.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -2955,6 +3006,8 @@
             <element signature="e#1223#1224#0" expanded="true" />
             <element signature="e#1261#1262#0" expanded="true" />
 =======
+=======
+>>>>>>> Stashed changes
     <entry file="jar://$PROJECT_DIR$/../../sdk/extras/android/m2repository/com/android/support/design/23.1.0/design-23.1.0-sources.jar!/android/support/design/widget/FloatingActionButtonEclairMr1.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.40638608">
@@ -2981,15 +3034,15 @@
           <caret line="7" column="21" selection-start-line="7" selection-start-column="21" selection-end-line="7" selection-end-column="21" />
 =======
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_camera.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="32" column="49" selection-start-line="32" selection-start-column="49" selection-end-line="32" selection-end-column="49" />
 >>>>>>> 6007d92e46eae6c53fb820db9f49cf219abbb6ac
           <folding />
         </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
       </provider>
     </entry>
 <<<<<<< HEAD
@@ -3031,18 +3084,19 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/include_picture_wipe.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.8770865">
           <caret line="34" column="25" selection-start-line="34" selection-start-column="25" selection-end-line="34" selection-end-column="25" />
           <folding />
         </state>
       </provider>
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/CameraActivity.java">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< Updated upstream
 <<<<<<< HEAD
         <state vertical-scroll-proportion="10.113671">
           <caret line="1178" column="50" selection-start-line="1178" selection-start-column="50" selection-end-line="1178" selection-end-column="50" />
@@ -3083,10 +3137,18 @@
             <element signature="e#48167#48319#0" expanded="true" />
             <element signature="e#48318#48319#0" expanded="true" />
 >>>>>>> 6007d92e46eae6c53fb820db9f49cf219abbb6ac
+=======
+        <state vertical-scroll-proportion="0.0">
+          <caret line="591" column="34" selection-start-line="591" selection-start-column="34" selection-end-line="591" selection-end-column="34" />
+          <folding>
+            <element signature="e#22963#23307#0" expanded="true" />
+            <element signature="e#23306#23307#0" expanded="true" />
+>>>>>>> Stashed changes
           </folding>
         </state>
       </provider>
     </entry>
+<<<<<<< Updated upstream
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_camera.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.27331188">
@@ -3097,6 +3159,15 @@
       <provider editor-type-id="android-designer">
         <state />
       </provider>
+=======
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/chien/sony/cameraremote/api/RemoteApi.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.41944847">
+          <caret line="179" column="20" selection-start-line="179" selection-start-column="20" selection-end-line="179" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+>>>>>>> Stashed changes
     </entry>
   </component>
 </project>

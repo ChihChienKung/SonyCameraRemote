@@ -287,8 +287,7 @@ public class CameraActivity extends AppCompatActivity {
                         Log.d(TAG, "openConnection(): getApplicationInfo()");
                         replyJson = mRemoteApi.getApplicationInfo();
                         if (!isSupportedServerVersion(replyJson)) {
-                            DisplayHelper.toast(getApplicationContext(), //
-                                    R.string.msg_error_non_supported_device);
+                            DisplayHelper.toast(getApplicationContext(), R.string.msg_error_non_supported_device);
                             CameraActivity.this.finish();
                             return;
                         }
