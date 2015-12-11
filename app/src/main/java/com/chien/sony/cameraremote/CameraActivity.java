@@ -38,7 +38,6 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -207,7 +206,7 @@ public class CameraActivity extends AppCompatActivity {
                             startOpenConnectionAfterChangeCameraState();
 
                             // set Camera function to Remote Shooting
-                            replyJson = mRemoteApi.setCameraFunction(RemoteApi.API_SET_CAMERA_FUNCTION_REMOTE_SHOOTING);
+                            replyJson = mRemoteApi.setCameraFunction(RemoteApi.API_SET_CAMERA_FUNCTION__VALUE_REMOTE_SHOOTING);
                         }
                     }
                 } catch (IOException e) {

@@ -43,8 +43,12 @@ public class RemoteApi {
     public static final String API_RESULT = "result";
     public static final String API_ID = "id";
 
-    public static final String API_SET_CAMERA_FUNCTION_REMOTE_SHOOTING = "Remote Shooting";
-    public static final String API_SET_CAMERA_FUNCTION_CONTENTS_TRANSFER = "Contents Transfer";
+    public static final String API_GET_LIVEVIEW_FRAME_INFO__KEY_FRAME_INFO = "frameInfo";
+    public static final String API_GET_ZOOM_SETTING__KEY_ZOOM = "zoom";
+    public static final String API_GET_SUPPORTED_ZOOM_SETTING__KEY_CANDIDATE = "candidate";
+
+    public static final String API_SET_CAMERA_FUNCTION__VALUE_REMOTE_SHOOTING = "Remote Shooting";
+    public static final String API_SET_CAMERA_FUNCTION__VALUE_CONTENTS_TRANSFER = "Contents Transfer";
 
     public static final String API_GET_EVENT_TYPE = "type";
     public static final String API_GET_EVENT_CAMERA_STATUS = "cameraStatus";

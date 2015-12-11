@@ -26,4 +26,11 @@ public interface IApiResultListener {
     public void getLiveviewSizeResult(String liveviewSize, int id);
     public void getSupportedLiveviewSizeResult(String[] supportLiveviewSize, int id);
     public void getAvailableLiveviewSizeResult(String currentLiveviewSize, String[] supportLiveviewSize, int id);
+    public void setLiveviewFrameInfoResult(int id);
+    public void getLiveviewFrameInfoResult(boolean frameInfo, int id);
+    public void actZoomResult(int resultCode, int id);
+    public void setZoomSettingResult(int resultCode, int id);
+    public void getZoomSettingResult(String zoom, int id);
+    public void getSupportedZoomSettingResult(String direction, String movement, int id);
+    public void getAvailableZoomSettingResult(String zoom, String direction, String movement, int id);
 }
