@@ -33,4 +33,11 @@ public interface IApiResultListener {
     public void getZoomSettingResult(String zoom, int id);
     public void getSupportedZoomSettingResult(String direction, String movement, int id);
     public void getAvailableZoomSettingResult(String zoom, String direction, String movement, int id);
+    public void actHalfPressShutterResult(int id);
+    public void cancelHalfPressShutterResult(int id);
+    public void setTouchAFPositionResult(int resultCode, boolean afResult, String afType, int id);
+    public void getTouchAFPositionResult(boolean set, double[] touchCoordinates, int id);
+    public void cancelTouchAFPositionResult(int id);
+    public void actTrackingFocusResult(int id);
+    public void cancelTrackingFocusResult(int id);
 }

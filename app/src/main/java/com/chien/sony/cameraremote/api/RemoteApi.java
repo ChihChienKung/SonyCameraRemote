@@ -46,6 +46,10 @@ public class RemoteApi {
     public static final String API_GET_LIVEVIEW_FRAME_INFO__KEY_FRAME_INFO = "frameInfo";
     public static final String API_GET_ZOOM_SETTING__KEY_ZOOM = "zoom";
     public static final String API_GET_SUPPORTED_ZOOM_SETTING__KEY_CANDIDATE = "candidate";
+    public static final String API_SET_TOUCH_AF_POSITION__AF_RESULT = "AFResult";
+    public static final String API_SET_TOUCH_AF_POSITION__AF_TYPE = "AFType";
+    public static final String API_GET_TOUCH_AF_POSITION__SET = "set";
+    public static final String API_GET_TOUCH_AF_POSITION__TOUCH_COORDINATES = "touchCoordinates";
 
     public static final String API_SET_CAMERA_FUNCTION__VALUE_REMOTE_SHOOTING = "Remote Shooting";
     public static final String API_SET_CAMERA_FUNCTION__VALUE_CONTENTS_TRANSFER = "Contents Transfer";
@@ -287,7 +291,7 @@ public class RemoteApi {
         return command_v1_0(API_SERVICE_CAMERA, "cancelHalfPressShutter");
     }
 
-    public JSONObject setTouchAFPosition(float x, float y) throws IOException {
+    public JSONObject setTouchAFPosition(double x, double y) throws IOException {
         return command_v1_0(API_SERVICE_CAMERA, "setTouchAFPosition", x, y);
     }
 
@@ -299,7 +303,7 @@ public class RemoteApi {
         return command_v1_0(API_SERVICE_CAMERA, "cancelTouchAFPosition");
     }
 
-    public JSONObject actTrackingFocus(float x, float y) throws IOException {
+    public JSONObject actTrackingFocus(double x, double y) throws IOException {
         try {
             JSONObject object = new JSONObject();
             object.put("xPosition", x).put("yPosition", y);
